@@ -1,0 +1,8 @@
+function(j2_enable_sanitizers target_name)
+  if (MSVC)
+    message(WARNING "MSVC에서는 AddressSanitizer 설정이 제한적일 수 있습니다.")
+  else()
+    target_compile_options(${target_name} PRIVATE -fsanitize=address,undefined -fno-omit-frame-pointer)
+    target_link_options(${target_name} PRIVATE -fsanitize=address,undefined)
+  endif()
+endfunction()
