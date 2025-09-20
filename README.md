@@ -19,6 +19,14 @@ Linux와 Windows MinGW를 모두 지원하는 C++ 라이브러리 템플릿입�
 - (Windows) MinGW(예: `C:\Qt\Tools\mingw1310_64\bin` 가 PATH에 있어야 함)
 - (권장) Ninja 빌드 툴
 
+### 패키지 설치 
+- `MingW` + `vcpkg` : `vcpkg install gtest:x64-mingw-static`
+- `Ubuntu/Debian` : `sudo apt-get install libgtest-dev`
+- `Fedora/CentOS/RHEL` : `sudo yum install gtest-devel`
+- `Arch Linux` : `sudo pacman -S gtest`
+
+
+
 ---
 
 ## 디렉터리 구조
