@@ -1,5 +1,5 @@
 # tests/CMakeLists.txt
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.27)
 
 ##########################################################################
 # 모듈 경로 등록 후 include
