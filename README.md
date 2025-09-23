@@ -1,35 +1,41 @@
 # j2_library (split CMake project)
 
-Linux와 Windows MinGW를 모두 지원하는 C++ 라이브러리 템플릿입니다.  
-라이브러리 전용 CMake(`j2_library/`)와 상위(루트) CMake(`./`)를 **분리 구성**했습니다.
+- `Linux`와 `Windows MinGW`를 모두 지원하는 `C++` 라이브러리 템플릿입니다.  
+- 라이브러리 전용 `CMake`(`j2_library/`)와 상위(루트) `CMake`(`./`)를 **분리 구성** 했습니다.
 
 ## 특징
 - **분리형 CMake**
-  - `j2_library/` : 라이브러리 정의/설치/패키징(find_package)
+  - `j2_library/` : 라이브러리 정의/설치/패키징(`find_package`)
   - 루트 : 옵션/프리셋/예제/테스트 오케스트레이션
-- **정적/공유 자동 처리**: export 매크로(`J2LIB_STATIC` / `J2LIB_BUILDING_DLL`)를 타깃 타입에 맞게 자동 전파
-- **C++ 표준 옵션**: `-DJ2_LIBRARY_CXX_STANDARD=17|20|23` (기본 17)
-- **경고/샌리타이저 모듈**(선택): `cmake/warnings.cmake`, `cmake/sanitize.cmake`
-- **패키징 지원**: `find_package(j2_library CONFIG REQUIRED)`로 재사용 가능
-- **예제/테스트 포함**: `examples/hello`, `tests`(GoogleTest FetchContent)
+- **정적/공유 자동 처리** : `export` 매크로(`J2LIB_STATIC` / `J2LIB_BUILDING_DLL`)를 타깃 타입에 맞게 자동 전파
+- **C++ 표준 옵션** : `-DJ2_LIBRARY_CXX_STANDARD=17|20|23` (기본 17)
+- **경고/샌리타이저 모듈** (선택) : `cmake/warnings.cmake`, `cmake/sanitize.cmake`
+- **패키징 지원** : `find_package(j2_library CONFIG REQUIRED)`로 재사용 가능
+- **예제/테스트 포함** : `examples/hello`, `tests`(`GoogleTest FetchContent`)
 
 ## 요구 사항
-- CMake ≥ 3.20
-- (Linux) GCC/Clang
-- (Windows) MinGW(예: `C:\Qt\Tools\mingw1310_64\bin` 가 PATH에 있어야 함)
-- (권장) Ninja 빌드 툴
+- `CMake ≥ 3.20`
+- (`Linux`) `GCC/Clang`
+- (`Windows`) `MinGW`(예: `C:\Qt\Tools\mingw1310_64\bin` 가 `PATH`에 있어야 함)
+- (권장) `Ninja` 빌드 툴
 
 ### 패키지 설치 
+
+#### `Google C++`
+
 - `MingW` + `vcpkg` : `vcpkg install gtest:x64-mingw-static`
 - `Ubuntu/Debian` : `sudo apt-get install libgtest-dev`
 - `Fedora/CentOS/RHEL` : `sudo yum install gtest-devel`
 - `Arch Linux` : `sudo pacman -S gtest`
-
+- `Visual Studio` 
+   - `vcpkg install gtest:x64-windows`
+   - `vcpkg install gtest:x64-windows-static` 
 
 
 ---
 
 ## 디렉터리 구조
+
 ```
 your-repo/
 ├─ CMakeLists.txt          # 상위(전체) CMake
@@ -99,7 +105,8 @@ cmake --build --preset windows-mingw-lib-release -j
 
 ---
 
-## C++ 표준 변경
+## `C++` 표준 변경
+
 ```bash
 # C++20으로 빌드
 cmake -S . -B build -DJ2_LIBRARY_CXX_STANDARD=20
@@ -111,6 +118,7 @@ cmake --build build -j
 ## 설치 및 사용
 
 ### 설치
+
 ```bash
 # Linux 예시
 cmake --install build --prefix /usr/local
@@ -120,6 +128,7 @@ cmake --install build --prefix "C:/dev/j2_prefix"
 ```
 
 ### 다른 프로젝트에서 사용
+
 ```cmake
 # CMakeLists.txt
 find_package(j2_library CONFIG REQUIRED)
@@ -136,10 +145,10 @@ target_link_libraries(your_app PRIVATE j2_library::j2_library)
 
 ---
 
-## CMakePresets.json 요약
-- `configurePresets`: 소스/빌드 디렉터리, 제너레이터(Ninja), 기본 캐시 변수
-- `buildPresets`: 어떤 configure 프리셋을 빌드할지 지정
-- `testPresets`: ctest 실행 프리셋
+## `CMakePresets.json` 요약
+- `configurePresets`: 소스/빌드 디렉터리, 제너레이터(`Ninja`), 기본 캐시 변수
+- `buildPresets`: 어떤 `configure` 프리셋을 빌드할지 지정
+- `testPresets`: `ctest` 실행 프리셋
 
 루트에 아래와 같은 프리셋을 두는 것을 권장합니다.
 
