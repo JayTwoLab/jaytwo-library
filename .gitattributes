@@ -1,0 +1,7 @@
+# 기본은 텍스트 자동/정규화
+* text=auto eol=lf
+
+# Windows 전용(원하면 CRLF 유지)
+*.sln      text eol=crlf
+*.vcxproj  text eol=crlf
+*.bat      text eol=crlf
