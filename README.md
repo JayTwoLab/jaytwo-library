@@ -139,9 +139,9 @@ target_link_libraries(your_app PRIVATE j2_library::j2_library)
 
 ## 자주 쓰는 팁
 - **클린/재설정**: 빌드 폴더를 삭제하고 `cmake --preset ...`을 다시 실행하면 캐시 문제를 줄일 수 있습니다.
-- **Sanitizer**: `-DJ2_LIBRARY_ENABLE_SANITIZERS=ON` (GCC/Clang)
+- **Sanitizer**: `-DJ2_LIBRARY_ENABLE_SANITIZERS=ON` (`GCC`/`Clang`)
 - **경고 강화**: `-DJ2_LIBRARY_ENABLE_WARNINGS=ON`
-- **IDE 프리셋**: Qt Creator/VS Code/CLion/VS 2022는 `CMakePresets.json`을 인식합니다.
+- **IDE 프리셋**: `Qt Creator`/`VS Code`/`CLion`/`VS 2022`는 `CMakePresets.json`을 인식합니다.
 
 ---
 
@@ -168,12 +168,10 @@ target_link_libraries(your_app PRIVATE j2_library::j2_library)
     { "name": "linux-release",         "generator": "Ninja",
       "binaryDir": "${sourceDir}/build/${presetName}",
       "cacheVariables": { "CMAKE_BUILD_TYPE": "Release", "BUILD_SHARED_LIBS": "OFF" } },
-
     { "name": "windows-mingw-lib-release", "inherits": "windows-mingw-release",
       "sourceDir": "${sourceDir}/j2_library" },
     { "name": "linux-lib-release",          "inherits": "linux-release",
       "sourceDir": "${sourceDir}/j2_library" },
-
     { "name": "windows-mingw-release-shared", "inherits": "windows-mingw-release",
       "cacheVariables": { "BUILD_SHARED_LIBS": "ON" } },
     { "name": "linux-release-shared",          "inherits": "linux-release",
