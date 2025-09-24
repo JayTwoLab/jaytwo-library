@@ -270,4 +270,34 @@ dist/
 .kateproject.*
 
 
+# CMake 빌드 디렉토리 (out-of-source build 권장)
+build/
+[Cc]MakeCache.txt
+[Cc]MakeFiles/
+cmake_install.cmake
+install_manifest.txt
+CTestTestfile.cmake
+
+# Visual Studio 전용
+CMakeSettings.json
+CMakeOutput.log
+CMakeError.log
+
+# Ninja/Make 빌드 산출물
+*.ninja
+.ninja_deps
+.ninja_log
+
+# Visual Studio Code 관련
+.vscode/
+
+# Qt Creator 관련
+*.user
+
+# 임시 파일 / 백업 파일
+*.swp
+*.swo
+*~
+
+
 
