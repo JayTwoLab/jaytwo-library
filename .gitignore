@@ -100,6 +100,10 @@ CMakeUserPresets.json
 _deps/
 Makefile
 
+# CMake
+build/
+CMakeSettings.json
+
 # Build directories (use out-of-source when possible)
 build/
 build-*/
@@ -264,5 +268,6 @@ dist/
 # Kate
 *.kate-swp
 .kateproject.*
+
 
 
