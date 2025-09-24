@@ -40,7 +40,12 @@ if (NOT GTest_FOUND)
   message(FATAL_ERROR "GTest 패키지를 찾을 수 없습니다. 시스템 패키지 설치 또는 CMAKE_PREFIX_PATH 설정이 필요합니다.")
 endif()
 
-add_executable(j2_tests test_basic.cpp)
+# 실행 프로그램
+add_executable(j2_tests
+  test_basic.cpp
+)
+
+# 링크 라이브러리
 target_link_libraries(j2_tests
   PRIVATE
     j2_library::j2_library

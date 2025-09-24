@@ -39,11 +39,7 @@ function(setup_platform_defaults_with_vcpkg)
   _dcpv_msg("현재 사용자 계정: ${_CURRENT_USER}")
   _dcpv_msg("System: ${CMAKE_SYSTEM_NAME}, Compiler: ${CMAKE_CXX_COMPILER_ID}, ARCH: ${_ARCH_BITS}-bit")
 
-  # vcpkg 루트 추론 (환경변수 우선)
-  # set(_VCPKG_ROOT "$ENV{VCPKG_ROOT}")
-  # if (NOT _VCPKG_ROOT)
-  # .... 
-  # endif()
+  # vcpkg 루트를 추론한다.
   if (WIN32)
    set(_VCPKG_ROOT "C:/Users/${_CURRENT_USER}/vcpkg")
   elseif(APPLE)
@@ -51,6 +47,11 @@ function(setup_platform_defaults_with_vcpkg)
   else()
    set(_VCPKG_ROOT "/home/${_CURRENT_USER}/vcpkg")
   endif()
+  # vcpkg 루트를 환경변수 우선하는 방법은 다음과 같다.
+  # set(_VCPKG_ROOT "$ENV{VCPKG_ROOT}")
+  # if (NOT _VCPKG_ROOT)
+  # ....
+  # endif()
 
 
   # 기본 트립렛 자동 추론
@@ -144,3 +145,5 @@ function(setup_platform_defaults_with_vcpkg)
   set(DCPV_EFFECTIVE_VCPKG_ROOT "${_VCPKG_ROOT}" PARENT_SCOPE)
   set(DCPV_EFFECTIVE_TRIPLET "${_TRIPLET}" PARENT_SCOPE)
 endfunction()
+
+
