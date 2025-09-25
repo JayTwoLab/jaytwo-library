@@ -7,14 +7,16 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 #  CMAKE_SOURCE_DIR → 항상 최상위 CMakeLists.txt 디렉토리 (프로젝트 루트)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 #  CMAKE_CURRENT_SOURCE_DIR → 현재 처리 중인 CMakeLists.txt 파일이 위치한 디렉토리
-include(vcpkg) # vcpkg.cmake   
+include(vcpkg) # vcpkg.cmake
+# include(warnings OPTIONAL) # warnings.cmake
+# include(sanitize OPTIONAL) # sanitize.cmake
 
 # 선택 옵션 (필요 시)
-# set(DCPV_VCPKG_TRIPLET "x64-mingw")  # 정적 대신 동적 MinGW 트립렛 사용
-# set(DCPV_SILENT ON)                  # 상태 메시지 숨김
-# set(DCPV_ENABLE_THREADS OFF)         # 스레드 미사용
+#  set(DCPV_VCPKG_TRIPLET "x64-mingw")  # 정적 대신 동적 MinGW 트립렛 사용
+#  set(DCPV_SILENT ON)                  # 상태 메시지 숨김
+#  set(DCPV_ENABLE_THREADS OFF)         # 스레드 미사용
 
-# 설정 적용
+# vcpkg 설정 적용
 setup_platform_defaults_with_vcpkg()
 ##########################################################################
 

@@ -1,4 +1,4 @@
-###################################
+﻿###################################
 # vcpkg를 활용하는 공통 플랫폼/컴파일러 감지 및 기본 옵션 적용 모듈
 # 사용자는 DCPV_* 변수로 동작을 커스터마이즈할 수 있습니다.
 ###################################
@@ -10,7 +10,7 @@ include_guard(GLOBAL)
 # set(DCPV_SILENT ON)                    # 상태 메시지 억제
 # set(DCPV_ENABLE_THREADS OFF)           # Threads 비활성(기본 ON)
 
-function(setup_platform_defaults_with_vcpkg)
+function(setup_platform_defaults_with_vcpkg) # vcpkg 설정 적용
   # 사용자 계정 감지
   set(_CURRENT_USER "$ENV{USERNAME}")
   if (NOT _CURRENT_USER)
