@@ -16,7 +16,7 @@ include(vcpkg) # vcpkg.cmake
 #  set(DCPV_SILENT ON)                  # 상태 메시지 숨김
 #  set(DCPV_ENABLE_THREADS OFF)         # 스레드 미사용
 
-# vcpkg 설정 적용
+# vcpkg 설정 적용 
 setup_platform_defaults_with_vcpkg()
 ##########################################################################
 
