@@ -34,7 +34,6 @@ find_package(Threads REQUIRED)
 add_library(j2_library
   src/j2_library.cpp
   src/version.cpp
-  Build.md
 )
 add_library(j2_library::j2_library ALIAS j2_library)
 
