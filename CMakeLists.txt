@@ -19,9 +19,12 @@ option(BUILD_TESTING "테스트를 빌드합니다." ON)
 # endif()
 
 # 경고/샌리타이저 모듈(있으면 사용)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+#  CMAKE_SOURCE_DIR → 항상 최상위 CMakeLists.txt 디렉토리 (프로젝트 루트)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
-include(warnings OPTIONAL)
-include(sanitize OPTIONAL)
+#  CMAKE_CURRENT_SOURCE_DIR → 현재 처리 중인 CMakeLists.txt 파일이 위치한 디렉토리
+include(warnings OPTIONAL) # warnings.cmake
+include(sanitize OPTIONAL) # sanitize.cmake
 
 # -------------------------
 # 라이브러리 서브프로젝트 포함
