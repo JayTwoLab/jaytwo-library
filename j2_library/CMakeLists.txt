@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.27)
 
 # 이 서브프로젝트는 단독으로도 동작해야 하므로 project() 선언을 포함합니다.
 project(j2_library
-  VERSION 0.1.0
+  VERSION 0.2.3
   LANGUAGES CXX
 )
 
@@ -31,10 +31,18 @@ find_package(Threads REQUIRED)
 # -------------------------
 # 라이브러리 정의
 # -------------------------
-add_library(j2_library
-  src/j2_library.cpp
-  src/version.cpp
+
+# src 디렉터리 안의 모든 cpp 파일을 glob으로 수집
+file(GLOB SRC_FILES CONFIGURE_DEPENDS
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
 )
+
+# 라이브러리 추가
+add_library(j2_library ${SRC_FILES})
+
+# ALIAS 생성  
+#  실제 타깃 이름: j2_library
+#  별칭(ALIAS) 이름: j2_library::j2_library
 add_library(j2_library::j2_library ALIAS j2_library)
 
 # 정적/공유 타입에 따라 매크로 자동 전파
