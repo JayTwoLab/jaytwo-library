@@ -5,6 +5,8 @@ project(j2_super
   LANGUAGES CXX
 )
 
+
+
 # -------------------------
 # 전역 옵션
 # -------------------------
@@ -18,13 +20,18 @@ option(BUILD_TESTING "테스트를 빌드합니다." ON)
 #   set(CMAKE_TOOLCHAIN_FILE "${VCPKG_ROOT}/vcpkg/scripts/buildsystems/vcpkg.cmake" CACHE FILEPATH "" FORCE)
 # endif()
 
-# 경고/샌리타이저 모듈(있으면 사용)
+###############################################
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 #  CMAKE_SOURCE_DIR → 항상 최상위 CMakeLists.txt 디렉토리 (프로젝트 루트)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 #  CMAKE_CURRENT_SOURCE_DIR → 현재 처리 중인 CMakeLists.txt 파일이 위치한 디렉토리
+
+# 경고/샌리타이저 모듈(있으면 사용)
 include(warnings OPTIONAL) # warnings.cmake
 include(sanitize OPTIONAL) # sanitize.cmake
+
+include(utf8 OPTIONAL) # utf8.cmake
+##################################################
 
 # -------------------------
 # 라이브러리 서브프로젝트 포함
