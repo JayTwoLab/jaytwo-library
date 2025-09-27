@@ -1,5 +1,5 @@
 # tests/CMakeLists.txt
-cmake_minimum_required(VERSION 3.27)
+cmake_minimum_required(VERSION 3.26)
 
 ##########################################################################
 # 모듈 경로 등록 후 include
@@ -26,7 +26,10 @@ if (NOT BUILD_TESTING)
   return()
 endif()
 
-# Google Test 패키지 설치 필요	
+# Google Test 패키지 설치 필요
+
+# set(CMAKE_TOOLCHAIN_FILE "C:/Users/j2dol/vcpkg/scripts/buildsystems/vcpkg.cmake" CACHE STRING "")
+
 
 # 1) CMake 패키지 구성(Config mode) 우선 시도 (MSYS2, vcpkg 등에서 흔함)
 find_package(GTest CONFIG QUIET)

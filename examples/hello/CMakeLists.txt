@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.27)
+cmake_minimum_required(VERSION 3.26)
 
 add_executable(j2_hello main.cpp)
 target_link_libraries(j2_hello PRIVATE j2_library::j2_library)

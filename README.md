@@ -1,4 +1,4 @@
-# j2_library (split CMake project)
+﻿# j2_library (split CMake project)
 
 - `Linux`와 `Windows MinGW`를 모두 지원하는 `C++` 라이브러리 템플릿입니다.  
 - 라이브러리 전용 `CMake`(`j2_library/`)와 상위(루트) `CMake`(`./`)를 **분리 구성** 했습니다.
@@ -150,7 +150,7 @@ target_link_libraries(your_app PRIVATE j2_library::j2_library)
 - `buildPresets`: 어떤 `configure` 프리셋을 빌드할지 지정
 - `testPresets`: `ctest` 실행 프리셋
 
-루트에 아래와 같은 프리셋을 두는 것을 권장합니다.
+- 루트에 아래와 같은 프리셋을 두는 것을 권장합니다.
 
 ```json
 {
@@ -195,3 +195,26 @@ target_link_libraries(your_app PRIVATE j2_library::j2_library)
   ]
 }
 ```
+
+- Visual Studio 2022용 `CMakeSettings.json`
+```json
+{
+  "version": 3,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 23
+  },
+  "configurePresets": [
+    {
+      "name": "x64-debug",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/x64-debug",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "C:/Users/j2dol/vcpkg/scripts/buildsystems/vcpkg.cmake",
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    }
+  ]
+}
+```
+   - `CMAKE_TOOLCHAIN_FILE` 에 `vcpkg.cmake` 파일 경로를 설정한다. 
