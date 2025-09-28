@@ -22,7 +22,12 @@ endif()
 include(utf8 OPTIONAL) # utf8.cmake
 
 # vcpkg 설정 적용
-option(USE_VCPKG "vcpkg를 사용합니다." ON) # 기본값 ON
+if (MSVC)
+  option(USE_VCPKG "[MSVC] vcpkg를 사용합니다." ON) 
+endif()
+if (MINGW)
+  option(USE_VCPKG "[MINGW] vcpkg를 사용합니다." ON) 
+endif()
 if (USE_VCPKG)
   include(vcpkg OPTIONAL) # vcpkg.cmake
   setup_platform_defaults_with_vcpkg()
