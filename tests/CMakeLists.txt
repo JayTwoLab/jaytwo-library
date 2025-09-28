@@ -1,24 +1,28 @@
 # tests/CMakeLists.txt
 cmake_minimum_required(VERSION 3.26)
 
-##########################################################################
-# 모듈 경로 등록 후 include
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
-#  CMAKE_SOURCE_DIR → 항상 최상위 CMakeLists.txt 디렉토리 (프로젝트 루트)
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+###############################################
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../j2_library/cmake")
 #  CMAKE_CURRENT_SOURCE_DIR → 현재 처리 중인 CMakeLists.txt 파일이 위치한 디렉토리
-include(vcpkg) # vcpkg.cmake
-# include(warnings OPTIONAL) # warnings.cmake
-# include(sanitize OPTIONAL) # sanitize.cmake
 
-# 선택 옵션 (필요 시)
-#  set(DCPV_VCPKG_TRIPLET "x64-mingw")  # 정적 대신 동적 MinGW 트립렛 사용
-#  set(DCPV_SILENT ON)                  # 상태 메시지 숨김
-#  set(DCPV_ENABLE_THREADS OFF)         # 스레드 미사용
+# 경고/샌리타이저 모듈(있으면 사용)
+if (COMMAND j2_enable_warnings)
+  j2_enable_warnings(j2_library) # warnings.cmake
+endif()
+if (COMMAND j2_enable_sanitizers)
+  j2_enable_sanitizers(j2_library) # sanitize.cmake
+endif()
 
-# vcpkg 설정 적용 
-setup_platform_defaults_with_vcpkg()
-##########################################################################
+# 소스코드 인코딩 설정 모듈(있으면 사용)
+include(utf8 OPTIONAL) # utf8.cmake
+
+# vcpkg 설정 적용
+option(USE_VCPKG "vcpkg를 사용합니다." ON) # 기본값 ON
+if (USE_VCPKG)
+  include(vcpkg OPTIONAL) # vcpkg.cmake
+  setup_platform_defaults_with_vcpkg()
+endif()
+#################################################
 
 # 상위 CMake에서 이미 add_subdirectory(tests) 했다면 생략 가능
 include(CTest)

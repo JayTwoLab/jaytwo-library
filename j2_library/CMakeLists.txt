@@ -5,18 +5,44 @@ project(j2_library
   VERSION 0.2.3
   LANGUAGES CXX
 )
+# 프로젝트 VERSION은 주로 설치/패키징에 사용됩니다.
+# cmake 파일에서 VERSION을 설정하면 헤더 파일(version.hpp)에 자동으로 반영됩니다.
 
 # -------------------------
 # C++ 표준 설정
 # -------------------------
 set(J2_LIBRARY_CXX_STANDARD 17 CACHE STRING "j2_library가 사용할 C++ 표준 (예: 17, 20, 23)")
-set(CMAKE_CXX_STANDARD ${J2_LIBRARY_CXX_STANDARD})
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_CXX_STANDARD ${J2_LIBRARY_CXX_STANDARD}) # C++ 표준 설정
+set(CMAKE_CXX_STANDARD_REQUIRED ON) # 지정한 표준을 반드시 사용
+set(CMAKE_CXX_EXTENSIONS OFF) # -std=c++17 대신 -std=c++17(또는 gnu++17) 사용 방지
+
+###############################################
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+#  CMAKE_CURRENT_SOURCE_DIR → 현재 처리 중인 CMakeLists.txt 파일이 위치한 디렉토리
+
+# 경고/샌리타이저 모듈(있으면 사용)
+if (COMMAND j2_enable_warnings)
+  j2_enable_warnings(j2_library) # warnings.cmake
+endif()
+if (COMMAND j2_enable_sanitizers)
+  j2_enable_sanitizers(j2_library) # sanitize.cmake
+endif()
+
+# 소스코드 인코딩 설정 모듈(있으면 사용)
+include(utf8 OPTIONAL) # utf8.cmake
+
+# vcpkg 설정 적용
+option(USE_VCPKG "vcpkg를 사용합니다." ON) # 기본값 ON
+# cmake -DUSE_VCPKG=OFF 를 하면 vcpkg 사용 안 함.
+if (USE_VCPKG)
+  include(vcpkg OPTIONAL) # vcpkg.cmake
+  setup_platform_defaults_with_vcpkg()
+endif()
+#################################################
 
 # 가시성 최적화(GCC/Clang)
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
-  add_compile_options(-fvisibility=hidden -fvisibility-inlines-hidden)
+  add_compile_options(-fvisibility=hidden -fvisibility-inlines-hidden) # 기본 가시성 숨김
 endif()
 
 # Linux RPATH (설치 후 실행 편의)
@@ -25,7 +51,7 @@ if (UNIX AND NOT APPLE)
   set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 endif()
 
-# 스레드 라이브러리
+# 스레드 라이브러리 
 find_package(Threads REQUIRED)
 
 # -------------------------
@@ -40,7 +66,7 @@ file(GLOB SRC_FILES CONFIGURE_DEPENDS
 # 라이브러리 추가
 add_library(j2_library ${SRC_FILES})
 
-# ALIAS 생성  
+# 라이브러리 별칭(alias) 설정 
 #  실제 타깃 이름: j2_library
 #  별칭(ALIAS) 이름: j2_library::j2_library
 add_library(j2_library::j2_library ALIAS j2_library)
@@ -120,3 +146,5 @@ install(EXPORT j2_libraryTargets
   NAMESPACE j2_library::
   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/j2_library
 )
+
+

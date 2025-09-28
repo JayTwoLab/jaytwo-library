@@ -1,10 +1,10 @@
-﻿# .editorconfig
+# .editorconfig
 root = true
 
 # 모든 파일에 적용
 [*]
-charset = utf-8-bom      # 인코딩을 UTF-8 with BOM으로 지정
-end_of_line = crlf       # 윈도우 기준 줄바꿈(CRLF)
+charset = utf-8     
+end_of_line = lf # 리눅스 기준 줄바꿈(LF)
 insert_final_newline = true
 trim_trailing_whitespace = true
 
@@ -12,15 +12,15 @@ trim_trailing_whitespace = true
 [*.{c,cpp,cxx,h,hpp}]
 indent_style = space
 indent_size = 4
-charset = utf-8-bom      # C/C++ 파일은 반드시 UTF-8 BOM 저장
+charset = utf-8       
 
 # CMake 파일에 적용
 [CMakeLists.txt]
 indent_style = space
 indent_size = 2
-charset = utf-8          # BOM 없는 UTF-8도 무방
+charset = utf-8 # 필요시 utf-8-bom 도 가능
 
-# 윈도우 전용 파일이 CRLF가 더 편하면 예외 처리
+# 윈도우 전용 파일이 CRLF가 더 편하면 예외 처리도 가능
 # 
 # [*.sln]
 # end_of_line = crlf
