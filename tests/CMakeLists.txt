@@ -5,28 +5,7 @@ cmake_minimum_required(VERSION 3.26)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../j2_library/cmake")
 #  CMAKE_CURRENT_SOURCE_DIR → 현재 처리 중인 CMakeLists.txt 파일이 위치한 디렉토리
 
-# 경고/샌리타이저 모듈(있으면 사용)
-if (COMMAND j2_enable_warnings)
-  j2_enable_warnings(j2_library) # warnings.cmake
-endif()
-if (COMMAND j2_enable_sanitizers)
-  j2_enable_sanitizers(j2_library) # sanitize.cmake
-endif()
-
-# 소스코드 인코딩 설정 모듈(있으면 사용)
-include(utf8 OPTIONAL) # utf8.cmake
-
-# vcpkg 설정 적용
-if (MSVC)
-  option(USE_VCPKG "[MSVC] vcpkg를 사용합니다." ON) 
-endif()
-if (MINGW)
-  option(USE_VCPKG "[MINGW] vcpkg를 사용합니다." ON) 
-endif()
-if (USE_VCPKG)
-  include(vcpkg OPTIONAL) # vcpkg.cmake
-  setup_platform_defaults_with_vcpkg()
-endif()
+include(j2_cmake OPTIONAL) # j2_cmake.cmake
 #################################################
 
 # 상위 CMake에서 이미 add_subdirectory(tests) 했다면 생략 가능
@@ -35,14 +14,19 @@ if (NOT BUILD_TESTING)
   return()
 endif()
 
-# Google Test 패키지 설치 필요
+###################################
+# Google Test
+#
+# Rocky/CentOS/Fedora Linux 패키지 설치 : sudo yum install -y gtest-devel (dnf로도 설치 가능)
+# Ubunut/Debian Linux 패키지 설치 : sudo apt install -y libgtest-dev
+#
+# MSYS 패키지 설치 : pacman -S mingw-w64-x86_64-gtest (64비트)
+# MingW 패키지 설치 : vcpkg install gtest:x64-mingw-static (static은 옵션)
+#
+# Visual Studio : vcpkg install gtest:x64-windows (64비트)
 
-# set(CMAKE_TOOLCHAIN_FILE "C:/Users/j2dol/vcpkg/scripts/buildsystems/vcpkg.cmake" CACHE STRING "")
-
-
-# 1) CMake 패키지 구성(Config mode) 우선 시도 (MSYS2, vcpkg 등에서 흔함)
+# 1) CMake 패키지 구성(Config mode) 우선 시도  
 find_package(GTest CONFIG QUIET)
-# find_package(GTest CONFIG ON)
 
 # 2) 모듈 모드(배포판의 FindGTest.cmake)도 함께 시도
 if (NOT GTest_FOUND)
@@ -52,6 +36,7 @@ endif()
 if (NOT GTest_FOUND)
   message(FATAL_ERROR "GTest 패키지를 찾을 수 없습니다. 시스템 패키지 설치 또는 CMAKE_PREFIX_PATH 설정이 필요합니다.")
 endif()
+###################################
 
 # 실행 프로그램
 add_executable(j2_tests

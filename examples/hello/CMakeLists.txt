@@ -10,28 +10,7 @@ project(j2_hello
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../j2_library/cmake")
 #  CMAKE_CURRENT_SOURCE_DIR → 현재 처리 중인 CMakeLists.txt 파일이 위치한 디렉토리
 
-# 경고/샌리타이저 모듈(있으면 사용)
-if (COMMAND j2_enable_warnings)
-  j2_enable_warnings(j2_library) # warnings.cmake
-endif()
-if (COMMAND j2_enable_sanitizers)
-  j2_enable_sanitizers(j2_library) # sanitize.cmake
-endif()
-
-# 소스코드 인코딩 설정 모듈(있으면 사용)
-include(utf8 OPTIONAL) # utf8.cmake
-
-# vcpkg 설정 적용
-if (MSVC)
-  option(USE_VCPKG "[MSVC] vcpkg를 사용합니다." ON) 
-endif()
-if (MINGW)
-  option(USE_VCPKG "[MINGW] vcpkg를 사용합니다." ON) 
-endif()
-if (USE_VCPKG)
-  include(vcpkg OPTIONAL) # vcpkg.cmake
-  setup_platform_defaults_with_vcpkg()
-endif()
+include(j2_cmake OPTIONAL) # j2_cmake.cmake
 #################################################
 
 add_executable(j2_hello
