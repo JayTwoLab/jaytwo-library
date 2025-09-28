@@ -2,9 +2,9 @@
 
 ---
 
-## `Visual Studio` 용 CMake 프리셋 예제
+## `Visual Studio` 용 `CMake`` 프리셋 예제
 
-- `CMakePresets.json` 
+- 파일명: `CMakePresets.json` 
 
 ```json
 {
@@ -35,6 +35,10 @@
   ]
 }
 ```
+
+- `CMAKE_TOOLCHAIN_FILE` 에 `vcpkg` 경로를 지정하여 `vcpkg` 패키지 매니저를 사용하도록 설정.
+- `ninja` 빌드 시스템을 사용하도록 설정.
+   - `ninja`가 없는 경우 설치 필요. (`scoop` 이나 `Visual Studio` 설치시 선택 가능)
 
 ---
 
