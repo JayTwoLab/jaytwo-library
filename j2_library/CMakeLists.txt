@@ -20,7 +20,11 @@ set(CMAKE_CXX_EXTENSIONS OFF) # -std=c++17 대신 -std=c++17(또는 gnu++17) 사
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 #  CMAKE_CURRENT_SOURCE_DIR → 현재 처리 중인 CMakeLists.txt 파일이 위치한 디렉토리
 
-include(j2_cmake OPTIONAL) # j2_cmake.cmake
+# j2_cmake.cmake
+include(j2_cmake OPTIONAL RESULT_VARIABLE _J2_CMAKE_FOUND)
+if(NOT _J2_CMAKE_FOUND)
+ message(FATAL_ERROR "[j2_libarary] 필수 모듈 j2_cmake.cmake 를 찾을 수 없습니다. CMAKE_MODULE_PATH 설정을 확인하세요.")
+endif()
 #################################################
 
 # 가시성 최적화(GCC/Clang)
