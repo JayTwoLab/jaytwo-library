@@ -23,8 +23,8 @@ endif()
 # -------------------------
 # 테스트(google test) 서브 프로젝트
 # -------------------------
-# option(BUILD_TESTING "테스트를 빌드합니다." ON) # 기본값 ON
-option(BUILD_TESTING "테스트를 빌드합니다." OFF)
+option(BUILD_TESTING "테스트를 빌드합니다." ON) # 기본값 ON
+# option(BUILD_TESTING "테스트를 빌드합니다." OFF)
 # cmake -DBUILD_TESTING=OFF 를 하면 테스트 빌드하지 않음.
 if (BUILD_TESTING)
   include(CTest)  # BUILD_TESTING 옵션 정의

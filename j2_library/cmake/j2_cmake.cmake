@@ -27,6 +27,7 @@ if (MINGW)
 endif()
 
 if (USE_VCPKG)
+  message("-- Use vcpkg. --")
   include(vcpkg) # vcpkg.cmake
   setup_platform_defaults_with_vcpkg() # vcpkg를 사용한 플랫폼 기본 설정
 endif()

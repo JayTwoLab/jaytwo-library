@@ -34,17 +34,33 @@ endif()
 #
 # Visual Studio : vcpkg install gtest:x64-windows (64비트)
 
-# 1) CMake 패키지 구성(Config mode) 우선 시도  
+# 기본(권장): CONFIG 모드
 find_package(GTest CONFIG QUIET)
 
-# 2) 모듈 모드(배포판의 FindGTest.cmake)도 함께 시도
+message(STATUS "CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}")
+
+# CONFIG 실패 시 share/gtest 힌트로 재시도
+if (NOT GTest_FOUND AND DEFINED DCPV_EFFECTIVE_VCPKG_PREFIX AND EXISTS "${DCPV_EFFECTIVE_VCPKG_PREFIX}")
+  find_package(GTest CONFIG QUIET
+               HINTS "${DCPV_EFFECTIVE_VCPKG_PREFIX}/share/gtest")
+endif()
+
+# 그래도 실패하면 MODULE 모드(배포판 FindGTest.cmake) 시도
 if (NOT GTest_FOUND)
   find_package(GTest QUIET)
 endif()
 
 if (NOT GTest_FOUND)
-  message(FATAL_ERROR "GTest package not found. System package installation or CMAKE_PREFIX_PATH setting is required.")
+  message(FATAL_ERROR
+    "GTest package not found.\n"
+    "Resolve:\n"
+    "  1) vcpkg install gtest:x64-mingw-static\n"
+    "  2) Specify toolchain/trip in CMake factor:\n"
+    "     -DCMAKE_TOOLCHAIN_FILE=C:/Users/{USER}/vcpkg/scripts/buildsystems/vcpkg.cmake\n"
+    "     -DVCPKG_TARGET_TRIPLET=x64-mingw-static\n"
+  )
 endif()
+
 ###################################
 
 # 실행 프로그램

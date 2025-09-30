@@ -31,78 +31,57 @@ function(setup_platform_defaults_with_vcpkg) # vcpkg 설정 적용
 
   # 메시지 헬퍼 (조용한 모드 지원)
   if (DCPV_SILENT)
-    function(_dcpv_msg) 
+    function(_dcpv_msg)
     endfunction()
   else()
-    function(_dcpv_msg) 
-        message(STATUS "${ARGN}") 
+    function(_dcpv_msg)
+      message(STATUS "${ARGN}")
     endfunction()
   endif()
 
   _dcpv_msg("Current User Account: ${_CURRENT_USER}")
   _dcpv_msg("System: ${CMAKE_SYSTEM_NAME}, Compiler: ${CMAKE_CXX_COMPILER_ID}, ARCH: ${_ARCH_BITS}-bit")
 
-  # vcpkg 루트를 추론한다.
-  if (WIN32) # Windows
-   set(_VCPKG_ROOT "C:/Users/${_CURRENT_USER}/vcpkg")
-  elseif(APPLE) # macOS
-   set(_VCPKG_ROOT "/Users/${_CURRENT_USER}/vcpkg")
-  else() # Linux 및 기타 UNIX 
-   set(_VCPKG_ROOT "/home/${_CURRENT_USER}/vcpkg")
+  # vcpkg 루트 추론 (원하시면 ENV 우선으로 바꿔도 됨)
+  if (WIN32)
+    set(_VCPKG_ROOT "C:/Users/${_CURRENT_USER}/vcpkg")
+  elseif(APPLE)
+    set(_VCPKG_ROOT "/Users/${_CURRENT_USER}/vcpkg")
+  else()
+    set(_VCPKG_ROOT "/home/${_CURRENT_USER}/vcpkg")
   endif()
-
-  # vcpkg 루트를 환경변수 우선하는 방법은 다음과 같다.
-  # set(_VCPKG_ROOT "$ENV{VCPKG_ROOT}")
-  # if (NOT _VCPKG_ROOT)
-  # ....
-  # endif()
 
   # 기본 트립렛 자동 추론
   set(_AUTO_TRIPLET "")
-  if (MSVC) # Visual Studio
+  if (MSVC)
     set(_AUTO_TRIPLET "x64-windows")
-    # set(_AUTO_TRIPLET "x64-windows-static")
-  elseif(MINGW) # MinGW
-    # 정적/동적 필요에 따라 교체 가능: x64-mingw 또는 x64-mingw-static
-    set(_AUTO_TRIPLET "x64-mingw-static")
-  elseif(APPLE) # macOS
+  elseif(MINGW)
+    set(_AUTO_TRIPLET "x64-mingw-static") # 필요시 x64-mingw
+  elseif(APPLE)
     set(_AUTO_TRIPLET "x64-osx")
-  elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND UNIX AND NOT APPLE) # Linux + g++
+  elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND UNIX AND NOT APPLE)
     set(_AUTO_TRIPLET "x64-linux")
-  elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND UNIX AND NOT APPLE) # Linux + clang++
+  elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND UNIX AND NOT APPLE)
     set(_AUTO_TRIPLET "x64-linux")
   endif()
 
   # 사용자 지정 트립렛 우선
-  if (DEFINED DCPV_VCPKG_TRIPLET AND NOT "${DCPV_VCPKG_TRIPLET}" STREQUAL "") # 사용자가 지정한 트립렛
+  if (DEFINED DCPV_VCPKG_TRIPLET AND NOT "${DCPV_VCPKG_TRIPLET}" STREQUAL "")
     set(_TRIPLET "${DCPV_VCPKG_TRIPLET}")
   else()
     set(_TRIPLET "${_AUTO_TRIPLET}")
   endif()
 
-  # 플랫폼/컴파일러별 공통 옵션
-  if (MSVC) # Visual Studio
+  # 플랫폼/컴파일러별 공통 옵션 (발췌)
+  if (MSVC)
     _dcpv_msg("[MSVC] Visual C++ 설정 적용")
     add_compile_options(/W4 /permissive-)
     add_definitions(-D_CRT_SECURE_NO_WARNINGS)
-    # 필요시 런타임 라이브러리 정책:
-    # set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-    # set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDLL$<$<CONFIG:Debug>:Debug>")
-    # 
-    # 모든 타겟에 공통 적용하려면:
     add_compile_options(
-      # MSVC: 소스/실행 문자셋을 모두 UTF-8로 고정
       $<$<CXX_COMPILER_ID:MSVC>:/utf-8>
-
-      # GCC/Clang: 소스 입력/실행 문자셋을 UTF-8로 고정
       $<$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>>:-finput-charset=UTF-8>
       $<$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>>:-fexec-charset=UTF-8>
     )
-    # (선택) 리소스(.rc) 파일을 쓴다면 MSVC rc.exe에서 안전하게 처리
-    #  └ rc.exe는 케이스가 다양하므로 .rc 파일 맨 위에 다음 지시문을 추천:
-    #     #pragma code_page(65001)
-    #  CMake로 일괄 플래그 주입이 필요하면(환경에 따라 동작 다름, 지양):
-    # set(CMAKE_RC_FLAGS "${CMAKE_RC_FLAGS} /nologo")
   elseif(MINGW)
     _dcpv_msg("[MinGW] Apply MinGW settings")
     add_compile_options(-Wall -Wextra -Wpedantic -O2)
@@ -112,9 +91,6 @@ function(setup_platform_defaults_with_vcpkg) # vcpkg 설정 적용
   elseif(APPLE AND (CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang"))
     _dcpv_msg("[macOS/Clang] Apply AppleClang/Clang settings")
     add_compile_options(-Wall -Wextra -Wpedantic -O2)
-    # 필요시 libc++ 강제:
-    # add_compile_options(-stdlib=libc++)
-    # set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -stdlib=libc++")
   elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND UNIX AND NOT APPLE)
     _dcpv_msg("[Linux/Clang] Apply clang++ settings")
     add_compile_options(-Wall -Wextra -Wpedantic -O2)
@@ -124,17 +100,52 @@ function(setup_platform_defaults_with_vcpkg) # vcpkg 설정 적용
   endif()
 
   # Threads (기본 ON)
-  if (NOT DEFINED DCPV_ENABLE_THREADS OR DCPV_ENABLE_THREADS) # 기본값 ON
+  if (NOT DEFINED DCPV_ENABLE_THREADS OR DCPV_ENABLE_THREADS)
     set(THREADS_PREFER_PTHREAD_FLAG ON)
     find_package(Threads REQUIRED)
   endif()
 
-  # CMAKE_PREFIX_PATH에 vcpkg 경로 추가 (존재 시, 누적 방식)
-  if (_TRIPLET) # 트립렛이 유효할 때만
+  # ----------------------------------------------------
+  # CMAKE_PREFIX_PATH 캐시와 "병합"하여 vcpkg prefix 반영 (중요)
+  # ----------------------------------------------------
+  set(_VCPKG_PREFIX "")
+  if (_TRIPLET)
     file(TO_CMAKE_PATH "${_VCPKG_ROOT}/installed/${_TRIPLET}" _VCPKG_PREFIX)
     if (EXISTS "${_VCPKG_PREFIX}")
-      list(APPEND CMAKE_PREFIX_PATH "${_VCPKG_PREFIX}")
+      # 1) 기존 캐시값 읽어오기
+      if (DEFINED CMAKE_PREFIX_PATH)
+        set(_CPP_OLD "${CMAKE_PREFIX_PATH}")
+      else()
+        set(_CPP_OLD "")
+      endif()
+
+      # 2) 이미 포함되어 있지 않다면 병합
+      set(_NEED_APPEND TRUE)
+      if (_CPP_OLD)
+        string(FIND "${_CPP_OLD}" "${_VCPKG_PREFIX}" _found)
+        if (NOT _found EQUAL -1)
+          set(_NEED_APPEND FALSE)
+        endif()
+      endif()
+
+      if (_NEED_APPEND)
+        if (_CPP_OLD STREQUAL "")
+          set(_CPP_NEW "${_VCPKG_PREFIX}")
+        else()
+          set(_CPP_NEW "${_CPP_OLD};${_VCPKG_PREFIX}")
+        endif()
+      else()
+        set(_CPP_NEW "${_CPP_OLD}")
+      endif()
+
+      # 3) 캐시에 FORCE로 반영 (Qt가 준 -D 값을 덮는 핵심)
+      set(CMAKE_PREFIX_PATH "${_CPP_NEW}" CACHE STRING "Prefix paths for find_package()" FORCE)
+
+      # 필요시, 현재 디렉터리 스코프도 동기화(가독용)
+      set(CMAKE_PREFIX_PATH "${_CPP_NEW}")
+
       _dcpv_msg("Add vcpkg Path: ${_VCPKG_PREFIX}")
+      _dcpv_msg("Merged CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}")
     else()
       _dcpv_msg("vcpkg path does not exist: ${_VCPKG_PREFIX}")
     endif()
@@ -142,10 +153,10 @@ function(setup_platform_defaults_with_vcpkg) # vcpkg 설정 적용
     _dcpv_msg("Triplet auto inference failure or unspecified: omit adding vcpkg path")
   endif()
 
-  # parent scope로 결과 노출
+  # parent scope로 결과 노출 (힌트/로그용)
   set(CURRENT_USER "${_CURRENT_USER}" PARENT_SCOPE)
   set(ARCH_BITS "${_ARCH_BITS}" PARENT_SCOPE)
   set(DCPV_EFFECTIVE_VCPKG_ROOT "${_VCPKG_ROOT}" PARENT_SCOPE)
   set(DCPV_EFFECTIVE_TRIPLET "${_TRIPLET}" PARENT_SCOPE)
-
+  set(DCPV_EFFECTIVE_VCPKG_PREFIX "${_VCPKG_PREFIX}" PARENT_SCOPE)
 endfunction()
