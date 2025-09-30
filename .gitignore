@@ -299,5 +299,8 @@ CMakeError.log
 *.swo
 *~
 
+out/
+out/*
+
 
 
