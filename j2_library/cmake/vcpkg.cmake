@@ -39,7 +39,7 @@ function(setup_platform_defaults_with_vcpkg) # vcpkg 설정 적용
     endfunction()
   endif()
 
-  _dcpv_msg("현재 사용자 계정: ${_CURRENT_USER}")
+  _dcpv_msg("Current User Account: ${_CURRENT_USER}")
   _dcpv_msg("System: ${CMAKE_SYSTEM_NAME}, Compiler: ${CMAKE_CXX_COMPILER_ID}, ARCH: ${_ARCH_BITS}-bit")
 
   # vcpkg 루트를 추론한다.
@@ -104,22 +104,22 @@ function(setup_platform_defaults_with_vcpkg) # vcpkg 설정 적용
     #  CMake로 일괄 플래그 주입이 필요하면(환경에 따라 동작 다름, 지양):
     # set(CMAKE_RC_FLAGS "${CMAKE_RC_FLAGS} /nologo")
   elseif(MINGW)
-    _dcpv_msg("[MinGW] MinGW 설정 적용")
+    _dcpv_msg("[MinGW] Apply MinGW settings")
     add_compile_options(-Wall -Wextra -Wpedantic -O2)
   elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND UNIX AND NOT APPLE)
-    _dcpv_msg("[Linux/GNU] g++ 설정 적용")
+    _dcpv_msg("[Linux/GNU] Apply g++ settings")
     add_compile_options(-Wall -Wextra -Wpedantic -O2)
   elseif(APPLE AND (CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang"))
-    _dcpv_msg("[macOS/Clang] AppleClang/Clang 설정 적용")
+    _dcpv_msg("[macOS/Clang] Apply AppleClang/Clang settings")
     add_compile_options(-Wall -Wextra -Wpedantic -O2)
     # 필요시 libc++ 강제:
     # add_compile_options(-stdlib=libc++)
     # set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -stdlib=libc++")
   elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND UNIX AND NOT APPLE)
-    _dcpv_msg("[Linux/Clang] clang++ 설정 적용")
+    _dcpv_msg("[Linux/Clang] Apply clang++ settings")
     add_compile_options(-Wall -Wextra -Wpedantic -O2)
   else()
-    _dcpv_msg("[기타] 일반 설정 적용 (예: 커스텀 툴체인)")
+    _dcpv_msg("[Other] Apply General Settings (e.g., Custom Toolchain)")
     add_compile_options(-Wall -Wextra -Wpedantic -O2)
   endif()
 
@@ -134,12 +134,12 @@ function(setup_platform_defaults_with_vcpkg) # vcpkg 설정 적용
     file(TO_CMAKE_PATH "${_VCPKG_ROOT}/installed/${_TRIPLET}" _VCPKG_PREFIX)
     if (EXISTS "${_VCPKG_PREFIX}")
       list(APPEND CMAKE_PREFIX_PATH "${_VCPKG_PREFIX}")
-      _dcpv_msg("vcpkg 경로 추가: ${_VCPKG_PREFIX}")
+      _dcpv_msg("Add vcpkg Path: ${_VCPKG_PREFIX}")
     else()
-      _dcpv_msg("vcpkg 경로가 존재하지 않습니다: ${_VCPKG_PREFIX}")
+      _dcpv_msg("vcpkg path does not exist: ${_VCPKG_PREFIX}")
     endif()
   else()
-    _dcpv_msg("트립렛 자동 추론 실패 또는 미지정: vcpkg 경로 추가 생략")
+    _dcpv_msg("Triplet auto inference failure or unspecified: omit adding vcpkg path")
   endif()
 
   # parent scope로 결과 노출

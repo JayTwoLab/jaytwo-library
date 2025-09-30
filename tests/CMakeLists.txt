@@ -13,7 +13,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../j2_library/cmake")
 # j2_cmake.cmake
 include(j2_cmake OPTIONAL RESULT_VARIABLE _J2_CMAKE_FOUND)
 if(NOT _J2_CMAKE_FOUND)
- message(FATAL_ERROR "[j2_test] 필수 모듈 j2_cmake.cmake 를 찾을 수 없습니다. CMAKE_MODULE_PATH 설정을 확인하세요.")
+ message(FATAL_ERROR "[j2_test] Mandatory module j2_cmake.cmake not found, please check CMAKE_MODULE_PATH settings.")
 endif()
 #################################################
 
@@ -43,7 +43,7 @@ if (NOT GTest_FOUND)
 endif()
 
 if (NOT GTest_FOUND)
-  message(FATAL_ERROR "GTest 패키지를 찾을 수 없습니다. 시스템 패키지 설치 또는 CMAKE_PREFIX_PATH 설정이 필요합니다.")
+  message(FATAL_ERROR "GTest package not found. System package installation or CMAKE_PREFIX_PATH setting is required.")
 endif()
 ###################################
 

@@ -19,11 +19,11 @@ include(utf8) # utf8.cmake
 #########################################
 # vcpkg 설정 적용
 if (MSVC)
-  option(USE_VCPKG "[MSVC] vcpkg를 사용합니다." ON) 
+  option(USE_VCPKG "[MSVC] Use vcpkg." ON)
 endif()
 
 if (MINGW)
-  option(USE_VCPKG "[MINGW] vcpkg를 사용합니다." ON) 
+  option(USE_VCPKG "[MINGW] Use vcpkg." ON)
 endif()
 
 if (USE_VCPKG)

@@ -11,7 +11,7 @@ function(j2_enable_sanitizers target_name)
 # 런타임 오류 검출 도구(Sanitizer) 옵션을 적용하는 함수입니다.
 
   if (MSVC)
-    message(WARNING "MSVC에서는 AddressSanitizer 설정이 제한적일 수 있습니다.") 
+    message(WARNING "Address Sanitizer settings may be limited on MSVC.")
     # MSVC는 Clang-cl 기반이 아니면 ASan 지원이 불완전함
   else()
     target_compile_options(${target_name} PRIVATE

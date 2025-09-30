@@ -13,7 +13,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../j2_library/cmak
 # j2_cmake.cmake
 include(j2_cmake OPTIONAL RESULT_VARIABLE _J2_CMAKE_FOUND)
 if(NOT _J2_CMAKE_FOUND)
- message(FATAL_ERROR "[j2_hello] 필수 모듈 j2_cmake.cmake 를 찾을 수 없습니다. CMAKE_MODULE_PATH 설정을 확인하세요.")
+ message(FATAL_ERROR "[j2_hello] Mandatory module j2_cmake.cmake not found, please check CMAKE_MODULE_PATH settings.")
 endif()
 #################################################
 
