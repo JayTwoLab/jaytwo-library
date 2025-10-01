@@ -1,6 +1,6 @@
 #pragma once
 
-// 정적/공유 구분: 정적 빌드 시엔 내보내기/가시성 매크로를 비웁니다.
+// Static/Shared Separation: Empty export/visibility macros during static build.
 #if defined(J2LIB_STATIC)
   #define J2LIB_API
   #define J2LIB_HIDDEN

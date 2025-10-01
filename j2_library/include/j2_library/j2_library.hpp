@@ -6,7 +6,7 @@
 
 namespace j2
 {
-    // 공개 API: 정적/공유에 맞게 J2LIB_API가 설정됩니다.
+    // Public API: J2LIB_API is set for static/sharing.
 
     J2LIB_API int add(int a, int b);
 

@@ -19,6 +19,7 @@ charset = utf-8
 indent_style = space
 indent_size = 2
 charset = utf-8 # 필요시 utf-8-bom 도 가능
+end_of_line = lf # 리눅스 기준 줄바꿈(LF)
 
 # 윈도우 전용 파일이 CRLF가 더 편하면 예외 처리도 가능
 # 

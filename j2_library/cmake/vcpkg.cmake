@@ -54,7 +54,7 @@ function(setup_platform_defaults_with_vcpkg) # vcpkg 설정 적용
   # 기본 트립렛 자동 추론
   set(_AUTO_TRIPLET "")
   if (MSVC)
-    set(_AUTO_TRIPLET "x64-windows")
+    set(_AUTO_TRIPLET "x64-windows-static")  # 필요시 x64-windows
   elseif(MINGW)
     set(_AUTO_TRIPLET "x64-mingw-static") # 필요시 x64-mingw
   elseif(APPLE)
