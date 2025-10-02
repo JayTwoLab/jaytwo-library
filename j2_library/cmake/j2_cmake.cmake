@@ -10,12 +10,10 @@ if (MSVC)
 endif()
 
 ####################################
-# 전역 정적 CRT 강제(/MT, /MTd)
+# MSVC 전역 정적 CRT 강제(/MT, /MTd)
 if (MSVC)
   set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>" CACHE STRING "" FORCE)
 endif()
-
-
 
 #########################################
 # 경고/샌리타이저 모듈(있으면 사용)
@@ -29,13 +27,12 @@ endif()
 
 #########################################
 # 소스코드 인코딩 설정 모듈(있으면 사용)
-include(utf8) # utf8.cmake
+include(j2_utf8) # utf8.cmake
 
 #########################################
 # vcpkg 설정 적용
 if (MSVC)
   option(USE_VCPKG "[MSVC] Use vcpkg." ON)
-  # set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 endif()
 
 if (MINGW)
@@ -44,7 +41,7 @@ endif()
 
 if (USE_VCPKG)
   message("-- Use vcpkg. --")
-  include(vcpkg) # vcpkg.cmake
+  include(j2_vcpkg) # vcpkg.cmake
   setup_platform_defaults_with_vcpkg() # vcpkg를 사용한 플랫폼 기본 설정
 endif()
 
