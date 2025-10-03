@@ -99,7 +99,7 @@ TEST(MutexString, SubstrAndCompare) {
         EXPECT_EQ(ms.substr(pos_plus, 4), "plus");
     }
     EXPECT_EQ(ms.compare("(***{start plus more] tail)"), -1);
-    EXPECT_EQ(ms.compare(1, 5, std::string("***{")), -1);
+    EXPECT_LT(ms.compare(1, 5, std::string("***{")), 0);
 }
 
 // 6. Replace/Erase/Copy/Resize function test
@@ -183,7 +183,7 @@ TEST(MutexString, Jstr) {
     // std::cout << "\n===== testJstr: j2::MutexString basic functionality test =====\n";
 
     //-----------------------------------------------------------
-    // construction/copy initialization (implicit conversion allowed)
+// construction/copy initialization (implicit conversion allowed)
     // jstr is same as j2::MutexString
     jstr ms = "start"; // 5 characters
     EXPECT_EQ(ms.str(), "start");
@@ -289,7 +289,7 @@ TEST(MutexString, Jstr) {
     //  << "compare(1,5,std::string(\"***{\")) = "
     //  << ms.compare(1, 5, std::string("***{")) << "\n";
     // compare("(***{start plus more] tail)") = -1
-    EXPECT_EQ(ms.compare(1, 5, std::string("***{")), -1);
+    EXPECT_LT(ms.compare(1, 5, std::string("***{")), 0);
 
     //-----------------------------------------------------------
     // replace (string/char*/n, ch)
