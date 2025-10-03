@@ -472,7 +472,7 @@ TEST(MutexString, Atomicity) {
                 std::this_thread::sleep_for(1ms);
             }
 
-            std::cout << "[reader] 'hello' detected: " << hello_hits << "\n";
+            // std::cout << "[reader] 'hello' detected: " << hello_hits << "\n";
             EXPECT_TRUE(hello_hits >= 0 && hello_hits <= 300);
 
         };
