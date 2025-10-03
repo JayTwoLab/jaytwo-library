@@ -98,7 +98,7 @@ TEST(MutexString, SubstrAndCompare) {
     if (pos_plus != std::string::npos) {
         EXPECT_EQ(ms.substr(pos_plus, 4), "plus");
     }
-    EXPECT_EQ(ms.compare("(***{start plus more] tail)"), -1);
+    EXPECT_LT(ms.compare("(***{start plus more] tail)"), 0);
     EXPECT_LT(ms.compare(1, 5, std::string("***{")), 0);
 }
 
