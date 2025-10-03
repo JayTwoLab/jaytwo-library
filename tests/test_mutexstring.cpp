@@ -283,7 +283,7 @@ TEST(MutexString, Jstr) {
     //  << "compare(\"(***{start plus more] tail)\") = "
     //  << ms.compare("(***{start plus more] tail)") << "\n";
     // compare("(***{start plus more] tail)") = -1
-    EXPECT_EQ(ms.compare("(***{start plus more] tail)"), -1);
+    EXPECT_LT(ms.compare("(***{start plus more] tail)"), 0);
 
     // std::cout
     //  << "compare(1,5,std::string(\"***{\")) = "
