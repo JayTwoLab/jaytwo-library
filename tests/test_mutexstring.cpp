@@ -283,13 +283,19 @@ TEST(MutexString, Jstr) {
     //  << "compare(\"(***{start plus more] tail)\") = "
     //  << ms.compare("(***{start plus more] tail)") << "\n";
     // compare("(***{start plus more] tail)") = -1
+#if defined(_MSC_VER)
+    // MSVC returns -1 for this comparison
+    EXPECT_EQ(ms.compare("(***{start plus more] tail)"), -1);
+    EXPECT_EQ(ms.compare(1, 5, std::string("***{")), -1);
+#elif defined(__GNUC__)
+    // GCC returns -34 for this comparison (difference between '{' and 's')
+    EXPECT_EQ(ms.compare("(***{start plus more] tail)"), int('{' - 's'));
+    EXPECT_EQ(ms.compare(1, 5, std::string("***{")), int('{' - 's'));
+#else
+    // Fallback: just check it's negative
     EXPECT_LT(ms.compare("(***{start plus more] tail)"), 0);
-
-    // std::cout
-    //  << "compare(1,5,std::string(\"***{\")) = "
-    //  << ms.compare(1, 5, std::string("***{")) << "\n";
-    // compare("(***{start plus more] tail)") = -1
     EXPECT_LT(ms.compare(1, 5, std::string("***{")), 0);
+#endif
 
     //-----------------------------------------------------------
     // replace (string/char*/n, ch)

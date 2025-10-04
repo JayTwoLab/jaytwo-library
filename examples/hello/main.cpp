@@ -1,6 +1,5 @@
 #include <iostream>
 #include "j2_library/j2_library.hpp"
-#include "j2_library/version.hpp"
 
 int main()
 {

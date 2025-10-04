@@ -12,10 +12,11 @@ project(j2_library
 # cmake 파일에서 VERSION을 설정하면 헤더 파일(version.hpp)에 자동으로 반영됩니다.
 
 # -------------------------
-# C++ 표준 설정
+# C++ 표준 설정 (예: 17, 20, 23)
 # -------------------------
-set(J2_LIBRARY_CXX_STANDARD 17 CACHE STRING "C++ standards for use by j2_library (e.g., 17, 20, 23)")
-set(CMAKE_CXX_STANDARD ${J2_LIBRARY_CXX_STANDARD}) # C++ 표준 설정 (예: 17, 20, 23)
+set(J2_LIBRARY_CXX_STANDARD 17
+  CACHE STRING "C++ standards for use by j2_library (e.g., 17, 20, 23)")
+set(CMAKE_CXX_STANDARD ${J2_LIBRARY_CXX_STANDARD}) 
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON) # 지정한 표준을 반드시 사용
 
@@ -29,7 +30,6 @@ include(j2_cmake OPTIONAL RESULT_VARIABLE _J2_CMAKE_FOUND)
 if(NOT _J2_CMAKE_FOUND)
  message(FATAL_ERROR "[j2_libarary] Mandatory module j2_cmake.cmake not found, please check CMAKE_MODULE_PATH settings.")
 endif()
-
 
 # -------------------------
 # 가시성 최적화(GCC/Clang)
