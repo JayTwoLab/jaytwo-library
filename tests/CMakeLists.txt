@@ -1,3 +1,5 @@
+# test/CMakeLists.txt
+
 cmake_minimum_required(VERSION 3.26)
 
 # 프로젝트 선언

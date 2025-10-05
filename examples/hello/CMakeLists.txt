@@ -1,8 +1,9 @@
-# hello/CMakeLists.txt
+# examples/hello/CMakeLists.txt
+
 cmake_minimum_required(VERSION 3.26)
 
 project(j2_hello
-  VERSION 0.1.0
+  VERSION 1.0.0
   LANGUAGES CXX
 )
 

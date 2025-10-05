@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.26)
 # 프로젝트 선언
 # -------------------------
 project(j2_library
-  VERSION 0.2.3
+  VERSION 0.1.0
   LANGUAGES CXX
 )
 # 이 서브프로젝트는 단독으로도 동작해야 하므로 project() 선언을 포함합니다.
