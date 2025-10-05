@@ -11,7 +11,7 @@
 - `vcpkg` 설치
     - `git clone https://github.com/microsoft/vcpkg.git`
 	    - 보통 사용자 계정 폴더에 설치함 : `C:\Users\j2\vcpkg`
-    - 명령 실행 
+    - 명령을 실행하여 `vcpkg.exe`를 생성
 	    - `cd vcpkg`
 	    - `.\bootstrap-vcpkg.bat`
 	- `vcpkg` 설치 경로를 윈도 횐경 변수 `PATH`에 추가
@@ -29,7 +29,7 @@
 - `vcpkg` 설치
     - `git clone https://github.com/microsoft/vcpkg.git`
 		- 보통 사용자 계정 폴더에 설치함 : `C:\Users\j2\vcpkg`
-    - 명령 실행  
+    - 명령을 실행하여 `vcpkg.exe`를 생성
 	    - `cd vcpkg`
 	    - `.\bootstrap-vcpkg.bat`
 	- `vcpkg` 설치 경로를 `PATH`에 추가
