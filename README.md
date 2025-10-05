@@ -2,9 +2,11 @@
 
 <br />
 
+### 1. vcpkg 설치
+
 ---
 
-### `Visual Studio`
+#### 1.1. `Visual Studio`
 
 - `vcpkg` 설치
     - `git clone https://github.com/microsoft/vcpkg.git`
@@ -17,7 +19,7 @@
 
 ---
 
-### `MingW` (`+ Qt Creator`)
+#### 1.2. `MingW` (`+ Qt Creator`)
 
 - `vcpkg` 설치
     - `git clone https://github.com/microsoft/vcpkg.git`
@@ -30,7 +32,7 @@
 
 ---
 
-### `Linux`
+#### 1.3. `Linux`
 
 - `Google Test` 설치
    - `Rocky/CentOS` : `sudo dnf install gtest gtest-devel -y`
