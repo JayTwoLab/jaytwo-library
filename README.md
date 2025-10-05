@@ -117,10 +117,10 @@ cmake -S .. ^
  -DCMAKE_BUILD_TYPE=Release ^
  -DCMAKE_INSTALL_PREFIX="C:/install/j2_library"
 
-@REM 빌드 (Release)
+@REM 라이브러리 빌드
 cmake --build build --config Release
 
-@REM 설치
+@REM 라이브러리 설치
 cmake --install build --config Release
 ```
 
@@ -145,10 +145,10 @@ cmake -S .. ^
  -DCMAKE_BUILD_TYPE=Release ^
  -DCMAKE_INSTALL_PREFIX="C:/mingw-install/j2_library"
 
-@REM 빌드
+@REM 라이브러리 빌드
 cmake --build build
 
-@REM 설치
+@REM 라이브러리 설치
 cmake --install build
 ```
 
@@ -172,10 +172,10 @@ cmake -S .. \
  -DCMAKE_BUILD_TYPE=Release \
  -DCMAKE_INSTALL_PREFIX="/home/j2/workspace/dev/lib"
 
-# 빌드 (cpu 코어 수 만큼 병렬 빌드)
+# 라이브러리 빌드 (cpu 코어 수 만큼 병렬 빌드)
 cmake --build build -j$(nproc)
 
-# 설치 
+# 라이브러리 설치 
 cmake --install build
 # 설치 경로가 /usr/local/... 등의 시스템 경로인 경우, 설치 시 sudo(root 권한) 필요함.
 #  sudo cmake --install build
