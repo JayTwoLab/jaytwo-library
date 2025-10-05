@@ -32,7 +32,9 @@
 
 ---
 
-#### 1.3. `Linux`
+### 2. non-vcpkg 설치
+
+#### 2.1. `Linux` (non-vcpkg)
 
 - `Google Test` 설치
    - `Rocky/CentOS` : `sudo dnf install gtest gtest-devel -y`
