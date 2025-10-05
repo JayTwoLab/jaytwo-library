@@ -4,21 +4,21 @@
 // Google Test framework
 // TEST(Test Suite Name, Test Name)
 
-// --- Core ---
+// --- Single Function ---
 
-TEST(Core, Add) {
+TEST(SingleFunction, Add) {
     EXPECT_EQ(j2::add(2, 3), 5);
 }
 
-TEST(Core, Trim) {
+TEST(SingleFunction, Trim) {
     EXPECT_EQ(j2::trim("  hello  "), "hello");
 }
 
-TEST(Core, ToUpper) {
+TEST(SingleFunction, ToUpper) {
     EXPECT_EQ(j2::to_upper("Abc123!"), "ABC123!");
 }
 
-TEST(Core, Split) {
+TEST(SingleFunction, Split) {
     auto v = j2::split("a,b,,c", ',');
     ASSERT_EQ(v.size(), 4u);
     EXPECT_EQ(v[0], "a");
