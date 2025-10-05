@@ -101,11 +101,11 @@
 ##### 2.1.1. `Windows` (`MSVC`, `Visual Studio`)
 
 ```cmd
-# 빌드 경로 생성
+@REM 빌드 경로 생성
 mkdir build 
 cd build
 
-# cmake 실행 (릴리즈 빌드, 설치 경로 지정)
+@REM cmake 실행 (릴리즈 빌드, 설치 경로 지정)
 cmake -S .. ^
  -B build ^
  -G "Visual Studio 17 2022" ^
@@ -113,10 +113,10 @@ cmake -S .. ^
  -DCMAKE_BUILD_TYPE=Release ^
  -DCMAKE_INSTALL_PREFIX="C:/install/j2_library"
 
-# 빌드 (Release)
+@REM 빌드 (Release)
 cmake --build build --config Release
 
-# 설치
+@REM 설치
 cmake --install build --config Release
 ```
 
@@ -126,22 +126,22 @@ cmake --install build --config Release
 
 ##### 2.1.2. `Windows` (`MinGW g++`)
 
-```bash
-# 빌드 경로 생성
+```cmd
+@REM 빌드 경로 생성
 mkdir build 
 cd build
 
-# cmake 실행 (릴리즈 빌드, 설치 경로 지정)
+@REM cmake 실행 (릴리즈 빌드, 설치 경로 지정)
 cmake -S .. ^
  -B build ^
  -G "MinGW Makefiles" ^
  -DCMAKE_BUILD_TYPE=Release ^
  -DCMAKE_INSTALL_PREFIX="C:/mingw-install/j2_library"
 
-# 빌드
+@REM 빌드
 cmake --build build
 
-# 설치
+@REM 설치
 cmake --install build
 ```
 
