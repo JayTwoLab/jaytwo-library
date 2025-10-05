@@ -101,6 +101,8 @@
 ##### 2.1.1. `Windows` (`MSVC`, `Visual Studio`)
 
 ```cmd
+cd j2_library
+
 @REM 빌드 경로 생성
 mkdir build 
 cd build
@@ -127,6 +129,8 @@ cmake --install build --config Release
 ##### 2.1.2. `Windows` (`MinGW g++`)
 
 ```cmd
+cd j2_library
+
 @REM 빌드 경로 생성
 mkdir build 
 cd build
@@ -152,6 +156,8 @@ cmake --install build
 ##### 2.1.3. `Linux` (`g++`)
 
 ```bash
+cd j2_library
+
 # 빌드 경로 생성
 mkdir build 
 cd build
