@@ -9,13 +9,14 @@
 - `C++` 컴파일러 설치
 	- `Visual Studio`
 		- [Visual Studio 다운로드](https://visualstudio.microsoft.com/ko/downloads/)
-	- `MingW`
+	- `MingW` (+ `gcc`)
 		- 권장: `Qt Creator`에서 `MingW`를 사용할 경우 [Qt 다운로드](https://www.qt.io/download) (오픈소스 버전)
 		- [MingW 다운로드](http://mingw-w64.org/doku.php/download) 직접 설치도 가능 
 	- `gcc`
 		- Ubuntu/Debian : `sudo apt-get install build-essential`
 		- Rocky/CentOS : `sudo dnf groupinstall "Development Tools"`
 		- Arch : `sudo pacman -S base-devel`
+	- ⚠️ NOTICE: `clang` 에 대한 테스트는 하지 않음
 - `CMake` 설치
 	- [CMake 다운로드](https://cmake.org/download/) 직접 설치
 	- 윈도우 scoop, chocolatey, winget 등 패키지 관리자를 이용하여 설치 가능
@@ -31,10 +32,10 @@
 - `IDE` 설치
 	- `Windows`
 	    - `Visual Studio`
-		- `Qt Creator`
-		- `VSCode`
+		- `Qt Creator` (+ `MingW`)
+		- `VSCode` (+ `MingW` or `MSVC`)
 	- `Linux`
-		- `VSCode`
+		- `VSCode` (+ `gcc` or `WSL`)
 
 <br />
 
