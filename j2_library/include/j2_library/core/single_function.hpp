@@ -8,7 +8,7 @@
 
 #include "j2_library/export.hpp" // For J2LIB_API macro definition
 
-namespace j2
+namespace j2 
 {
     // NOTE: Public API: J2LIB_API is set for static/sharing.
 

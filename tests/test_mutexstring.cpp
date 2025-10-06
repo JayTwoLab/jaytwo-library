@@ -5,13 +5,13 @@
 #include <gtest/gtest.h>
 #include "j2_library/j2_library.hpp"
 
-using namespace std::chrono_literals;
+using jstr = j2::mutex_string; // alias for easier usage
 
 // Google Test framework
 // TEST(Test Suite Name, Test Name)
 
 // 1. Constructor and basic state test
-TEST(MutexString, ConstructorAndBasic) {
+TEST(mutex_string, ConstructorAndBasic) {
     jstr ms = "start";
     EXPECT_EQ(ms.str(), "start");
     EXPECT_EQ(ms.size(), 5);
@@ -20,7 +20,7 @@ TEST(MutexString, ConstructorAndBasic) {
 }
 
 // 2. Capacity-related function test
-TEST(MutexString, CapacityFunctions) {
+TEST(mutex_string, CapacityFunctions) {
     jstr ms = "start";
     auto cap0 = ms.capacity();
     EXPECT_EQ(cap0, 15);
@@ -43,7 +43,7 @@ TEST(MutexString, CapacityFunctions) {
 }
 
 // 3. Append/Insert/Modify function test
-TEST(MutexString, AppendInsertModify) {
+TEST(mutex_string, AppendInsertModify) {
     jstr ms = "start";
     ms.append(" plus");
     ms += ' ';
@@ -61,38 +61,38 @@ TEST(MutexString, AppendInsertModify) {
 }
 
 // 4. Search-related function test
-TEST(MutexString, Find) {
+TEST(mutex_string, Find) {
     jstr ms = "[***start plus more] tail";
     EXPECT_EQ(ms.find("plus"), 10u);
 }
 
-TEST(MutexString, RFind) {
+TEST(mutex_string, RFind) {
     jstr ms = "[***start plus more] tail";
     EXPECT_EQ(ms.rfind('l'), 24u);
 }
 
-TEST(MutexString, FindFirstOf) {
+TEST(mutex_string, FindFirstOf) {
     jstr ms = "[***start plus more] tail";
     EXPECT_EQ(ms.find_first_of("aeiou"), 6u);
 }
 
-TEST(MutexString, FindLastOf) {
+TEST(mutex_string, FindLastOf) {
     jstr ms = "[***start plus more] tail";
     EXPECT_EQ(ms.find_last_of('o'), 16u);
 }
 
-TEST(MutexString, FindFirstNotOf) {
+TEST(mutex_string, FindFirstNotOf) {
     jstr ms = "[***start plus more] tail";
     EXPECT_EQ(ms.find_first_not_of("()*"), 0u);
 }
 
-TEST(MutexString, FindLastNotOf) {
+TEST(mutex_string, FindLastNotOf) {
     jstr ms = "[***start plus more] tail";
     EXPECT_EQ(ms.find_last_not_of(')'), 24u);
 }
 
 // 5. Substring and compare function test
-TEST(MutexString, SubstrAndCompare) {
+TEST(mutex_string, SubstrAndCompare) {
     jstr ms = "(***start plus more] tai)";
     std::size_t pos_plus = ms.find("plus");
     if (pos_plus != std::string::npos) {
@@ -103,7 +103,7 @@ TEST(MutexString, SubstrAndCompare) {
 }
 
 // 6. Replace/Erase/Copy/Resize function test
-TEST(MutexString, ReplaceEraseCopyResize) {
+TEST(mutex_string, ReplaceEraseCopyResize) {
     jstr ms = "(***start plus more] tai)";
     if (ms.size() >= 5) {
         ms.replace(1, 5, "BEGIN");
@@ -130,7 +130,7 @@ TEST(MutexString, ReplaceEraseCopyResize) {
 }
 
 // 7. Swap/Clear/Empty function test
-TEST(MutexString, SwapClearEmpty) {
+TEST(mutex_string, SwapClearEmpty) {
     jstr ms = "##(BEGINartplus more] tai)!!!";
     std::string ext = "EXTERNAL";
     ms.swap(ext);
@@ -148,7 +148,7 @@ TEST(MutexString, SwapClearEmpty) {
 }
 
 // 8. Guard/With function test
-TEST(MutexString, GuardAndWith) {
+TEST(mutex_string, GuardAndWith) {
     jstr ms = "##(BEGINartplus more] tai)!!!";
     {
         auto g = ms.guard();
@@ -162,7 +162,7 @@ TEST(MutexString, GuardAndWith) {
 }
 
 // 9. Operator and special function test
-TEST(MutexString, OperatorsAndSpecial) {
+TEST(mutex_string, OperatorsAndSpecial) {
     jstr ms = "##(BEGINartplus more] tai)!!! [WITH]";
     ms.insert(0, 3, '*');
     ms.replace(0, 3, 2, '#');
@@ -175,16 +175,16 @@ TEST(MutexString, OperatorsAndSpecial) {
 }
 
 
-TEST(MutexString, Jstr) {
+TEST(mutex_string, Jstr) {
     //---------------------------------------------------------------------------
-    // Demonstration of various j2::MutexString features similar to std::string
+    // Demonstration of various j2::mutex_string features similar to std::string
     // testJstr() does not include multi-thread related tests.
 
-    // std::cout << "\n===== testJstr: j2::MutexString basic functionality test =====\n";
+    // std::cout << "\n===== testJstr: j2::mutex_string basic functionality test =====\n";
 
     //-----------------------------------------------------------
 // construction/copy initialization (implicit conversion allowed)
-    // jstr is same as j2::MutexString
+    // jstr is same as j2::mutex_string
     jstr ms = "start"; // 5 characters
     EXPECT_EQ(ms.str(), "start");
     EXPECT_EQ(ms.size(), 5);
@@ -194,7 +194,7 @@ TEST(MutexString, Jstr) {
     //-----------------------------------------------------------
     // reserve/capacity/shrink_to_fit
 
-    // In the j2::MutexString class, capacity() is a function that returns how many characters an internally used std::string object can currently store without additional memory allocation.
+    // In the j2::mutex_string class, capacity() is a function that returns how many characters an internally used std::string object can currently store without additional memory allocation.
     auto cap0 = ms.capacity();
     EXPECT_EQ(cap0, 15);
 
@@ -350,7 +350,7 @@ TEST(MutexString, Jstr) {
     ms.swap(ext); // restore
 
     //-----------------------------------------------------------
-    // swap(MutexString&)
+    // swap(mutex_string&)
     jstr ms2 = "other";
     ms2.swap(ms);
     // std::cout << "after swap(jstr): ms=\"" << ms.str()
@@ -431,21 +431,21 @@ static void c_api_sink(const char* p) {
 }
 #endif
 
-TEST(MutexString, Atomicity) {
+TEST(mutex_string, Atomicity) {
     //---------------------------------------------------------------------------
     // demo: two threads randomly read/write strings
     // - externally, since c_str()/guard_cstr() are protected, they cannot be called directly
     // - safe usage: (1) snapshot copy ms.str()
     //               (2) use std::string API within lock guard scope: auto g=ms.guard(); g->c_str();
 
-    j2::MutexString ms("start"); // same as jstr ms("start");
+    j2::mutex_string ms("start"); // same as jstr ms("start");
 
     auto writer = [&] {
             std::mt19937 rng(std::random_device{}());
             for (int i = 0; i < 300; ++i) {
                 if (rng() & 1) ms = "hello";
                 else           ms = "world";
-                std::this_thread::sleep_for(1ms);
+                std::this_thread::sleep_for(std::chrono::milliseconds(1));
             }
         };
 
@@ -472,7 +472,7 @@ TEST(MutexString, Atomicity) {
                     // ms.append("X"); // do not call ms.* again inside with()/guard() scope
                 }
 
-                std::this_thread::sleep_for(1ms);
+                std::this_thread::sleep_for(std::chrono::milliseconds(1));
             }
 
             // std::cout << "[reader] 'hello' detected: " << hello_hits << "\n";

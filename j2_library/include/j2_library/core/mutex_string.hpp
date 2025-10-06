@@ -8,21 +8,20 @@
 
 #include "j2_library/export.hpp" // for J2LIB_API macro definition
 
-// j2 namespace
 namespace j2 {
 
 // thread-safe string wrapper
 // - only members are std::string and std::mutex
 // - std::string API is provided with identical/similar signatures as much as possible
 // - returning pointer/iterator/reference directly is dangerous, so access only via guard() or snapshot (str)
-J2LIB_API class MutexString {
+J2LIB_API class mutex_string {
 public:
     // locked view (guard): holds the mutex during lifetime and provides direct access to internal std::string
     class Locked {
     public:
         // for reentrancy detection, the pointer to owner (protected target object) is also passed
-        Locked(std::string& s, std::mutex& m, const MutexString* owner);
-        Locked(const std::string& s, std::mutex& m, const MutexString* owner);
+        Locked(std::string& s, std::mutex& m, const mutex_string* owner);
+        Locked(const std::string& s, std::mutex& m, const mutex_string* owner);
         ~Locked(); // release reentrancy mark in debug mode
 
         // internal std::string full API can be used during guard lifetime
@@ -47,11 +46,11 @@ public:
 
 #ifndef NDEBUG
         // debug-only reentrancy control
-        const MutexString* owner_ = nullptr;
+        const mutex_string* owner_ = nullptr;
         bool mark_set_ = false;
 #endif
 
-        friend class MutexString; // MutexString can access internally
+        friend class mutex_string; // mutex_string can access internally
     };
 
     // RAII pointer guard (internal use)
@@ -71,30 +70,30 @@ public:
 
 public:
     // ===== constructors/assignments =====
-    MutexString() = default;                 // empty string
+    mutex_string() = default;                 // empty string
 
-    // explicit removed allows "j2::MutexString ms = \"start\";" / "jstr ms = \"start\";"
-    MutexString(std::string s);
-    MutexString(const char* s);
+    // explicit removed allows "j2::mutex_string ms = \"start\";" / "jstr ms = \"start\";"
+    mutex_string(std::string s);
+    mutex_string(const char* s);
 
-    MutexString(const MutexString& other);
-    MutexString(MutexString&& other) noexcept;
-    MutexString& operator=(const MutexString& other);
-    MutexString& operator=(MutexString&& other) noexcept;
+    mutex_string(const mutex_string& other);
+    mutex_string(mutex_string&& other) noexcept;
+    mutex_string& operator=(const mutex_string& other);
+    mutex_string& operator=(mutex_string&& other) noexcept;
 
     // assignment from std::string/char* (write)
-    MutexString& operator=(const std::string& rhs);
-    MutexString& operator=(const char* rhs);
+    mutex_string& operator=(const std::string& rhs);
+    mutex_string& operator=(const char* rhs);
 
     // comparison (read)
     bool operator==(const std::string& rhs) const;
     bool operator==(const char* rhs) const;
     bool operator!=(const std::string& rhs) const { return !(*this == rhs); }
     bool operator!=(const char* rhs) const { return !(*this == rhs); }
-    friend inline bool operator==(const std::string& lhs, const MutexString& rhs) { return rhs == lhs; }
-    friend inline bool operator==(const char* lhs, const MutexString& rhs) { return rhs == lhs; }
-    friend inline bool operator!=(const std::string& lhs, const MutexString& rhs) { return !(rhs == lhs); }
-    friend inline bool operator!=(const char* lhs, const MutexString& rhs) { return !(rhs == lhs); }
+    friend inline bool operator==(const std::string& lhs, const mutex_string& rhs) { return rhs == lhs; }
+    friend inline bool operator==(const char* lhs, const mutex_string& rhs) { return rhs == lhs; }
+    friend inline bool operator!=(const std::string& lhs, const mutex_string& rhs) { return !(rhs == lhs); }
+    friend inline bool operator!=(const char* lhs, const mutex_string& rhs) { return !(rhs == lhs); }
 
     // ===== capacity/status =====
     std::size_t size() const;
@@ -125,35 +124,35 @@ public:
     void assign(const char* s);
     void assign(std::size_t count, char ch);
 
-    // append (chained: returns MutexString&)
-    MutexString& append(const std::string& s);
-    MutexString& append(const char* s);
-    MutexString& append(std::size_t count, char ch);
+    // append (chained: returns mutex_string&)
+    mutex_string& append(const std::string& s);
+    mutex_string& append(const char* s);
+    mutex_string& append(std::size_t count, char ch);
 
     // operator+=
-    MutexString& operator+=(const std::string& s);
-    MutexString& operator+=(const char* s);
-    MutexString& operator+=(char ch);
+    mutex_string& operator+=(const std::string& s);
+    mutex_string& operator+=(const char* s);
+    mutex_string& operator+=(char ch);
 
     // insert
-    MutexString& insert(std::size_t pos, const std::string& s);
-    MutexString& insert(std::size_t pos, const char* s);
-    MutexString& insert(std::size_t pos, std::size_t count, char ch);
+    mutex_string& insert(std::size_t pos, const std::string& s);
+    mutex_string& insert(std::size_t pos, const char* s);
+    mutex_string& insert(std::size_t pos, std::size_t count, char ch);
 
     // erase
-    MutexString& erase(std::size_t pos = 0, std::size_t count = std::string::npos);
+    mutex_string& erase(std::size_t pos = 0, std::size_t count = std::string::npos);
 
     // replace
-    MutexString& replace(std::size_t pos, std::size_t count, const std::string& s);
-    MutexString& replace(std::size_t pos, std::size_t count, const char* s);
-    MutexString& replace(std::size_t pos, std::size_t count, std::size_t n, char ch);
+    mutex_string& replace(std::size_t pos, std::size_t count, const std::string& s);
+    mutex_string& replace(std::size_t pos, std::size_t count, const char* s);
+    mutex_string& replace(std::size_t pos, std::size_t count, std::size_t n, char ch);
 
     // resize
     void resize(std::size_t n);
     void resize(std::size_t n, char ch);
 
     // swap
-    void swap(MutexString& other);          // between MutexStrings
+    void swap(mutex_string& other);          // between mutex_strings
     void swap(std::string& other_str);      // between internal string and std::string
 
     // ===== string operations =====
@@ -233,15 +232,15 @@ protected:
 
 #ifndef NDEBUG
     // debug-only reentrancy check helper/mark
-    static thread_local const MutexString* tls_owner_;
+    static thread_local const mutex_string* tls_owner_;
     void assert_not_reentrant_() const {
         // if already inside this object's lock context in the same thread no reentrancy
         assert(tls_owner_ != this && "reentrancy detected: do not call ms.* again inside with()/guard() scope. "
                                      "Inside with(), only manipulate the provided std::string(s).");
     }
     struct ReentrancyMark {
-        const MutexString* prev;
-        ReentrancyMark(const MutexString* self) : prev(tls_owner_) {
+        const mutex_string* prev;
+        ReentrancyMark(const mutex_string* self) : prev(tls_owner_) {
             // even if another object is marked, only prevent reentrancy for the same object
             assert(tls_owner_ != self && "no reentrancy for same object");
             tls_owner_ = self;
@@ -256,9 +255,9 @@ protected:
 };
 
 // non-member swap (ADL target)
-inline void swap(MutexString& a, MutexString& b) { a.swap(b); }
+inline void swap(mutex_string& a, mutex_string& b) { a.swap(b); }
 
 } // namespace j2
 
 // alias: to use shortly in global scope (e.g., jstr ms = "start";)
-using jstr = j2::MutexString;
+// using jstr = j2::mutex_string;
