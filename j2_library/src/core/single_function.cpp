@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <cctype>
 
-#include "j2_library/core/SingleFunction.hpp"
+#include "j2_library/core/single_function.hpp"
 
 namespace j2
 {
