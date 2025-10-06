@@ -15,6 +15,9 @@ if(NOT _J2_CMAKE_FOUND)
  message(FATAL_ERROR "[j2_hello] Mandatory module j2_cmake.cmake not found, please check CMAKE_MODULE_PATH settings.")
 endif()
 
+# target_include_directories(j2_hello PRIVATE ${CMAKE_SOURCE_DIR}/../../j2_library/include)
+# target_link_directories(j2_hello PRIVATE ${CMAKE_SOURCE_DIR}/../../j2_library/build)
+
 # 실행 프로그램 설정
 add_executable(j2_hello
   main.cpp
