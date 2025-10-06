@@ -194,8 +194,7 @@ TEST(MutexString, Jstr) {
     //-----------------------------------------------------------
     // reserve/capacity/shrink_to_fit
 
-    // capacity()는 j2::MutexString 클래스에서, 내부적으로 사용하는 std::string 객체가
-    // 현재 얼마나 많은 문자를 추가적인 메모리 할당 없이 저장할 수 있는지를 반환하는 함수입니다.
+    // In the j2::MutexString class, capacity() is a function that returns how many characters an internally used std::string object can currently store without additional memory allocation.
     auto cap0 = ms.capacity();
     EXPECT_EQ(cap0, 15);
 
@@ -204,9 +203,9 @@ TEST(MutexString, Jstr) {
 #if defined(_MSC_VER)
     EXPECT_EQ(ms.capacity(), 79); // MSVC: capacity after reserve(64)
 #elif defined(__GNUC__)
-    EXPECT_EQ(ms.capacity(), 64); // GCC: capacity after reserve(64) (실제 값은 환경에 따라 다를 수 있음)
+    EXPECT_EQ(ms.capacity(), 64); // GCC: capacity after reserve(64) (Actual values may vary by environment)
 #else
-    EXPECT_GE(ms.capacity(), 64); // 기타 컴파일러: 최소값만 체크
+    EXPECT_GE(ms.capacity(), 64); // Other Compilers: Check Minimums Only
 #endif
 
     //-----------------------------------------------------------
@@ -288,8 +287,8 @@ TEST(MutexString, Jstr) {
     EXPECT_EQ(ms.compare("(***{start plus more] tail)"), -1);
     EXPECT_EQ(ms.compare(1, 5, std::string("***{")), -1);
 #elif defined(__GNUC__)
-    EXPECT_EQ(ms.compare("(***{start plus more] tail)"), -8); // 실제 g++ 결과
-    EXPECT_EQ(ms.compare(1, 5, std::string("***{")), -8);     // 실제 g++ 결과
+    EXPECT_EQ(ms.compare("(***{start plus more] tail)"), -8); // Actual g++ results
+    EXPECT_EQ(ms.compare(1, 5, std::string("***{")), -8);     // Actual g++ results
 #else
     EXPECT_LT(ms.compare("(***{start plus more] tail)"), 0);
     EXPECT_LT(ms.compare(1, 5, std::string("***{")), 0);
@@ -340,7 +339,7 @@ TEST(MutexString, Jstr) {
 #endif
 
     //-----------------------------------------------------------
-    // swap(std::string&) — safe in single-thread example
+    // swap(std::string&)  safe in single-thread example
     std::string ext = "EXTERNAL";
     ms.swap(ext);
     // std::cout << "after swap(std::string): ms=\"" << ms.str() << "\", ext=\"" << ext << "\"\n";
@@ -380,14 +379,14 @@ TEST(MutexString, Jstr) {
         EXPECT_EQ(g->length(), 29);
         EXPECT_STREQ(g->c_str(), "##(BEGINartplus more] tai)!!!");
 
-        // ⚠ Do not store/return pointer outside guard scope.
+        // Do not store/return pointer outside guard scope.
     }
 
     //-----------------------------------------------------------
     // use with(): perform a batch modification within lock scope
     ms.with( [](std::string& s) {
             s.append(" [WITH]");
-            // ⚠ Calling ms.* again here triggers assert (reentrancy) in debug mode
+            // Calling ms.* again here triggers assert (reentrancy) in debug mode
         }
     );
     // std::cout << "after with(): \"" << ms.str() << "\"\n";
@@ -469,7 +468,7 @@ TEST(MutexString, Atomicity) {
                         c_api_sink(g->c_str()); // note: pointer becomes unsafe after guard is destroyed
                     }
 
-                    // ⚠ The following is caught by assert in debug mode (deadlock prevention):
+                    // The following is caught by assert in debug mode (deadlock prevention):
                     // ms.append("X"); // do not call ms.* again inside with()/guard() scope
                 }
 

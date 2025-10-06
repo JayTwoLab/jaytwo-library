@@ -20,7 +20,7 @@ public:
     // locked view (guard): holds the mutex during lifetime and provides direct access to internal std::string
     class Locked {
     public:
-        // ⚠️ for reentrancy detection, the pointer to owner (protected target object) is also passed
+        // for reentrancy detection, the pointer to owner (protected target object) is also passed
         Locked(std::string& s, std::mutex& m, const MutexString* owner);
         Locked(const std::string& s, std::mutex& m, const MutexString* owner);
         ~Locked(); // release reentrancy mark in debug mode
@@ -37,7 +37,7 @@ public:
         bool owns_lock() const;
 
     protected:
-        // ⚠ protected: block helpers that extract pointer directly from external code (prevent misuse)
+        // protected: block helpers that extract pointer directly from external code (prevent misuse)
         const char* guard_cstr() const;  // == (cs_ ? cs_ : s_)->c_str()
 
         // internal state
@@ -56,7 +56,7 @@ public:
 
     // RAII pointer guard (internal use)
     // - provides get()/operator const char*()
-    // - keeps lock during object lifetime → safe to pass directly as function arguments
+    // - keeps lock during object lifetime safe to pass directly as function arguments
     class CStrGuard {
     public:
         CStrGuard(const std::string& s, std::mutex& m);
@@ -73,7 +73,7 @@ public:
     // ===== constructors/assignments =====
     MutexString() = default;                 // empty string
 
-    // ⬇⬇⬇ explicit removed → allows "j2::MutexString ms = \"start\";" / "jstr ms = \"start\";"
+    // explicit removed allows "j2::MutexString ms = \"start\";" / "jstr ms = \"start\";"
     MutexString(std::string s);
     MutexString(const char* s);
 
@@ -191,7 +191,7 @@ public:
     std::string str() const;
 
     // run lock scope with lambda: with_lock()/with() (short alias)
-    // ⚠️ in debug mode: calling other members of the same object inside with() scope will trigger assert
+    // in debug mode: calling other members of the same object inside with() scope will trigger assert
     template <typename Fn>
     auto with_lock(Fn&& f) -> decltype(std::forward<Fn>(f)(std::declval<std::string&>())) {
 #ifndef NDEBUG
@@ -228,14 +228,14 @@ public:
     [[nodiscard]] Locked guard() const { return synchronize(); }
 
 protected:
-    // ⚠ protected: RAII c_str() helper is not exposed externally (prevent misuse)
+    // protected: RAII c_str() helper is not exposed externally (prevent misuse)
     CStrGuard c_str() const;
 
 #ifndef NDEBUG
     // debug-only reentrancy check helper/mark
     static thread_local const MutexString* tls_owner_;
     void assert_not_reentrant_() const {
-        // if already inside this object's lock context in the same thread → no reentrancy
+        // if already inside this object's lock context in the same thread no reentrancy
         assert(tls_owner_ != this && "reentrancy detected: do not call ms.* again inside with()/guard() scope. "
                                      "Inside with(), only manipulate the provided std::string(s).");
     }
