@@ -219,6 +219,38 @@ cmake -S . -B build -G "Visual Studio 17 2022" -A x64 -DCMAKE_BUILD_TYPE=Release
 cmake --build build --config Release
 ```
 
+- `CMakeSettings.json` 셋팅 (`MSVC`)
+	- `Visual Studio` IDE에서 빌드 구성을 쉽게 전환할 수 있도록 `CMakeSettings.json` 파일을 프로젝트 루트에 생성합니다.
+	- `CMakeSettings.json` 파일은 `git` 등 버전 관리 시스템에 포함시키는 것이 좋습니다.
+	```json
+	{
+	  "configurations": [
+		{
+		  "name": "x64-Debug",
+		  "generator": "Ninja",
+		  "configurationType": "Debug",
+		  "inheritEnvironments": [ "msvc_x64_x64" ],
+		  "buildRoot": "${projectDir}\\out\\build\\${name}",
+		  "installRoot": "${projectDir}\\out\\install\\${name}",
+		  "cmakeCommandArgs": "",
+		  "buildCommandArgs": "",
+		  "ctestCommandArgs": ""
+		},
+		{
+		  "name": "x64-Release",
+		  "generator": "Ninja",
+		  "configurationType": "Release",
+		  "inheritEnvironments": [ "msvc_x64_x64" ],
+		  "buildRoot": "${projectDir}\\out\\build\\${name}",
+		  "installRoot": "${projectDir}\\out\\install\\${name}",
+		  "cmakeCommandArgs": "",
+		  "buildCommandArgs": "",
+		  "ctestCommandArgs": ""
+		}	
+	  ]
+	}
+	```
+
 <br />
 
 ---
