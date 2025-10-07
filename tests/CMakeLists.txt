@@ -13,7 +13,7 @@ project(j2_test
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../j2_library/cmake")
 include(j2_cmake OPTIONAL RESULT_VARIABLE _J2_CMAKE_FOUND)
 if(NOT _J2_CMAKE_FOUND)
-  message(FATAL_ERROR "[j2_test] Mandatory module j2_cmake.cmake not found, please check CMAKE_MODULE_PATH settings.")
+  message(FATAL_ERROR "Mandatory module j2_cmake.cmake not found, please check CMAKE_MODULE_PATH settings.")
 endif()
 
 # 테스트 빌드 설정

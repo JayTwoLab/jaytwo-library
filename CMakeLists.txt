@@ -18,6 +18,7 @@ option(BUILD_EXAMPLES "예제를 빌드합니다." ON)
 # cmake -DBUILD_EXAMPLES=OFF 를 하면 예제 빌드하지 않음.
 if (BUILD_EXAMPLES)
   add_subdirectory(examples/hello) # examples/hello/CMakeLists.txt
+  add_subdirectory(hello-template) # hello-template/CMakeLists.txt
 endif()
 
 # -------------------------

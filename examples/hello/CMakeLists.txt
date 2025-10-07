@@ -12,11 +12,8 @@ project(j2_hello
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../j2_library/cmake") 
 include(j2_cmake OPTIONAL RESULT_VARIABLE _J2_CMAKE_FOUND)
 if(NOT _J2_CMAKE_FOUND)
- message(FATAL_ERROR "[j2_hello] Mandatory module j2_cmake.cmake not found, please check CMAKE_MODULE_PATH settings.")
+  message(FATAL_ERROR "Mandatory module j2_cmake.cmake not found, please check CMAKE_MODULE_PATH settings.")
 endif()
-
-# target_include_directories(j2_hello PRIVATE ${CMAKE_SOURCE_DIR}/../../j2_library/include)
-# target_link_directories(j2_hello PRIVATE ${CMAKE_SOURCE_DIR}/../../j2_library/build)
 
 # 실행 프로그램 설정
 add_executable(j2_hello
@@ -25,7 +22,8 @@ add_executable(j2_hello
 
 # j2_library 라이브러리 링크
 target_link_libraries(j2_hello PRIVATE
-  j2_library::j2_library 
+  j2_library  # j2_library::j2_library 
 )
+
 
  
