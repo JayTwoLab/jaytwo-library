@@ -16,32 +16,28 @@ if(NOT _J2_CMAKE_FOUND)
 endif()
 
 # 실행 프로그램 설정
-add_executable(${PROJECT_NAME}
-  main.cpp
+file(GLOB SRC_FILES CONFIGURE_DEPENDS
+  "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
+  "${CMAKE_CURRENT_SOURCE_DIR}/*.c"
 )
+add_executable(${PROJECT_NAME} ${SRC_FILES})
 
-
-# j2_library 인클루드 경로
+# NOTE: target_... 은 add_executable 이후에 설정해야 함. 
+# j2_library 인클루드 경로. 
 target_include_directories(j2_hello PRIVATE
   "${CMAKE_CURRENT_SOURCE_DIR}"
   "${CMAKE_CURRENT_SOURCE_DIR}/../j2_library/include"
 )
 
+# version.hpp 파일 인클루드 경로.
 # NOTICE: version.hpp 파일은 j2_library 프로젝트에서 자동 생성됨. 해당 경로도 인클루드 경로에 추가해야 함.
-
-#   $<$<CONFIG:Debug>:${CMAKE_CURRENT_SOURCE_DIR}/../../out/build/x64-Debug/j2_library/generated/j2_library>
-#   $<$<CONFIG:Release>:${CMAKE_CURRENT_SOURCE_DIR}/../../out/build/x64-Release/j2_library/generated/j2_library>
-
-# ${CMAKE_SOURCE_DIR}/build/j2_library/generated/j2_library/version.hpp 
+target_include_directories(j2_hello PRIVATE
+  $<$<CONFIG:Debug>:${CMAKE_CURRENT_SOURCE_DIR}/out/build/x64-Debug/generated/j2_library>
+  $<$<CONFIG:Release>:${CMAKE_CURRENT_SOURCE_DIR}/out/build/x64-Release/generated/j2_library>
+)
 
 # j2_library 라이브러리 링크 경로
 if(MSVC)
-    target_link_directories(j2_hello PRIVATE
-      $<$<CONFIG:Debug>:${CMAKE_CURRENT_SOURCE_DIR}/../out/build/x64-Debug/j2_library>
-      $<$<CONFIG:Debug>:${CMAKE_CURRENT_SOURCE_DIR}/../j2_library/out/build/x64-Debug>
-      $<$<CONFIG:Release>:${CMAKE_CURRENT_SOURCE_DIR}/../out/build/x64-Release/j2_library>
-      $<$<CONFIG:Release>:${CMAKE_CURRENT_SOURCE_DIR}/../j2_library/out/build/x64-Release>
-    )
 
     if(CMAKE_BUILD_TYPE STREQUAL "Debug")
       # Lib Dir #1 (최상위 프로젝트 빌드 폴더)
@@ -52,6 +48,11 @@ if(MSVC)
       set(LIB_RELATIVE_PATH_2 "${CMAKE_CURRENT_SOURCE_DIR}/../j2_library/out/build/x64-Debug")
       get_filename_component(LIB_ABSOLUTE_PATH_2 "${LIB_RELATIVE_PATH_2}" ABSOLUTE)
       message(STATUS "Resolved absolute library path = ${LIB_ABSOLUTE_PATH_2}")
+
+      target_link_directories(j2_hello PRIVATE
+        $<$<CONFIG:Debug>:${LIB_ABSOLUTE_PATH_1}>
+        $<$<CONFIG:Debug>:${LIB_ABSOLUTE_PATH_2}>
+      )
     endif()
 
     if(CMAKE_BUILD_TYPE STREQUAL "Release")
@@ -63,13 +64,14 @@ if(MSVC)
       set(LIB_RELATIVE_PATH_4 "${CMAKE_CURRENT_SOURCE_DIR}/../j2_library/out/build/x64-Release")
       get_filename_component(LIB_ABSOLUTE_PATH_4 "${LIB_RELATIVE_PATH_4}" ABSOLUTE)
       message(STATUS "Resolved absolute library path = ${LIB_ABSOLUTE_PATH_4}")
+
+      target_link_directories(j2_hello PRIVATE
+        $<$<CONFIG:Release>:${LIB_ABSOLUTE_PATH_3}>
+        $<$<CONFIG:Release>:${LIB_ABSOLUTE_PATH_4}>
+      )
     endif()
 
 elseif(MINGW)
-    target_link_directories(j2_hello PRIVATE
-        ${CMAKE_SOURCE_DIR}/build/j2_library
-        ${CMAKE_CURRENT_SOURCE_DIR}/../j2_library/build
-    )
 
     # Lib Dir #1
     set(LIB_RELATIVE_PATH_1 "${CMAKE_SOURCE_DIR}/build/j2_library")
@@ -79,12 +81,13 @@ elseif(MINGW)
     set(LIB_RELATIVE_PATH_2 "${CMAKE_CURRENT_SOURCE_DIR}/../j2_library/build")
     get_filename_component(LIB_ABSOLUTE_PATH_2 "${LIB_RELATIVE_PATH_2}" ABSOLUTE)
     message(STATUS "Resolved absolute library path = ${LIB_ABSOLUTE_PATH_2}")
+
+    target_link_directories(j2_hello PRIVATE
+        ${LIB_ABSOLUTE_PATH_1}
+        ${LIB_ABSOLUTE_PATH_2}
+    )
 
 else() # Linux gcc
-    target_link_directories(j2_hello PRIVATE
-        ${CMAKE_SOURCE_DIR}/build/j2_library
-        ${CMAKE_CURRENT_SOURCE_DIR}/../j2_library/build
-    )
 
     # Lib Dir #1
     set(LIB_RELATIVE_PATH_1 "${CMAKE_SOURCE_DIR}/build/j2_library")
@@ -94,6 +97,11 @@ else() # Linux gcc
     set(LIB_RELATIVE_PATH_2 "${CMAKE_CURRENT_SOURCE_DIR}/../j2_library/build")
     get_filename_component(LIB_ABSOLUTE_PATH_2 "${LIB_RELATIVE_PATH_2}" ABSOLUTE)
     message(STATUS "Resolved absolute library path = ${LIB_ABSOLUTE_PATH_2}")
+
+    target_link_directories(j2_hello PRIVATE
+        ${LIB_ABSOLUTE_PATH_1}
+        ${LIB_ABSOLUTE_PATH_2}
+    )
 
 endif()
 
