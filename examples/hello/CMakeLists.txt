@@ -16,12 +16,12 @@ if(NOT _J2_CMAKE_FOUND)
 endif()
 
 # 실행 프로그램 설정
-add_executable(j2_hello
+add_executable(${PROJECT_NAME}
   main.cpp
 )
 
 # j2_library 라이브러리 링크
-target_link_libraries(j2_hello PRIVATE
+target_link_libraries(${PROJECT_NAME} PRIVATE
   j2_library  # j2_library::j2_library 
 )
 

@@ -24,14 +24,14 @@ add_executable(${PROJECT_NAME} ${SRC_FILES})
 
 # NOTE: target_... 은 add_executable 이후에 설정해야 함. 
 # j2_library 인클루드 경로. 
-target_include_directories(j2_hello PRIVATE
+target_include_directories(${PROJECT_NAME} PRIVATE
   "${CMAKE_CURRENT_SOURCE_DIR}"
   "${CMAKE_CURRENT_SOURCE_DIR}/../j2_library/include"
 )
 
 # version.hpp 파일 인클루드 경로.
 # NOTICE: version.hpp 파일은 j2_library 프로젝트에서 자동 생성됨. 해당 경로도 인클루드 경로에 추가해야 함.
-target_include_directories(j2_hello PRIVATE
+target_include_directories(${PROJECT_NAME} PRIVATE
   $<$<CONFIG:Debug>:${CMAKE_CURRENT_SOURCE_DIR}/out/build/x64-Debug/generated/j2_library>
   $<$<CONFIG:Release>:${CMAKE_CURRENT_SOURCE_DIR}/out/build/x64-Release/generated/j2_library>
 )
@@ -49,7 +49,7 @@ if(MSVC)
       get_filename_component(LIB_ABSOLUTE_PATH_2 "${LIB_RELATIVE_PATH_2}" ABSOLUTE)
       message(STATUS "Resolved absolute library path = ${LIB_ABSOLUTE_PATH_2}")
 
-      target_link_directories(j2_hello PRIVATE
+      target_link_directories(${PROJECT_NAME} PRIVATE
         $<$<CONFIG:Debug>:${LIB_ABSOLUTE_PATH_1}>
         $<$<CONFIG:Debug>:${LIB_ABSOLUTE_PATH_2}>
       )
@@ -65,7 +65,7 @@ if(MSVC)
       get_filename_component(LIB_ABSOLUTE_PATH_4 "${LIB_RELATIVE_PATH_4}" ABSOLUTE)
       message(STATUS "Resolved absolute library path = ${LIB_ABSOLUTE_PATH_4}")
 
-      target_link_directories(j2_hello PRIVATE
+      target_link_directories(${PROJECT_NAME} PRIVATE
         $<$<CONFIG:Release>:${LIB_ABSOLUTE_PATH_3}>
         $<$<CONFIG:Release>:${LIB_ABSOLUTE_PATH_4}>
       )
@@ -82,7 +82,7 @@ elseif(MINGW)
     get_filename_component(LIB_ABSOLUTE_PATH_2 "${LIB_RELATIVE_PATH_2}" ABSOLUTE)
     message(STATUS "Resolved absolute library path = ${LIB_ABSOLUTE_PATH_2}")
 
-    target_link_directories(j2_hello PRIVATE
+    target_link_directories(${PROJECT_NAME} PRIVATE
         ${LIB_ABSOLUTE_PATH_1}
         ${LIB_ABSOLUTE_PATH_2}
     )
@@ -98,7 +98,7 @@ else() # Linux gcc
     get_filename_component(LIB_ABSOLUTE_PATH_2 "${LIB_RELATIVE_PATH_2}" ABSOLUTE)
     message(STATUS "Resolved absolute library path = ${LIB_ABSOLUTE_PATH_2}")
 
-    target_link_directories(j2_hello PRIVATE
+    target_link_directories(${PROJECT_NAME} PRIVATE
         ${LIB_ABSOLUTE_PATH_1}
         ${LIB_ABSOLUTE_PATH_2}
     )
