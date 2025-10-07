@@ -32,15 +32,25 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 # version.hpp 파일 인클루드 경로.
 # NOTICE: version.hpp 파일은 j2_library 프로젝트에서 자동 생성됨. 해당 경로도 인클루드 경로에 추가해야 함.
 if(MSVC)
+
    target_include_directories(${PROJECT_NAME} PRIVATE
-     $<$<CONFIG:Debug>:${CMAKE_CURRENT_SOURCE_DIR}/out/build/x64-Debug/generated/j2_library>
-     $<$<CONFIG:Release>:${CMAKE_CURRENT_SOURCE_DIR}/out/build/x64-Release/generated/j2_library>
+     $<$<CONFIG:Debug>:${CMAKE_CURRENT_SOURCE_DIR}/../out/build/x64-Debug/j2_library/generated>
+     $<$<CONFIG:Release>:${CMAKE_CURRENT_SOURCE_DIR}/../out/build/x64-Release/j2_library/generated>
    )
 
 elseif(MINGW)
 
+  target_include_directories(${PROJECT_NAME} PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}/../build/j2_library/generated"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../j2_library/build/generated"
+  )
+
 else() # Linux gcc
 
+  target_include_directories(${PROJECT_NAME} PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}/../build/j2_library/generated"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../j2_library/build/generated"
+  )
 
 endif()
 
