@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.26)
 project(j2_hello_template LANGUAGES CXX)
 
 # j2_library 라이브러리를 같은 소스 트리에서 빌드
-add_subdirectory(${CMAKE_SOURCE_DIR}/../j2_library ${CMAKE_BINARY_DIR}/j2_library_build)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../j2_library ${CMAKE_CURRENT_BINARY_DIR}/j2_library_build)
 ##
 ## NOTE: 빌드 동작 방식
 ##

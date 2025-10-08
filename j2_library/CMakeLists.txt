@@ -1,3 +1,4 @@
+# j2_library/CMakeLists.txt
 cmake_minimum_required(VERSION 3.26)
 
 # -------------------------
@@ -10,6 +11,13 @@ project(j2_library
 # 이 서브프로젝트는 단독으로도 동작해야 하므로 project() 선언을 포함합니다.
 # 프로젝트 VERSION은 주로 설치/패키징에 사용됩니다.
 # cmake 파일에서 VERSION을 설정하면 헤더 파일(version.hpp)에 자동으로 반영됩니다.
+
+# --- 중복 포함 가드: 이미 j2_library 타깃이 존재하면 재정의/재설치 로직을 건너뜁니다.
+if (TARGET j2_library OR TARGET j2_library::j2_library)
+  message(STATUS "[j2_library] Target already exists; skip duplicate definition.")
+  return()
+endif()
+
 
 # -------------------------
 # C++ 표준 설정 (예: 17, 20, 23)
