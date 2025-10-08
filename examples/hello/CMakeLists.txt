@@ -20,6 +20,11 @@ add_executable(${PROJECT_NAME}
   main.cpp
 )
 
+# 인클루드 경로 설정
+target_include_directories(${PROJECT_NAME} PRIVATE
+  "${CMAKE_CURRENT_SOURCE_DIR}"
+)
+
 # j2_library 라이브러리 링크
 target_link_libraries(${PROJECT_NAME} PRIVATE
   j2_library  # j2_library::j2_library 

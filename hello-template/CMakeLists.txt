@@ -22,41 +22,34 @@ file(GLOB SRC_FILES CONFIGURE_DEPENDS
 )
 add_executable(${PROJECT_NAME} ${SRC_FILES})
 
+# j2_library 인클루드 경로.
+# NOTE: j2_library 라이브러리를 설치하지 않고 인클루드하는 경우, 상대 경로로 지정해야 함.
 # NOTE: target_... 은 add_executable 이후에 설정해야 함. 
-# j2_library 인클루드 경로. 
 target_include_directories(${PROJECT_NAME} PRIVATE
-  "${CMAKE_CURRENT_SOURCE_DIR}"
   "${CMAKE_CURRENT_SOURCE_DIR}/../j2_library/include"
 )
 
 # version.hpp 파일 인클루드 경로.
 # NOTICE: version.hpp 파일은 j2_library 프로젝트에서 자동 생성됨. 해당 경로도 인클루드 경로에 추가해야 함.
 if(MSVC)
-
    target_include_directories(${PROJECT_NAME} PRIVATE
      $<$<CONFIG:Debug>:${CMAKE_CURRENT_SOURCE_DIR}/../out/build/x64-Debug/j2_library/generated>
      $<$<CONFIG:Release>:${CMAKE_CURRENT_SOURCE_DIR}/../out/build/x64-Release/j2_library/generated>
    )
-
 elseif(MINGW)
-
   target_include_directories(${PROJECT_NAME} PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../build/j2_library/generated"
     "${CMAKE_CURRENT_SOURCE_DIR}/../j2_library/build/generated"
   )
-
 else() # Linux gcc
-
   target_include_directories(${PROJECT_NAME} PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../build/j2_library/generated"
     "${CMAKE_CURRENT_SOURCE_DIR}/../j2_library/build/generated"
   )
-
 endif()
 
 # j2_library 라이브러리 링크 경로
 if(MSVC)
-
     if(CMAKE_BUILD_TYPE STREQUAL "Debug")
       # Lib Dir #1 (최상위 프로젝트 빌드 폴더)
       set(LIB_RELATIVE_PATH_1 "${CMAKE_CURRENT_SOURCE_DIR}/../out/build/x64-Debug/j2_library")
@@ -88,9 +81,7 @@ if(MSVC)
         $<$<CONFIG:Release>:${LIB_ABSOLUTE_PATH_4}>
       )
     endif()
-
 elseif(MINGW)
-
     # Lib Dir #1
     set(LIB_RELATIVE_PATH_1 "${CMAKE_SOURCE_DIR}/build/j2_library")
     get_filename_component(LIB_ABSOLUTE_PATH_1 "${LIB_RELATIVE_PATH_1}" ABSOLUTE)
@@ -104,9 +95,7 @@ elseif(MINGW)
         ${LIB_ABSOLUTE_PATH_1}
         ${LIB_ABSOLUTE_PATH_2}
     )
-
 else() # Linux gcc
-
     # Lib Dir #1
     set(LIB_RELATIVE_PATH_1 "${CMAKE_SOURCE_DIR}/build/j2_library")
     get_filename_component(LIB_ABSOLUTE_PATH_1 "${LIB_RELATIVE_PATH_1}" ABSOLUTE)
@@ -120,7 +109,6 @@ else() # Linux gcc
         ${LIB_ABSOLUTE_PATH_1}
         ${LIB_ABSOLUTE_PATH_2}
     )
-
 endif()
 
 # j2_library 라이브러리 링크

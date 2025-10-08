@@ -5,7 +5,7 @@
 #include <gtest/gtest.h>
 #include "j2_library/j2_library.hpp"
 
-using jstr = j2::mutex_string; // alias for easier usage
+using jstr = j2::core::mutex_string; // alias for easier usage
 
 // Google Test framework
 // TEST(Test Suite Name, Test Name)
@@ -438,7 +438,7 @@ TEST(mutex_string, Atomicity) {
     // - safe usage: (1) snapshot copy ms.str()
     //               (2) use std::string API within lock guard scope: auto g=ms.guard(); g->c_str();
 
-    j2::mutex_string ms("start"); // same as jstr ms("start");
+    jstr ms("start"); // same as jstr ms("start");
 
     auto writer = [&] {
             std::mt19937 rng(std::random_device{}());

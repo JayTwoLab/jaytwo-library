@@ -2,13 +2,13 @@
 # 전역 범위(Global scope) 에서 중복 include를 막습니다.
 include_guard(GLOBAL)
 
-####################################
+#########################################
 # MSVC 런타임 선택 정책 활성화
 if (MSVC)
   cmake_policy(SET CMP0091 NEW)
 endif()
 
-####################################
+#########################################
 # MSVC 전역 정적 CRT 강제(/MT, /MTd)
 if (MSVC)
   set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>" CACHE STRING "" FORCE)

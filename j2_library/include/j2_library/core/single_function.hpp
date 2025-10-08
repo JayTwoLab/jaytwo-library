@@ -1,4 +1,7 @@
 #pragma once
+//
+// NOTE: Do not use non-English commnets in public header files for character encoding compatibility.
+//
 
 #include <algorithm>
 #include <cctype>
@@ -8,7 +11,7 @@
 
 #include "j2_library/export.hpp" // For J2LIB_API macro definition
 
-namespace j2 
+namespace j2::core
 {
     // NOTE: Public API: J2LIB_API is set for static/sharing.
 
@@ -24,11 +27,8 @@ namespace j2
     // Splits the input string by the given delimiter and returns a vector of substrings.
     J2LIB_API std::vector<std::string> split(std::string_view s, char delim);
 
+    // TODO: Add more single-function utilities as needed.
 
-
-
-
-
-} // namespace j2
+} // namespace 
 
 

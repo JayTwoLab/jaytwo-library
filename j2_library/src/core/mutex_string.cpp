@@ -1,7 +1,8 @@
 
 #include "j2_library/core/mutex_string.hpp"
 
-namespace j2 {
+namespace j2::core
+{
 
 #ifndef NDEBUG
 thread_local const mutex_string* mutex_string::tls_owner_ = nullptr;

@@ -1,4 +1,7 @@
 #pragma once
+//
+// NOTE: Do not use non-English commnets in public header files for character encoding compatibility.
+//
 
 #include <string>
 #include <mutex>
@@ -8,7 +11,8 @@
 
 #include "j2_library/export.hpp" // for J2LIB_API macro definition
 
-namespace j2 {
+namespace j2::core
+{
 
 // thread-safe string wrapper
 // - only members are std::string and std::mutex

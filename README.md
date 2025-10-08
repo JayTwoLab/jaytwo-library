@@ -41,9 +41,9 @@
 
 ---
 
-#### 1.1. `vcpkg` 설치 방식
+#### 1.1. `vcpkg` 를 설치하여 라이브러리를 사용하는 방법
 
-##### 1.1.1. `Visual Studio`
+##### 1.1.1. `Visual Studio` 에서 `vcpkg` 를 설치하여 라이브러리를 사용하는 방법
 
 - `vcpkg` 설치
     - `git clone https://github.com/microsoft/vcpkg.git`
@@ -51,17 +51,20 @@
     - 명령을 실행하여 `vcpkg.exe`를 생성
 	    - `cd vcpkg`
 	    - `.\bootstrap-vcpkg.bat`
-	- `vcpkg` 설치 경로를 윈도 횐경 변수 `PATH`에 추가
-	- `vcpkg` 설치 경로를 윈도 횐경 변수 `VCPKG_ROOT`에 추가
-- `Google Test` 설치
-    - `vcpkg install gtest:x64-windows-static --vcpkg-root=C:\Users\j2\vcpkg`
-	   - 설치 시 vcpkg 경로를 지정하지 않으면 `CMake`에서 `vcpkg`를 찾지 못하는 경우가 있음.
+	- `vcpkg` 설치 경로를 윈도 횐경 변수 `PATH`에 추가할 것
+	- `vcpkg` 설치 경로를 윈도 횐경 변수 `VCPKG_ROOT`에 추가할 것
+- `vcpkg` 로 종속성있는 패키지 설치
+    - `Google Test` 설치
+       - `vcpkg install gtest:x64-windows-static --vcpkg-root=C:\Users\j2\vcpkg`
+            - `x64-windows` : `Visual Studio` 64비트
+			- `static` : 정적 라이브러리 (`DLL` 사용 않함)
+	   - 설치 시 `vcpkg` 경로를 지정하지 않으면 `CMake`에서 `vcpkg`를 찾지 못하는 경우가 있음.
 
 <br />
 
 ---
 
-##### 1.1.2. `MingW` (`+ Qt Creator`)
+##### 1.1.2. `MingW` 에서 `vcpkg` 를 설치하여 라이브러리를 사용하는 방법
 
 - `vcpkg` 설치
     - `git clone https://github.com/microsoft/vcpkg.git`
@@ -69,19 +72,22 @@
     - 명령을 실행하여 `vcpkg.exe`를 생성
 	    - `cd vcpkg`
 	    - `.\bootstrap-vcpkg.bat`
-	- `vcpkg` 설치 경로를 `PATH`에 추가
-    - `vcpkg` 설치 경로를 윈도 횐경 변수 `VCPKG_ROOT`에 추가 
-- `Google Test` 설치
-	- `vcpkg install gtest:x64-mingw-static --vcpkg-root=C:\Users\j2\vcpkg` 
-	   - 설치 시 vcpkg 경로를 지정하지 않으면 `CMake`에서 `vcpkg`를 찾지 못하는 경우가 있음.
+	- `vcpkg` 설치 경로를 `PATH`에 추가할 것
+    - `vcpkg` 설치 경로를 윈도 횐경 변수 `VCPKG_ROOT`에 추가할 것
+- `vcpkg` 로 종속성있는 패키지 설치
+    - `Google Test` 설치
+	   - `vcpkg install gtest:x64-mingw-static --vcpkg-root=C:\Users\j2\vcpkg`
+            - `x64-mingw` : `MingW` 64비트
+			- `static` : 정적 라이브러리 (DLL 사용 않함)
+	   - 설치 시 `vcpkg` 경로를 지정하지 않으면 `CMake`에서 `vcpkg`를 찾지 못하는 경우가 있음.
 		
 <br />
 
 ---
 
-#### 1.2. `non-vcpkg` 방식으로 설치
+#### 1.2. `vcpkg` 를 설치하지 않는 방식
 
-##### 1.2.1. `Linux` (non-vcpkg)
+##### 1.2.1. `Linux` (`non-vcpkg`)
 
 - 리눅스에서도 `vcpkg`로 설치 가능하지만, 패키지 관리자를 이용하는 것이 더 편리함.
 - `Google Test` 설치
@@ -99,7 +105,7 @@
 
 ---
 
-##### 2.1.1. `Windows` (`MSVC`, `Visual Studio`)
+##### 2.1.1. `Visual Studio` 에서 라이브러리 빌드 및 설치
 
 ```cmd
 @REM 라이브러리 경로로 이동
@@ -128,7 +134,7 @@ cmake --install build --config Release
 
 ---
 
-##### 2.1.2. `Windows` (`MinGW g++`)
+##### 2.1.2. `MinGW` (`g++`) 에서 라이브러리 빌드 및 설치
 
 ```cmd
 @REM 라이브러리 경로로 이동
@@ -156,7 +162,7 @@ cmake --install build
 
 ---
 
-##### 2.1.3. `Linux` (`g++`)
+##### 2.1.3. `Linux` (`g++`)  에서 라이브러리 빌드 및 설치
 
 ```bash
 # 라이브러리 경로로 이동
@@ -184,11 +190,12 @@ cmake --install build
 <br />
 
 ---
-
  
 #### 2.2. 설치된 라이브러리 사용하기
 
-#### 2.2.1. `Windows` — `MSVC` (`Visual Studio cl.exe`)
+---
+
+#### 2.2.1. `Visual Studio` 에서 설치된 라이브러리 사용하기
 
 ```cmake
 # CMakeLists.txt (MSVC용)
@@ -221,7 +228,6 @@ cmake --build build --config Release
 
 - `CMakeSettings.json` 셋팅 (`MSVC`)
 	- `Visual Studio` IDE에서 빌드 구성을 쉽게 전환할 수 있도록 `CMakeSettings.json` 파일을 프로젝트 루트에 생성합니다.
-	- `CMakeSettings.json` 파일은 `git` 등 버전 관리 시스템에 포함시키는 것이 좋습니다.
 	```json
 	{
 	  "configurations": [
@@ -250,12 +256,13 @@ cmake --build build --config Release
 	  ]
 	}
 	```
-
+	- `CMakeSettings.json` 파일은 `git` 등 버전 관리 시스템에 포함시키는 것이 좋습니다. (`.gitignore` 에 추가하여 관리)
+	
 <br />
 
 ---
 
-#### 2.2.2. `Windows` — `MinGW` `g++`
+#### 2.2.2. `MinGW`(`g++`) 에서 설치된 라이브러리 사용하기
 
 ```cmake
 # CMakeLists.txt (MinGW용)
@@ -287,14 +294,14 @@ cmake --build build
 
 ---
 
-#### 2.2.3. `Linux` — `g++`
+#### 2.2.3. `Linux` (`g++`) 에서 설치된 라이브러리 사용하기
 
 ```cmake
 # CMakeLists.txt (Linux g++용)
 cmake_minimum_required(VERSION 3.26)
 project(j2_app_linux LANGUAGES CXX)
 
-# 설치된 j2_library의 prefix 경로 (예: /opt/j2_library 또는 /usr/local/j2_library)
+# 설치된 j2_library의 prefix 경로 (예: /opt/j2_library 또는 /usr/local/j2_library 등)
 set(j2_library_ROOT "/opt/j2_library" CACHE PATH "Prefix of installed j2_library")
 
 # find_package 경로 힌트
