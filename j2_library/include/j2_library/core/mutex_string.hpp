@@ -1,7 +1,4 @@
 #pragma once
-//
-// NOTE: Do not use non-English commnets in public header files for character encoding compatibility.
-//
 
 #include <string>
 #include <mutex>
