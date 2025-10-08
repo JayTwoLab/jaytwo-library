@@ -286,9 +286,14 @@ TEST(mutex_string, Jstr) {
     // MSVC returns -1 for this comparison
     EXPECT_EQ(ms.compare("(***{start plus more] tail)"), -1);
     EXPECT_EQ(ms.compare(1, 5, std::string("***{")), -1);
-#elif defined(__GNUC__)
-    EXPECT_EQ(ms.compare("(***{start plus more] tail)"), -8); // Actual g++ results
-    EXPECT_EQ(ms.compare(1, 5, std::string("***{")), -8);     // Actual g++ results
+#elif defined(__GNUC__) && defined(__linux__)
+    // Linux GCC
+    EXPECT_EQ(ms.compare("(***{start plus more] tail)"), -8);
+    EXPECT_EQ(ms.compare(1, 5, std::string("***{")), -8);
+#elif defined(__GNUC__) && defined(_WIN32)
+    // Windows GCC (MinGW 등)
+    EXPECT_EQ(ms.compare("(***{start plus more] tail)"), -1);
+    EXPECT_EQ(ms.compare(1, 5, std::string("***{")), -1);
 #else
     EXPECT_LT(ms.compare("(***{start plus more] tail)"), 0);
     EXPECT_LT(ms.compare(1, 5, std::string("***{")), 0);
