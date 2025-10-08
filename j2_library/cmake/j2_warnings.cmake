@@ -1,6 +1,6 @@
 #########################################
-# 전역 범위(Global scope) 에서 중복 include를 막습니다.
-include_guard(GLOBAL)
+# include_guard(GLOBAL) # 전역 범위(Global scope) 에서 중복 include를 막습니다.
+include_guard(DIRECTORY)
 
 ###################################
 # 컴파일러 경고 플래그 설정

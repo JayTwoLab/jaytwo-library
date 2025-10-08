@@ -1,6 +1,6 @@
 #########################################
-# 전역 범위(Global scope) 에서 중복 include를 막습니다.
-include_guard(GLOBAL)
+# include_guard(GLOBAL) # 전역 범위(Global scope) 에서 중복 include를 막습니다.
+include_guard(DIRECTORY)
 
 ###################################
 # vcpkg를 활용하는 공통 플랫폼/컴파일러 감지 및 기본 옵션 적용 모듈

@@ -1,24 +1,13 @@
 # test/CMakeLists.txt
-
 cmake_minimum_required(VERSION 3.26)
 
-# 프로젝트 선언
-project(j2_test
-  VERSION 0.1.0
-  LANGUAGES CXX
-)
+project(j2_test VERSION 0.1.0 LANGUAGES CXX) # 프로젝트 선언
 
-if (MSVC)
-  add_compile_options(/utf-8) # MSVC 컴파일러에서 UTF-8 인코딩 사용
-endif()
+list(PREPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/../j2_library/cmake")
+include(j2_cmake) # j2_cmake 모듈 포함 (필요한 모듈만 선택적으로 포함도 가능)
 
-# [쉽게 사용하는 방법] j2_cmake 모듈 직접 포함
-#  CMAKE_CURRENT_SOURCE_DIR → 현재 처리 중인 CMakeLists.txt 파일이 위치한 디렉토리
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../j2_library/cmake")
-include(j2_cmake OPTIONAL RESULT_VARIABLE _J2_CMAKE_FOUND)
-if(NOT _J2_CMAKE_FOUND)
-  message(FATAL_ERROR "Mandatory module j2_cmake.cmake not found, please check CMAKE_MODULE_PATH settings.")
-endif()
+# j2_library 라이브러리를 같은 소스 트리에서 빌드
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/../j2_library" "${CMAKE_CURRENT_BINARY_DIR}/j2_library_build")
 
 # 테스트 빌드 설정
 include(CTest)
@@ -39,20 +28,16 @@ if (NOT GTest_FOUND)
 endif()
 
 # 실행 프로그램 테스트 타깃 생성
-file(GLOB SRC_FILES CONFIGURE_DEPENDS
-    "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
-)
+file(GLOB SRC_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/*.c")
 add_executable(${PROJECT_NAME} ${SRC_FILES})
 
 # 테스트 타깃에 포함할 디렉토리 설정
-target_include_directories(${PROJECT_NAME}
-  PRIVATE
+target_include_directories(${PROJECT_NAME} PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../j2_library/include"
 )
 
 # 테스트 타깃에 라이브러리 링크
-target_link_libraries(${PROJECT_NAME}
-  PRIVATE
+target_link_libraries(${PROJECT_NAME} PRIVATE
     j2_library::j2_library
     GTest::gtest_main
 )

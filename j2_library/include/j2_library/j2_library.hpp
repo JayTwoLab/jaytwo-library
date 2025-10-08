@@ -2,6 +2,7 @@
 //
 // NOTE: Do not use non-English commnets in public header files for character encoding compatibility.
 //
+// 한글
 
 #include <string>
 #include <string_view>
