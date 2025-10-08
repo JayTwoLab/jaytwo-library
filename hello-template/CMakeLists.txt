@@ -2,6 +2,10 @@
 cmake_minimum_required(VERSION 3.26)
 project(j2_hello_template LANGUAGES CXX)
 
+if (MSVC)
+  add_compile_options(/utf-8) # MSVC 컴파일러에서 UTF-8 인코딩 사용
+endif()
+
 # j2_library 라이브러리를 같은 소스 트리에서 빌드
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../j2_library ${CMAKE_CURRENT_BINARY_DIR}/j2_library_build)
 ##
@@ -31,3 +35,5 @@ target_link_libraries(j2_hello_template PRIVATE j2_library) # j2_library를 링�
 
 target_include_directories(j2_hello_template PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}") # 인클루드 경로
 # target_link_directories(j2_hello_template PRIVATE ...) # 링크 디렉토리 (필요 시)
+
+

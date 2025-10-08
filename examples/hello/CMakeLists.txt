@@ -7,6 +7,10 @@ project(j2_hello
   LANGUAGES CXX
 )
 
+if (MSVC)
+  add_compile_options(/utf-8) # MSVC 컴파일러에서 UTF-8 인코딩 사용
+endif()
+
 # [최상위 프로젝트 사용시 쉽게 사용하는 방법] j2_cmake 모듈 직접 포함
 #  CMAKE_CURRENT_SOURCE_DIR → 현재 처리 중인 CMakeLists.txt 파일이 위치한 디렉토리
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../j2_library/cmake") 

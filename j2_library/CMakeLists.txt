@@ -18,7 +18,6 @@ if (TARGET j2_library OR TARGET j2_library::j2_library)
   return()
 endif()
 
-
 # -------------------------
 # C++ 표준 설정 (예: 17, 20, 23)
 # -------------------------
@@ -34,7 +33,7 @@ set(CMAKE_CXX_EXTENSIONS OFF) # OFF: 컴파일러 확장 기능(GNU/Clang의 gnu
 # j2_cmake 모듈 포함
 # -------------------------
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake") #  CMAKE_CURRENT_SOURCE_DIR → 현재 처리 중인 CMakeLists.txt 파일이 위치한 디렉토리
-include(j2_cmake OPTIONAL RESULT_VARIABLE _J2_CMAKE_FOUND)
+include(j2_cmake OPTIONAL RESULT_VARIABLE _J2_CMAKE_FOUND) # j2_cmake.cmake 모듈 포함
 if(NOT _J2_CMAKE_FOUND)
  message(FATAL_ERROR "[j2_libarary] Mandatory module j2_cmake.cmake not found, please check CMAKE_MODULE_PATH settings.")
 endif()
