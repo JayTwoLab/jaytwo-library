@@ -3,7 +3,7 @@
 
 namespace jc = j2::core;
 
-TEST(to_string, FloatAndDoubleString)
+TEST(to_string, to_string)
 {
     float  f = 10.12f; // set f for 'float' value 10.12
     double d = 10.12;
@@ -16,10 +16,10 @@ TEST(to_string, FloatAndDoubleString)
 }
 
 
-TEST(to_string, DoubleStringEqualities)
+TEST(to_string, is_equal)
 {
-    EXPECT_TRUE(jc::is_equal<double>(10.12, 10.12, 2)); // 10.12 == 10.12
-    EXPECT_TRUE(jc::is_equal<double>(10.12, 10.1,  1)); // 10.1 == 10.1
+    EXPECT_TRUE(jc::is_equal<double>(10.12, 10.12, 2)); // 10.12  == 10.12
+    EXPECT_TRUE(jc::is_equal<double>(10.12, 10.1,  1)); // 10.1   == 10.1
     EXPECT_TRUE(jc::is_equal<double>(10.12, 10.12, 3)); // 10.120 == 10.120
 
     EXPECT_TRUE(jc::is_equal<double>( 10.12, 10.121,  2)); // 10.12 == 10.12 
