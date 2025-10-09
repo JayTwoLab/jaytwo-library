@@ -19,11 +19,19 @@
 // If not, take the alternative action
 #endif
 
+// --  core components --
+
 #include "j2_library/core/single_function.hpp" // For Single Function definitions
 
 #include "j2_library/core/mutex_string.hpp" // For mutex_string class definition
 
 #include "j2_library/core/to_string.hpp" // For to_string and is_equal functions
+
+#include "j2_library/core/to_console_encoding.hpp" // For to_console_encoding function
+
+// -- directory components --
+
+#include "j2_library/directory/directory.hpp" // For directory manipulation functions
 
 // TODO: Add more core components as needed
 

@@ -65,6 +65,7 @@ find_package(Threads REQUIRED)
 file(GLOB SRC_FILES CONFIGURE_DEPENDS
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/core/*.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/directory/*.cpp"
 )
 # src 디렉터리 안의 모든 cpp 파일을 glob으로 수집
 

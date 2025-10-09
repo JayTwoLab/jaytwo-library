@@ -11,7 +11,7 @@ using jstr = j2::core::mutex_string; // alias for easier usage
 // TEST(Test Suite Name, Test Name)
 
 // 1. Constructor and basic state test
-TEST(mutex_string, ConstructorAndBasic) {
+TEST(mutex_string, constructor_and_basic) {
     jstr ms = "start";
     EXPECT_EQ(ms.str(), "start");
     EXPECT_EQ(ms.size(), 5);
@@ -20,7 +20,7 @@ TEST(mutex_string, ConstructorAndBasic) {
 }
 
 // 2. Capacity-related function test
-TEST(mutex_string, CapacityFunctions) {
+TEST(mutex_string, capacity_functions) {
     jstr ms = "start";
     auto cap0 = ms.capacity();
     EXPECT_EQ(cap0, 15);
@@ -43,7 +43,7 @@ TEST(mutex_string, CapacityFunctions) {
 }
 
 // 3. Append/Insert/Modify function test
-TEST(mutex_string, AppendInsertModify) {
+TEST(mutex_string, append_insert_modify) {
     jstr ms = "start";
     ms.append(" plus");
     ms += ' ';
