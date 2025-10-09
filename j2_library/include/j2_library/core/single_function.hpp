@@ -8,28 +8,27 @@
 
 #include "j2_library/export.hpp" // For J2LIB_API macro definition
 
-namespace j2 {
-    namespace core {
+namespace j2::core {
 
-        // NOTE: Public API: J2LIB_API is set for static/sharing.
+// NOTE: Public API: J2LIB_API is set for static/sharing.
 
-        // Adds two integers and returns the result.
-        J2LIB_API int add(int a, int b);
+// Adds two integers and returns the result.
+J2LIB_API int add(int a, int b);
 
-        // Trims leading and trailing whitespace from the input string.
-        J2LIB_API std::string trim(std::string_view s);
+// Trims leading and trailing whitespace from the input string.
+J2LIB_API std::string trim(std::string_view s);
 
-        // Converts the input string to uppercase.
-        J2LIB_API std::string to_upper(std::string_view s);
+// Converts the input string to uppercase.
+J2LIB_API std::string to_upper(std::string_view s);
 
-        // Splits the input string by the given delimiter and returns a vector of substrings.
-        J2LIB_API std::vector<std::string> split(std::string_view s, char delim);
+// Splits the input string by the given delimiter and returns a vector of substrings.
+J2LIB_API std::vector<std::string> split(std::string_view s, char delim);
 
-        // TODO: Add more single-function utilities as needed.
-
+// TODO: Add more single-function utilities as needed.
 
 
 
 
-    } // namespace core
-} // namespace j2
+
+
+} // namespace j2::core

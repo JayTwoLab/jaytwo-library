@@ -23,6 +23,8 @@
 
 #include "j2_library/core/mutex_string.hpp" // For mutex_string class definition
 
+#include "j2_library/core/to_string.hpp" // For to_string and is_equal functions
+
 // TODO: Add more core components as needed
 
 //----------------------------------------------------------------
