@@ -499,3 +499,13 @@ TEST(mutex_string, Atomicity) {
 
 }
 
+TEST(mutex_string, Casting) {
+
+    std::string stds = "standard";
+    jstr ms = stds; // implicit conversion from std::string
+    EXPECT_EQ(ms.str(), "standard");
+
+    std::string stds3 = static_cast<std::string>(ms); // explicit cast to std::string
+    EXPECT_EQ(stds3, "standard");
+
+}

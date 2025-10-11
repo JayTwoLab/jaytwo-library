@@ -95,6 +95,9 @@ public:
     friend inline bool operator!=(const std::string& lhs, const mutex_string& rhs) { return !(rhs == lhs); }
     friend inline bool operator!=(const char* lhs, const mutex_string& rhs) { return !(rhs == lhs); }
 
+    // Usage: std::string s2 = static_cast<std::string>(ms);
+    explicit operator std::string() const { return str(); }
+
     // ===== capacity/status =====
     std::size_t size() const;
     std::size_t length() const;
