@@ -6,7 +6,7 @@
 #include <cstring>
 
 #if defined(_WIN32)
-#define NOMINMAX
+// #define NOMINMAX
 #include <windows.h>
 #else
 #include <locale>

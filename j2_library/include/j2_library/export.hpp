@@ -1,6 +1,9 @@
 #pragma once
 
 // Static/Shared Separation: Empty export/visibility macros during static build.
+//  NOTE: Public API: J2LIB_API is set for static/sharing.
+//  Usage: J2LIB_API before class/function declarations/definitions.
+//  Example: J2LIB_API int add(int a, int b);
 #if defined(J2LIB_STATIC)
   #define J2LIB_API
   #define J2LIB_HIDDEN

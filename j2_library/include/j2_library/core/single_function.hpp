@@ -10,8 +10,6 @@
 
 namespace j2::core {
 
-// NOTE: Public API: J2LIB_API is set for static/sharing.
-
 // Adds two integers and returns the result.
 J2LIB_API int add(int a, int b);
  
