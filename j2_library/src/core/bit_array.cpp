@@ -13,7 +13,7 @@ bit_array::bit_array() {
 // 초기 생성자
 bit_array::bit_array(const std::vector<uint8_t>& bytes, size_t bits) {
     from(bytes, bits);
-}
+}  
 
 //-------------------------------------
 // 초기화
