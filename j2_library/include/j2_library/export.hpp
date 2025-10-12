@@ -1,27 +1,5 @@
 #pragma once
 
-// Static/Shared Separation: Empty export/visibility macros during static build.
-//  NOTE: Public API: J2LIB_API is set for static/sharing.
-#if defined(J2LIB_STATIC)
-  #define J2LIB_API
-  #define J2LIB_HIDDEN
-#elif defined(_WIN32) || defined(__CYGWIN__)
-  #if defined(J2LIB_BUILDING_DLL)
-    #define J2LIB_API __declspec(dllexport)
-  #else
-    #define J2LIB_API __declspec(dllimport)
-  #endif
-  #define J2LIB_HIDDEN
-#else
-  #if __GNUC__ >= 4
-    #define J2LIB_API __attribute__((visibility("default")))
-    #define J2LIB_HIDDEN __attribute__((visibility("hidden")))
-  #else
-    #define J2LIB_API
-    #define J2LIB_HIDDEN
-  #endif
-#endif
-
 // ========================================================================
 // Export/Import 매크로 사용 가이드 (J2LIB_API / J2LIB_HIDDEN)
 //
@@ -126,4 +104,26 @@
 // - 템플릿 함수 (명시적 인스턴스화) → J2LIB_API 필요
 //
 // ========================================================================
+
+// Static/Shared Separation: Empty export/visibility macros during static build.
+//  NOTE: Public API: J2LIB_API is set for static/sharing.
+#if defined(J2LIB_STATIC)
+#define J2LIB_API
+#define J2LIB_HIDDEN
+#elif defined(_WIN32) || defined(__CYGWIN__)
+#if defined(J2LIB_BUILDING_DLL)
+#define J2LIB_API __declspec(dllexport)
+#else
+#define J2LIB_API __declspec(dllimport)
+#endif
+#define J2LIB_HIDDEN
+#else
+#if __GNUC__ >= 4
+#define J2LIB_API __attribute__((visibility("default")))
+#define J2LIB_HIDDEN __attribute__((visibility("hidden")))
+#else
+#define J2LIB_API
+#define J2LIB_HIDDEN
+#endif
+#endif
 
