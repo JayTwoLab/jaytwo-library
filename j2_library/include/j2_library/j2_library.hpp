@@ -41,6 +41,10 @@
 
 #include "j2_library/macro/setter_getter.hpp" // For DEFINE_MEMBER_AND_SETTER macro
 
+// -- thread components --
+
+#include "j2_library/thread/dynamic_thread.hpp" // For DynamicThread class definition
+
 // TODO: Add more core components as needed
 
 //----------------------------------------------------------------
