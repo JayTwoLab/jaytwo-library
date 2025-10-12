@@ -41,6 +41,8 @@
 
 #include "j2_library/macro/setter_getter.hpp" // For DEFINE_MEMBER_AND_SETTER macro
 
+#include "j2_library/macro/try_opt.hpp" // For TRY_OPT and related macros
+
 // -- thread components --
 
 #include "j2_library/thread/dynamic_thread.hpp" // For DynamicThread class definition
