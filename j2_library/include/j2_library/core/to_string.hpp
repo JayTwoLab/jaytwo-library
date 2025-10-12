@@ -8,7 +8,10 @@
 #include <type_traits>
 #include <limits>
 
+#include "j2_library/export.hpp"
+
 namespace j2::core {
+
 
 template <typename T>
 std::string to_string(typename std::enable_if< std::is_floating_point<T>::value, T >::type value)
@@ -19,6 +22,7 @@ std::string to_string(typename std::enable_if< std::is_floating_point<T>::value,
     return ret;
 }
 
+
 template <typename T>
 std::string to_string(typename std::enable_if< std::is_floating_point<T>::value, T >::type value, long long precision)
 {
@@ -27,6 +31,7 @@ std::string to_string(typename std::enable_if< std::is_floating_point<T>::value,
     std::string ret = oss.str();
     return ret;
 }
+
 
 template <typename T>
 bool is_equal(T value1, T value2, long long precision)
@@ -40,6 +45,7 @@ bool is_equal(T value1, T value2, long long precision)
 
     return false;
 }
+
 
 template <typename T>
 bool is_equal(T value1, T value2)

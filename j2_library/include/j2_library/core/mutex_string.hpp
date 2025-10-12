@@ -14,7 +14,7 @@ namespace j2::core {
 // - only members are std::string and std::mutex
 // - std::string API is provided with identical/similar signatures as much as possible
 // - returning pointer/iterator/reference directly is dangerous, so access only via guard() or snapshot (str)
-J2LIB_API class mutex_string {
+class J2LIB_API mutex_string {
 public:
     // locked view (guard): holds the mutex during lifetime and provides direct access to internal std::string
     class Locked {

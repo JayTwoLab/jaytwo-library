@@ -21,7 +21,7 @@
 
 namespace j2::core {
 
-class bit_array {
+class J2LIB_API bit_array {
 
 public:
 

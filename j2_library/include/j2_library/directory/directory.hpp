@@ -41,7 +41,7 @@ namespace j2::directory {
     enum class PermMode { Add, Remove, Exact };
 
     // 옵션
-    struct CreateDirOptions {
+    struct J2LIB_API CreateDirOptions {
         bool make_parents = true;        // 상위(부모) 경로까지 자동 생성 여부
         bool succeed_if_exists = true;   // 이미 존재하면 성공으로 간주 여부
         bool follow_symlinks = false;    // 심볼릭 링크 따라갈지 여부
@@ -54,7 +54,7 @@ namespace j2::directory {
     };
 
     // 결과 객체
-    struct CreateDirResult {
+    struct J2LIB_API CreateDirResult {
         CreatePathCode code = CreatePathCode::UnknownError;
         std::error_code ec;
         std::string message;
@@ -66,7 +66,7 @@ namespace j2::directory {
     };
 
     // 클래스
-    class DirectoryMaker {
+    class J2LIB_API DirectoryMaker {
     public:
         explicit DirectoryMaker(Language lang = Language::Korean,
             CreateDirOptions opt = {}) noexcept;

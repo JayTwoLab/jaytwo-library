@@ -27,7 +27,11 @@
 
 #include "j2_library/core/mutex_string.hpp" // For mutex_string class definition
 
+#include "j2_library/core/overload.hpp" // For overload utility
+
 #include "j2_library/core/single_function.hpp" // For Single Function definitions
+
+#include "j2_library/core/string.hpp" // For string manipulation functions
 
 #include "j2_library/core/to_console_encoding.hpp" // For to_console_encoding function
 
