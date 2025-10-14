@@ -21,6 +21,7 @@
 
 namespace j2::core {
 
+// 비트 배열 클래스
 class J2LIB_API bit_array {
 
 public:
