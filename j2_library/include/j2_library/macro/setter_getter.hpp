@@ -25,11 +25,11 @@ public:                                                                        \
 // 
 // Config cfg;
 // 
-//   cfg.name("Main Window")
+// cfg.name("Main Window")
 //      .width(1280)
 //      .height(720); // Setter 
 // 
-//   std::cout << "Name: " << cfg.name() << "\n"; // Getter 
-//   std::cout << "Width: " << cfg.width() << "\n";
-//   std::cout << "Fullscreen: " << std::boolalpha << cfg.fullscreen() << "\n";
+// std::cout << "Name: " << cfg.name() << "\n"; // Getter 
+// std::cout << "Width: " << cfg.width() << "\n";
+// std::cout << "Fullscreen: " << std::boolalpha << cfg.fullscreen() << "\n";
 // 
