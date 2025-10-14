@@ -37,6 +37,7 @@ cmake -S .. -B build -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INS
 
 # 빌드
 cmake --build build
+# VS 명령어로 직접 빌드하는 경우, devenv ***.sln /build "Release|x64" 
 
 # 설치
 cmake --install build
