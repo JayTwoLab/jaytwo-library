@@ -10,6 +10,7 @@ include(j2_utf8) # j2_utf8.cmake 모듈 포함
 # MSVC 런타임 선택 정책 활성화
 if (MSVC)
   cmake_policy(SET CMP0091 NEW)
+  add_compile_options(/wd4251)
 endif()
 
 #########################################
