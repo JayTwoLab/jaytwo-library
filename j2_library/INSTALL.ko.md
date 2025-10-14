@@ -11,11 +11,12 @@ cd build
 
 # cmake 실행 (릴리즈 빌드, 설치 경로 지정)
 cmake -S .. -B build -G "Visual Studio 17 2022" -A x64 -DCMAKE_BUILD_TYPE=Release  -DCMAKE_INSTALL_PREFIX="C:/install/j2_library"
+# -DBUILD_SHARED_LIBS=ON 옵션을 주면 DLL 로 빌드됨
 
-# 빌드 (Release)
+# 빌드. 'build' 경로에 릴리즈 빌드함
 cmake --build build --config Release
 
-# 설치
+# 설치. 'build' 경로에 릴리즈 빌드로 설치함. 
 cmake --install build --config Release
 ```
 
@@ -32,6 +33,7 @@ cd build
 
 # cmake 실행 (릴리즈 빌드, 설치 경로 지정)
 cmake -S .. -B build -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="C:/mingw-install/j2_library"
+# -DBUILD_SHARED_LIBS=ON 옵션을 주면 DLL 로 빌드됨
 
 # 빌드
 cmake --build build
@@ -53,6 +55,7 @@ cd build
 
 # cmake 실행 (릴리즈 빌드, 설치 경로 지정)
 cmake -S .. -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="/home/j2/workspace/dev/lib"
+# -DBUILD_SHARED_LIBS=ON 옵션을 주면 so(shared object) 로 빌드됨
 
 # 빌드 (cpu 코어 수 만큼 병렬 빌드)
 cmake --build build -j$(nproc)
