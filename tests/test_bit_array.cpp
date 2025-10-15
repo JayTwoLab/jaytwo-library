@@ -22,7 +22,7 @@
 #include <cstdint>
 #include <vector>
 #include <string>
-
+ 
 // 프로젝트의 실제 경로로 수정하세요.
 #include "j2_library/core/bit_array.hpp"
 

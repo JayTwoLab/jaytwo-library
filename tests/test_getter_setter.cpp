@@ -8,7 +8,7 @@ struct TestConfig {
     DEFINE_SETTER_GETTER(int, width)
     DEFINE_SETTER_GETTER(int, height)
 };
-
+ 
 // Test Suite: GetterSetter
 TEST(GetterSetter, DefaultInitialization) {
     TestConfig cfg;

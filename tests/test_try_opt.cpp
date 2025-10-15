@@ -8,7 +8,7 @@
 //   g++ -std=c++17 test_try_opt.cpp -I. -lgtest -lpthread -o test_try_opt
 //
 // 주의: 프로젝트 구조에 맞게 include 경로를 조정하세요.
-
+ 
 #include <gtest/gtest.h>
 #include <optional>
 #include <string>
