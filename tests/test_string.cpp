@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "j2_library/core/string.hpp"
+#include "j2_library/core/to_console_encoding.hpp"
  
 using namespace j2::core;
 
