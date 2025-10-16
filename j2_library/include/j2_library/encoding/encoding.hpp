@@ -7,7 +7,7 @@
 
 #include "j2_library/export.hpp" // J2LIB_API
 
-namespace j2::core
+namespace j2::encoding
 {
     // Unicode 문자 집합을 표현하는 인코딩 : UTF-8, UTF-16, UTF-32.
     // KS X 1001 문자 집합을 표현하는 인코딩 : EUC-KR, ISO-2022-KR.
@@ -247,4 +247,4 @@ namespace j2::core
     J2LIB_API std::u16string mackorean_to_utf16_or_throw(const std::string& mackor);
     J2LIB_API std::string    utf16_to_mackorean_or_throw(const std::u16string& u16);
 
-} // namespace j2::core
+} // namespace j2::encoding

@@ -1,4 +1,4 @@
-#include "j2_library/core/encoding.hpp"
+#include "j2_library/encoding/encoding.hpp"
 
 #include <stdexcept>
 #include <system_error>
@@ -196,7 +196,7 @@ namespace {
 
 } // namespace (anon)
 
-namespace j2::core
+namespace j2::encoding
 {
     // =============================
     // UTF-8 <-> UTF-16
@@ -627,4 +627,4 @@ namespace j2::core
         std::string out; if (!utf16_to_mackorean(u16, out)) throw_conv_err("utf16_to_mackorean failed"); return out;
     }
 
-} // namespace j2::core
+} // namespace j2::encoding

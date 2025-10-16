@@ -23,8 +23,6 @@
 
 #include "j2_library/core/bit_array.hpp" // For bit_array class definition
 
-#include "j2_library/core/encoding.hpp" // For encoding related functions
-
 #include "j2_library/core/mutex_string.hpp" // For mutex_string class definition
 
 #include "j2_library/core/overload.hpp" // For overload utility
@@ -40,6 +38,10 @@
 // -- directory components --
 
 #include "j2_library/directory/directory.hpp" // For directory manipulation functions
+
+// -- encoding components --
+
+#include "j2_library/encoding/encoding.hpp" // For encoding related functions
 
 // -- macro components --
 
