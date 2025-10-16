@@ -13,6 +13,7 @@
 #include <variant>
 #include <type_traits>
 
+#include "j2_library/core/to_console_encoding.hpp" 
 #include "j2_library/overload/overload.hpp"
 
 // Test Suite: Overload
@@ -65,10 +66,10 @@ TEST(Overload, DeductionGuideAndInvocability)
         [](int) {},
         [](const std::string&) {}
     };
-
+        
     // 정적 확인: h가 int, std::string에 대해 호출 가능한지 점검합니다.
-    static_assert(std::is_invocable_v<decltype(h), int>, "int 인자에 대해 호출 가능해야 합니다.");
-    static_assert(std::is_invocable_v<decltype(h), std::string>, "std::string 인자에 대해 호출 가능해야 합니다.");
+    static_assert(std::is_invocable_v<decltype(h), int>, u8"int 인자에 대해 호출 가능해야 합니다.");
+    static_assert(std::is_invocable_v<decltype(h), std::string>, u8"std::string 인자에 대해 호출 가능해야 합니다.");
 
     // 실제 호출에서도 예외 없이 동작해야 합니다.
     EXPECT_NO_THROW(h(0));
