@@ -22,10 +22,10 @@ static std::string ReadAll(const std::string& path) {
     return s;
 }
 
-// 테스트 픽스처
+// 테스트 픽스처(Test Fixture) : 테스트 실행 전에 준비해야 하는 공통 환경이나 데이터, 그리고 이를 초기화/정리하는 절차
 class IniTest : public ::testing::Test {
 protected:
-    void SetUp() override {
+    void SetUp() override { // 각 테스트 시작 전에 자동 호출 (공통 초기화)
         // 1) 기본 파일 저장
         j2::ini::Ini cfg;
 
@@ -68,7 +68,12 @@ protected:
         ASSERT_TRUE(cfg2_.load(kIniPath));
     }
 
-    j2::ini::Ini cfg2_;
+    void TearDown() override { // 각 테스트 종료 후에 자동 호출 (공통 정리)
+        // 테스트용 파일 삭제
+        std::remove(kIniPath);
+    }
+
+    j2::ini::Ini cfg2_; // 재로드된 설정 객체. 각 테스트에서 사용.
 };
 
 // [문자열] 존재/부재/빈 문자열/Raw/Literal 동작
