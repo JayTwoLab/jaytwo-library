@@ -20,6 +20,7 @@
 #include <mutex>
 
 #include "j2_library/uuid/uuid_v4.hpp"
+#include "j2_library/core/to_console_encoding.hpp"
 
 using j2::uuid::UuidV4;
 
@@ -33,17 +34,17 @@ TEST(UuidV4, FormatAndLength) {
         const std::string id = UuidV4::generate();
 
         // 길이는 하이픈 포함 36자여야 한다.
-        EXPECT_EQ(id.size(), 36u) << "UUID 길이는 36자여야 합니다.";
+        EXPECT_EQ(id.size(), 36u) << j2::core::to_console_encoding(u8"UUID 길이는 36자여야 합니다.");
 
         // 정규식(소문자 hex, 8-4-4-4-12)을 만족해야 한다.
         EXPECT_TRUE(std::regex_match(id, kUuidRegex))
-            << "UUID 형식이 올바르지 않습니다: " << id;
+            << j2::core::to_console_encoding(u8"UUID 형식이 올바르지 않습니다: ") << id;
 
         // 하이픈 위치가 정확해야 한다(0-index 기준 8,13,18,23).
-        EXPECT_EQ(id[8], '-') << "하이픈 위치(8)가 올바르지 않습니다.";
-        EXPECT_EQ(id[13], '-') << "하이픈 위치(13)가 올바르지 않습니다.";
-        EXPECT_EQ(id[18], '-') << "하이픈 위치(18)가 올바르지 않습니다.";
-        EXPECT_EQ(id[23], '-') << "하이픈 위치(23)가 올바르지 않습니다.";
+        EXPECT_EQ(id[8], '-') << j2::core::to_console_encoding(u8"하이픈 위치(8)가 올바르지 않습니다.");
+        EXPECT_EQ(id[13], '-') << j2::core::to_console_encoding(u8"하이픈 위치(13)가 올바르지 않습니다.");
+        EXPECT_EQ(id[18], '-') << j2::core::to_console_encoding(u8"하이픈 위치(18)가 올바르지 않습니다.");
+        EXPECT_EQ(id[23], '-') << j2::core::to_console_encoding(u8"하이픈 위치(23)가 올바르지 않습니다.");
     }
 }
 
@@ -55,12 +56,12 @@ TEST(UuidV4, VersionAndVariantBits) {
 
         // version=4 (문자 '4') 확인
         ASSERT_EQ(id.size(), 36u);
-        EXPECT_EQ(id[14], '4') << "버전 nibble(14번째)은 '4'여야 합니다: " << id;
+        EXPECT_EQ(id[14], '4') << j2::core::to_console_encoding(u8"버전 nibble(14번째)은 '4'여야 합니다: ") << id;
 
         // variant=10xx xxxx → 첫 nibble은 8,9,a,b 중 하나여야 한다.
         const char v = id[19];
         const bool ok = (v == '8' || v == '9' || v == 'a' || v == 'b');
-        EXPECT_TRUE(ok) << "바리언트 nibble(19번째)은 8/9/a/b 여야 합니다: " << id;
+        EXPECT_TRUE(ok) << j2::core::to_console_encoding(u8"바리언트 nibble(19번째)은 8/9/a/b 여야 합니다: ") << id;
     }
 }
 
@@ -75,13 +76,13 @@ TEST(UuidV4, ManyNoDuplicate) {
         auto id = UuidV4::generate();
         auto [it, inserted] = seen.insert(std::move(id));
         if (!inserted) {
-            ADD_FAILURE() << "중복 UUID 발견: " << *it;
+            ADD_FAILURE() << j2::core::to_console_encoding(u8"중복 UUID 발견: ") << *it;
             break;
         }
     }
 
     EXPECT_EQ(static_cast<int>(seen.size()), kN)
-        << "중복으로 인해 수량이 줄었습니다.";
+        << j2::core::to_console_encoding(u8"중복으로 인해 수량이 줄었습니다.");
 }
 
 TEST(UuidV4, MultithreadedNoDuplicate) {
@@ -114,14 +115,14 @@ TEST(UuidV4, MultithreadedNoDuplicate) {
         for (const auto& id : vec) {
             auto [it, inserted] = seen.insert(id);
             if (!inserted) {
-                ADD_FAILURE() << "멀티스레드 중복 UUID 발견: " << *it;
+                ADD_FAILURE() << j2::core::to_console_encoding(u8"멀티스레드 중복 UUID 발견: ") << *it;
                 // 계속 진행하여 추가 중복도 탐지 가능
             }
         }
     }
 
     EXPECT_EQ(static_cast<size_t>(threads * per_thread), seen.size())
-        << "멀티스레드 생성에서 중복이 발생했습니다.";
+        << j2::core::to_console_encoding(u8"멀티스레드 생성에서 중복이 발생했습니다.");
 }
 
 // 필요 시 gtest_main을 링크하지 않을 경우에만 사용
