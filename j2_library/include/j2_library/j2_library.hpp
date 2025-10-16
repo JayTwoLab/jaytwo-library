@@ -33,6 +33,10 @@
 
 #include "j2_library/encoding/encoding.hpp" // For encoding related functions
 
+// -- ini components --
+
+#include "j2_library/ini/ini.hpp" // For INI parser class definition
+
 // -- macro components --
 
 #include "j2_library/macro/setter_getter.hpp" // For DEFINE_MEMBER_AND_SETTER macro
