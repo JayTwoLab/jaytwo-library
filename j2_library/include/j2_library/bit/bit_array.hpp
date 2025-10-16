@@ -19,7 +19,7 @@
 
 #include "j2_library/export.hpp"
 
-namespace j2::core {
+namespace j2::bit {
 
 // 비트 배열 클래스
 class J2LIB_API bit_array {

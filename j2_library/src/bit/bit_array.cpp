@@ -1,7 +1,7 @@
 
-#include "j2_library/core/bit_array.hpp"
+#include "j2_library/bit/bit_array.hpp"
 
-namespace j2::core {
+namespace j2::bit {
 
 //-------------------------------------
 // 기본 생성자

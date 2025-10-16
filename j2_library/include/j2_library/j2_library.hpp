@@ -19,9 +19,11 @@
 // If not, take the alternative action
 #endif
 
-// --  core components --
+// -- bit components --
 
-#include "j2_library/core/bit_array.hpp" // For bit_array class definition
+#include "j2_library/bit/bit_array.hpp" // For bit_array class definition 
+
+// --  core components --
 
 #include "j2_library/core/single_function.hpp" // For Single Function definitions
 

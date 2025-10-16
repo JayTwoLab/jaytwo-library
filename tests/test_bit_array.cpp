@@ -24,9 +24,9 @@
 #include <string>
  
 // 프로젝트의 실제 경로로 수정하세요.
-#include "j2_library/core/bit_array.hpp"
+#include "j2_library/bit/bit_array.hpp"
 
-using j2::core::bit_array;
+using j2::bit::bit_array;
 
 // ---------------------------------------------
 // 유틸: 벡터<bool> 비교 + 디버그 문자열

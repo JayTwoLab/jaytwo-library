@@ -11,7 +11,7 @@
 // - 스레드-세이프(generate() 재진입 가능)
 //
 
-namespace j2::uuid {
+namespace j2::uuid { 
 
     class J2LIB_API UuidV4 {
     public:
