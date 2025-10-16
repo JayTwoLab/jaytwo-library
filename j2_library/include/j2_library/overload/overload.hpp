@@ -4,7 +4,7 @@
 
 #include "j2_library/export.hpp"
 
-namespace j2::core
+namespace j2::overload
 {
     // -------------------------------------------------------------------------
     // overload

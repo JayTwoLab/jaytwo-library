@@ -1,5 +1,5 @@
 // 파일명: tests/test_overload.cpp
-// 목적: j2::core::overload 템플릿의 동작을 GoogleTest로 검증
+// 목적: j2::overload::overload 템플릿의 동작을 GoogleTest로 검증
 //
 // 포함 테스트 항목
 // 1) 직접 호출 시 올바른 오버로드 선택 및 반환값 확인
@@ -13,7 +13,7 @@
 #include <variant>
 #include <type_traits>
 
-#include "j2_library/core/overload.hpp"
+#include "j2_library/overload/overload.hpp"
 
 // Test Suite: Overload
 // - 업로드하신 overload.hpp(템플릿 상속과 using Ts::operator()...; 구조)를 사용합니다.
@@ -23,7 +23,7 @@ TEST(Overload, WorksWithDirectCall)
 {
     // 두 개의 람다를 상속으로 합친 호출 객체를 생성합니다.
     // int -> int+1, std::string -> 문자열 길이 반환
-    auto f = j2::core::overload{
+    auto f = j2::overload::overload{
         [](int x) { return x + 1; },
         [](const std::string& s) { return static_cast<int>(s.size()); }
     };
@@ -44,7 +44,7 @@ TEST(Overload, WorksWithVariantVisit)
     std::variant<int, std::string> v;
 
     // 방문 시 타입별로 다른 값을 반환: int -> x*2, string -> 길이
-    auto g = j2::core::overload{
+    auto g = j2::overload::overload{
         [](int x) { return x * 2; },
         [](const std::string& s) { return static_cast<int>(s.size()); }
     };
@@ -61,7 +61,7 @@ TEST(Overload, WorksWithVariantVisit)
 TEST(Overload, DeductionGuideAndInvocability)
 {
     // 템플릿 인수 명시 없이 CTAD(클래스 템플릿 인수 추론)로 타입이 결정되어야 합니다.
-    auto h = j2::core::overload{
+    auto h = j2::overload::overload{
         [](int) {},
         [](const std::string&) {}
     };
@@ -82,7 +82,7 @@ TEST(Overload, PreferExactMatchOverConvertible)
     bool called_cstr = false;
     bool called_str = false;
 
-    auto ov = j2::core::overload{
+    auto ov = j2::overload::overload{
         [&](const char*) { called_cstr = true; },
         [&](const std::string&) { called_str = true; }
     };

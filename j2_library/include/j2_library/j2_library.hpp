@@ -25,8 +25,6 @@
 
 #include "j2_library/core/mutex_string.hpp" // For mutex_string class definition
 
-#include "j2_library/core/overload.hpp" // For overload utility
-
 #include "j2_library/core/single_function.hpp" // For Single Function definitions
 
 #include "j2_library/core/string.hpp" // For string manipulation functions
@@ -48,6 +46,10 @@
 #include "j2_library/macro/setter_getter.hpp" // For DEFINE_MEMBER_AND_SETTER macro
 
 #include "j2_library/macro/try_opt.hpp" // For TRY_OPT and related macros
+
+// -- overload components --
+
+#include "j2_library/overload/overload.hpp" // For overload utility
 
 // -- thread components --
 
