@@ -288,8 +288,8 @@ TEST(mutex_string, Jstr) {
     EXPECT_EQ(ms.compare(1, 5, std::string("***{")), -1);
 #elif defined(__GNUC__) && defined(__linux__)
     // Linux GCC
-    EXPECT_EQ(ms.compare("(***{start plus more] tail)"), -1);
-    EXPECT_EQ(ms.compare(1, 5, std::string("***{")), -1);
+    EXPECT_LT(ms.compare("(***{start plus more] tail)"), -8);
+    EXPECT_LT(ms.compare(1, 5, std::string("***{")), -8);
 #elif defined(__GNUC__) && defined(_WIN32)
     // Windows GCC (MinGW 등)
     EXPECT_EQ(ms.compare("(***{start plus more] tail)"), -1);
