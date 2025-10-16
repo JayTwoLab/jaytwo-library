@@ -5,7 +5,7 @@
 #include <gtest/gtest.h>
 #include "j2_library/j2_library.hpp"
 
-using jstr = j2::core::mutex_string; // alias for easier usage
+using jstr = j2::string::mutex_string; // alias for easier usage
 
 // Google Test framework
 // TEST(Test Suite Name, Test Name)

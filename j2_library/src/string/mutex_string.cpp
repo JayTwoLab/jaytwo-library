@@ -1,12 +1,12 @@
 #include "j2_library/string/mutex_string.hpp"
 
-namespace j2::core {
+namespace j2::string {
 
 #ifndef NDEBUG
     namespace {
         // 클래스 밖 내부 전역 TLS 저장소
         // - 클래스에 DLL 인터페이스가 붙어도 이 변수는 내보내지 않음
-        thread_local const j2::core::mutex_string* g_tls_owner = nullptr;
+        thread_local const j2::string::mutex_string* g_tls_owner = nullptr;
     }
 
     const mutex_string* mutex_string::tls_owner() noexcept {
@@ -688,4 +688,4 @@ namespace j2::core {
         return CStrGuard{ s_, m_ };
     }
 
-} // namespace j2::core
+} // namespace j2::string

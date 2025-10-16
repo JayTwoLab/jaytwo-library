@@ -8,7 +8,7 @@
 
 #include "j2_library/export.hpp" // for J2LIB_API macro definition
 
-namespace j2::core {
+namespace j2::string {
 
     // 스레드 안전 문자열 래퍼 클래스
     // - 멤버는 std::string 과 std::mutex 두 가지 뿐입니다.

@@ -10,7 +10,7 @@
 
 #include "j2_library/export.hpp" // For J2LIB_API macro definition
 
-namespace j2::core
+namespace j2::string
 {
     // -------------------------
     // 트림 계열

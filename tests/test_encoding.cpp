@@ -18,7 +18,7 @@ using namespace j2::encoding;
 static void SkipMsg(const std::string& msg) {
     // Windows 콘솔은 기본적으로 CP949 코드페이지라 UTF-8 문자열이 깨질 수 있음
     // → to_console_encoding()을 사용하여 적절한 코드페이지 문자열로 변환 후 출력
-    GTEST_SKIP() << j2::core::to_console_encoding(msg).c_str();
+    GTEST_SKIP() << j2::string::to_console_encoding(msg).c_str();
 }
 
 // -----------------------------
@@ -266,7 +266,7 @@ TEST(EncodingUtils, UnsupportedCharacter_To_CP949_ShouldFailOrSkip)
     std::string cp949;
     bool ok = utf8_to_cp949(utf8, cp949);
     if (!ok) {
-        GTEST_SUCCEED() << j2::core::to_console_encoding("표현 불가 문자로 변환 실패(기대한 동작)").c_str();
+        GTEST_SUCCEED() << j2::string::to_console_encoding("표현 불가 문자로 변환 실패(기대한 동작)").c_str();
     }
     else {
         SkipMsg("환경이 대체문자를 사용해 성공 처리함(정책 차이)");

@@ -10,7 +10,7 @@
 
 #include "j2_library/export.hpp"
 
-namespace j2::core {
+namespace j2::string {
 
 // 부동소수점 타입(float, double) 전용 to_string (정밀도 미지정)  
 template <typename T>

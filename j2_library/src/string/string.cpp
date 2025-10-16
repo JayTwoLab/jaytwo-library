@@ -27,7 +27,7 @@ static inline bool j2_utf8_is_cont(unsigned char c) {
     return (c & 0xC0u) == 0x80u;
 }
 
-namespace j2::core
+namespace j2::string
 {
     // -------------------------
     // 트림 계열
@@ -668,4 +668,4 @@ namespace j2::core
         return wildcard_impl(text.c_str(), pattern.c_str());
     }
 
-} // namespace j2::core
+} //  namespace j2::string

@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include "j2_library/j2_library.hpp"
 
-namespace jc = j2::core;
+namespace jc = j2::string;
 
 TEST(to_string, to_string)
 {

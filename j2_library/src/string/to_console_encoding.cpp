@@ -10,7 +10,7 @@
 
 #include <string>
 
-namespace j2::core {
+namespace j2::string {
 
 #if defined(_WIN32)
     // 내부 헬퍼: UTF-8 → 지정 코드페이지(예: 51949, 949) 멀티바이트 변환
@@ -68,4 +68,4 @@ namespace j2::core {
 #endif
     }
 
-} // namespace j2::core
+} // namespace j2::string

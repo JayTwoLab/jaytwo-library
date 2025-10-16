@@ -9,7 +9,7 @@
 
 #include "j2_library/export.hpp"
 
-namespace j2::core {
+namespace j2::string {
 
     /// UTF-8 문자열을 콘솔에 적합한 인코딩으로 변환하여 반환합니다.
     /// - Windows: EUC-KR(51949) → 실패 시 CP949(949)

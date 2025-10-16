@@ -5,7 +5,7 @@
 #include "j2_library/string/string.hpp"
 #include "j2_library/string/to_console_encoding.hpp"
  
-using namespace j2::core;
+using namespace j2::string;
 
 // 문자열 유틸 전반을 검증하는 테스트 스위트
 // - 트림(공백 제거) / 치환(문자열 바꾸기)

@@ -266,67 +266,67 @@ namespace j2::directory {
     std::string DirectoryMaker::msg_invalid_path_() const {
         return lang_ == Language::English
             ? "Invalid path: empty or malformed."
-            : j2::core::to_console_encoding("유효하지 않은 경로입니다(빈 경로 또는 잘못된 형식).");
+            : j2::string::to_console_encoding("유효하지 않은 경로입니다(빈 경로 또는 잘못된 형식).");
     }
     std::string DirectoryMaker::msg_already_exists_() const {
         return lang_ == Language::English
             ? "Directory already exists."
-            : j2::core::to_console_encoding("경로가 이미 디렉터리로 존재합니다.");
+            : j2::string::to_console_encoding("경로가 이미 디렉터리로 존재합니다.");
     }
     std::string DirectoryMaker::msg_already_exists_error_() const {
         return lang_ == Language::English
             ? "Directory already exists (policy: treat as error)."
-            : j2::core::to_console_encoding("경로가 이미 존재합니다(정책상 오류로 간주).");
+            : j2::string::to_console_encoding("경로가 이미 존재합니다(정책상 오류로 간주).");
     }
     std::string DirectoryMaker::msg_symlink_blocked_() const {
         return lang_ == Language::English
             ? "Operation blocked by symlink."
-            : j2::core::to_console_encoding("심볼릭 링크가 존재하며 차단되었습니다.");
+            : j2::string::to_console_encoding("심볼릭 링크가 존재하며 차단되었습니다.");
     }
     std::string DirectoryMaker::msg_not_directory_(const std::filesystem::path& p) const {
         return lang_ == Language::English
             ? "A non-directory entry exists: " + p.string()
-            : j2::core::to_console_encoding("디렉터리가 아닌 항목이 존재합니다: " + p.string());
+            : j2::string::to_console_encoding("디렉터리가 아닌 항목이 존재합니다: " + p.string());
     }
     std::string DirectoryMaker::msg_state_fail_(const std::filesystem::path& p, const std::error_code& ec) const {
         return lang_ == Language::English
             ? "Failed to query status: " + p.string() + " : " + ec.message()
-            : j2::core::to_console_encoding("경로 상태 확인 실패: " + p.string() + " : " + ec.message());
+            : j2::string::to_console_encoding("경로 상태 확인 실패: " + p.string() + " : " + ec.message());
     }
     std::string DirectoryMaker::msg_no_parent_(const std::filesystem::path& p) const {
         return lang_ == Language::English
             ? "Parent does not exist: " + p.string()
-            : j2::core::to_console_encoding("부모 경로가 존재하지 않습니다: " + p.string());
+            : j2::string::to_console_encoding("부모 경로가 존재하지 않습니다: " + p.string());
     }
     std::string DirectoryMaker::msg_create_fail_(const std::filesystem::path& p, const std::error_code& ec) const {
         return lang_ == Language::English
             ? "Failed to create: " + p.string() + " : " + ec.message()
-            : j2::core::to_console_encoding("디렉터리 생성 실패: " + p.string() + " : " + ec.message());
+            : j2::string::to_console_encoding("디렉터리 생성 실패: " + p.string() + " : " + ec.message());
     }
     std::string DirectoryMaker::msg_created_ok_() const {
         return lang_ == Language::English
             ? "Directory tree created."
-            : j2::core::to_console_encoding("디렉터리 트리를 성공적으로 생성했습니다.");
+            : j2::string::to_console_encoding("디렉터리 트리를 성공적으로 생성했습니다.");
     }
     std::string DirectoryMaker::msg_nothing_new_() const {
         return lang_ == Language::English
             ? "Nothing created; already exists."
-            : j2::core::to_console_encoding("새로 생성된 디렉터리가 없습니다(이미 존재).");
+            : j2::string::to_console_encoding("새로 생성된 디렉터리가 없습니다(이미 존재).");
     }
     std::string DirectoryMaker::msg_fs_exception_(const std::string& what, const std::error_code& ec) const {
         return lang_ == Language::English
             ? "filesystem_error: " + what + " : " + ec.message()
-            : j2::core::to_console_encoding("filesystem_error: " + what + " : " + ec.message());
+            : j2::string::to_console_encoding("filesystem_error: " + what + " : " + ec.message());
     }
     std::string DirectoryMaker::msg_std_exception_(const std::string& what) const {
         return lang_ == Language::English
             ? "std::exception: " + what
-            : j2::core::to_console_encoding("std::exception: " + what);
+            : j2::string::to_console_encoding("std::exception: " + what);
     }
     std::string DirectoryMaker::msg_unknown_exception_() const {
         return lang_ == Language::English
             ? "Unknown exception."
-            : j2::core::to_console_encoding("알 수 없는 예외가 발생했습니다.");
+            : j2::string::to_console_encoding("알 수 없는 예외가 발생했습니다.");
     }
 
 } // namespace j2::directory
