@@ -15,6 +15,6 @@ namespace j2::core {
     /// - Windows: EUC-KR(51949) → 실패 시 CP949(949)
     /// - Linux/macOS: 입력 그대로(UTF-8) 반환
     /// 주의: 반환값은 변환 결과 바이트열이므로, std::cout 등에 그대로 출력하십시오.
-    J2LIB_API std::string to_console_encoding(const std::string& utf8);
+    J2LIB_API std::string to_console_encoding(const std::string& utf8_string);
 
 } // namespace j2::core

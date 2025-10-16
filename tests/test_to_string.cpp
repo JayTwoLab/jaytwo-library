@@ -8,10 +8,10 @@ TEST(to_string, to_string)
     float  f = 10.12f; // set f for 'float' value 10.12
     double d = 10.12;
 
-    EXPECT_EQ(jc::to_string<float>(f, 2), "10.12"); // set precision to 2
+    EXPECT_EQ(jc::to_string<float>(f, 2),  "10.12"); // set precision to 2
     EXPECT_EQ(jc::to_string<double>(d, 2), "10.12"); // set precision to 2 
 
-    EXPECT_EQ(jc::to_string<float>(f, 10), "10.1199998856"); // set precision to 10
+    EXPECT_EQ(jc::to_string<float>(f, 10),  "10.1199998856"); // set precision to 10
     EXPECT_EQ(jc::to_string<double>(d, 20), "10.11999999999999921840"); // set precision to 20 
 }
 
