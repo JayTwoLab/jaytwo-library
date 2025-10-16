@@ -1,4 +1,4 @@
-#include "j2_library/core/mutex_string.hpp"
+#include "j2_library/string/mutex_string.hpp"
 
 namespace j2::core {
 

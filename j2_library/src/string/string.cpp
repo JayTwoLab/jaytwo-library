@@ -1,4 +1,4 @@
-#include "j2_library/core/string.hpp"
+#include "j2_library/string/string.hpp"
 
 #include <sstream>
 #include <algorithm>

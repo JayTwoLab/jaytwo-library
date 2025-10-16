@@ -23,15 +23,7 @@
 
 #include "j2_library/core/bit_array.hpp" // For bit_array class definition
 
-#include "j2_library/core/mutex_string.hpp" // For mutex_string class definition
-
 #include "j2_library/core/single_function.hpp" // For Single Function definitions
-
-#include "j2_library/core/string.hpp" // For string manipulation functions
-
-#include "j2_library/core/to_console_encoding.hpp" // For to_console_encoding function
-
-#include "j2_library/core/to_string.hpp" // For to_string and is_equal functions
 
 // -- directory components --
 
@@ -50,6 +42,16 @@
 // -- overload components --
 
 #include "j2_library/overload/overload.hpp" // For overload utility
+
+// -- string components --
+
+#include "j2_library/string/mutex_string.hpp" // For mutex_string class definition
+
+#include "j2_library/string/string.hpp" // For string manipulation functions
+
+#include "j2_library/string/to_console_encoding.hpp" // For to_console_encoding function
+
+#include "j2_library/string/to_string.hpp" // For to_string and is_equal functions
 
 // -- thread components --
 

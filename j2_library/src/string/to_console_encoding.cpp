@@ -1,8 +1,8 @@
 // 문자열 콘솔 인코딩 변환 유틸 (구현)
 // - platform별 분기 구현
-// - 공개 API: j2::core::to_console_encoding()
+ 
 
-#include "j2_library/core/to_console_encoding.hpp"
+#include "j2_library/string/to_console_encoding.hpp"
 
 #if defined(_WIN32)
 #include <windows.h>

@@ -13,7 +13,7 @@
 #include <variant>
 #include <type_traits>
 
-#include "j2_library/core/to_console_encoding.hpp" 
+#include "j2_library/string/to_console_encoding.hpp" 
 #include "j2_library/overload/overload.hpp"
 
 // Test Suite: Overload

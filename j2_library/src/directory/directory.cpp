@@ -1,6 +1,6 @@
 
 #include "j2_library/directory/directory.hpp"
-#include "j2_library/core/to_console_encoding.hpp"
+#include "j2_library/string/to_console_encoding.hpp"
 
 namespace j2::directory {
 

@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "j2_library/encoding/encoding.hpp"
-#include "j2_library/core/to_console_encoding.hpp" // 콘솔 메시지 변환 (Windows 한글 깨짐 방지)
+#include "j2_library/string/to_console_encoding.hpp" // 콘솔 메시지 변환 (Windows 한글 깨짐 방지)
 
 using namespace j2::encoding;
 

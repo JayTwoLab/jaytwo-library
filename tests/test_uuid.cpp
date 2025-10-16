@@ -20,7 +20,7 @@
 #include <mutex>
 
 #include "j2_library/uuid/uuid_v4.hpp"
-#include "j2_library/core/to_console_encoding.hpp"
+#include "j2_library/string/to_console_encoding.hpp"
 
 using j2::uuid::UuidV4;
 
