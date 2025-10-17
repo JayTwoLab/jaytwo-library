@@ -36,15 +36,10 @@ file(GLOB SRC_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp" "${CMA
 add_executable(${PROJECT_NAME} ${SRC_FILES})
 
 # 테스트 타깃에 포함할 디렉토리 설정
-target_include_directories(${PROJECT_NAME} PRIVATE
-    "${CMAKE_CURRENT_SOURCE_DIR}/../j2_library/include"
-)
+target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}/../j2_library/include")
 
 # 테스트 타깃에 라이브러리 링크
-target_link_libraries(${PROJECT_NAME} PRIVATE
-    j2_library::j2_library
-    GTest::gtest_main
-)
+target_link_libraries(${PROJECT_NAME} PRIVATE j2_library::j2_library GTest::gtest_main)
 
 # 구글 테스트 등록
 include(GoogleTest)

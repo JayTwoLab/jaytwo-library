@@ -11,6 +11,7 @@ project(j2_library
 # 이 서브프로젝트는 단독으로도 동작해야 하므로 project() 선언을 포함합니다.
 # 프로젝트 VERSION은 주로 설치/패키징에 사용됩니다.
 # cmake 파일에서 VERSION을 설정하면 헤더 파일(version.hpp, 자동 생성)에 자동으로 반영됩니다.
+#  TODO: 버전이 변경되면 반영할 것. (예: VERSION 0.1.0)
 
 # --- 중복 포함 가드: 이미 j2_library 타깃이 존재하면 재정의/재설치 로직을 건너뜁니다.
 if (TARGET j2_library OR TARGET j2_library::j2_library)
@@ -55,15 +56,15 @@ endif()
 
 # -------------------------
 # 외부 패키지 찾기
+#  TODO: 패키지 의존성이 추가되면 여기에 추가할 것
 # -------------------------
 find_package(Threads REQUIRED) # 스레드 라이브러리
 find_package(nlohmann_json CONFIG REQUIRED) # nlohmann_json 라이브러리 (include/j2_library/json/INSTALL.ko.md 참고)
 
-
 # -------------------------
 # 라이브러리 정의
+#  TODO: cpp 파일이 추가되면 아래 glob 패턴에 맞게 추가할 것
 # -------------------------
-
 file(GLOB SRC_FILES CONFIGURE_DEPENDS
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/bit/*.cpp" 
@@ -77,7 +78,7 @@ file(GLOB SRC_FILES CONFIGURE_DEPENDS
     "${CMAKE_CURRENT_SOURCE_DIR}/src/thread/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/uuid/*.cpp"
 )
-# src 디렉터리 안의 모든 cpp 파일을 glob으로 수집
+
 
 # -------------------------
 # 라이브러리 추가
@@ -132,6 +133,7 @@ target_compile_features(j2_library PUBLIC cxx_std_${J2_LIBRARY_CXX_STANDARD})
 
 # -------------------------
 # 필요한 시스템 라이브러리
+#  TODO: 라이브러리 의존성이 추가되면 여기에 추가할 것
 # -------------------------
 target_link_libraries(j2_library PRIVATE
   Threads::Threads # 스레드 라이브러리
