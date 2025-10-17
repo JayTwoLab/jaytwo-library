@@ -125,64 +125,80 @@ namespace j2::datetime {
 
     // ---------------- (A) 형식 파서 ----------------
 
+    // 변경: base_tm을 선택적으로 사용하기 위해 포인터 인자로 변경
     static DateTimeParseResult
         parse_strict_datetime_ex_impl(const std::string& datetime,
             const std::string& format,
             TimeZoneMode tzmode,
-            const std::tm& base_tm)
+            const std::tm* base_tm_opt)
     {
         DateTimeParseResult r;
         r.present = {};
 
-        // base_tm(현재 시각)을 초기값으로 사용 → 형식에 없는 토큰은 자동 보정
-        std::tm tmv = base_tm;
+        // 초기값 설정:
+        // - base_tm_opt가 있으면 그 값을 초기값으로 사용(누락 토큰 보정).
+        // - 없으면 임시 tm을 0으로 초기화하되, 보정은 하지 않음(누락 금지).
+        std::tm tmv{}; // 초기값 1900년 1월 0일 00:00:00 (0일 → 유효하지 않은 값 (일은 최소 1이어야 정상))
+        if (base_tm_opt) {
+            tmv = *base_tm_opt;
+        }
 
-        int Y = tmv.tm_year + 1900;
-        int M = tmv.tm_mon + 1;
-        int D = tmv.tm_mday;
-        int h = tmv.tm_hour;
-        int m = tmv.tm_min;
-        int s = tmv.tm_sec;
+        int Y = base_tm_opt ? (tmv.tm_year + 1900) : 0;
+        int M = base_tm_opt ? (tmv.tm_mon + 1) : 0;
+        int D = base_tm_opt ? (tmv.tm_mday) : 0; 
+        int h = base_tm_opt ? (tmv.tm_hour) : 0;
+        int m = base_tm_opt ? (tmv.tm_min) : 0;
+        int s = base_tm_opt ? (tmv.tm_sec) : 0;
         int ms = 0;
 
         size_t ip = 0;
         for (size_t fp = 0; fp < format.size();) {
-            if (match_token(format, fp, "YYYY")) { if (!read_ndigits(datetime, ip, 4, Y)) { r.error = "YYYY 오류"; return r; } r.present.Y = true; fp += 4; }
-            else if (match_token(format, fp, "MM")) { if (!read_ndigits(datetime, ip, 2, M)) { r.error = "MM 오류"; return r; } r.present.M = true; fp += 2; }
-            else if (match_token(format, fp, "DD")) { if (!read_ndigits(datetime, ip, 2, D)) { r.error = "DD 오류"; return r; } r.present.D = true; fp += 2; }
-            else if (match_token(format, fp, "hh")) { if (!read_ndigits(datetime, ip, 2, h)) { r.error = "hh 오류"; return r; } r.present.h = true; fp += 2; }
-            else if (match_token(format, fp, "mm")) { if (!read_ndigits(datetime, ip, 2, m)) { r.error = "mm 오류"; return r; } r.present.m = true; fp += 2; }
-            else if (match_token(format, fp, "ss")) { if (!read_ndigits(datetime, ip, 2, s)) { r.error = "ss 오류"; return r; } r.present.s = true; fp += 2; }
-            else if (match_token(format, fp, "SSS")) { if (!read_ndigits(datetime, ip, 3, ms)) { r.error = "SSS 오류"; return r; } r.present.SSS = true; fp += 3; }
+            if (match_token(format, fp, "YYYY")) { if (!read_ndigits(datetime, ip, 4, Y)) { r.error = u8"YYYY Error"; return r; } r.present.Y = true; fp += 4; }
+            else if (match_token(format, fp, "MM")) { if (!read_ndigits(datetime, ip, 2, M)) { r.error = u8"MM Error"; return r; } r.present.M = true; fp += 2; }
+            else if (match_token(format, fp, "DD")) { if (!read_ndigits(datetime, ip, 2, D)) { r.error = u8"DD Error"; return r; } r.present.D = true; fp += 2; }
+            else if (match_token(format, fp, "hh")) { if (!read_ndigits(datetime, ip, 2, h)) { r.error = u8"hh Error"; return r; } r.present.h = true; fp += 2; }
+            else if (match_token(format, fp, "mm")) { if (!read_ndigits(datetime, ip, 2, m)) { r.error = u8"mm Error"; return r; } r.present.m = true; fp += 2; }
+            else if (match_token(format, fp, "ss")) { if (!read_ndigits(datetime, ip, 2, s)) { r.error = u8"ss Error"; return r; } r.present.s = true; fp += 2; }
+            else if (match_token(format, fp, "SSS")) { if (!read_ndigits(datetime, ip, 3, ms)) { r.error = u8"SSS Error"; return r; } r.present.SSS = true; fp += 3; }
             else {
-                if (ip >= datetime.size()) { r.error = "리터럴 불일치"; return r; }
-                if (format[fp] != datetime[ip]) { r.error = "리터럴 불일치"; return r; }
+                if (ip >= datetime.size()) { r.error = u8"Literally inconsistent"; return r; }
+                if (format[fp] != datetime[ip]) { r.error = u8"Literally inconsistent"; return r; }
                 ++fp; ++ip;
             }
         }
-        if (ip != datetime.size()) { r.error = "여분 문자"; return r; }
+        if (ip != datetime.size()) { r.error = u8"Extra character"; return r; }
 
-        // === 추가: 범위 검증 ===
+        // base가 없는 경우: 핵심 토큰 누락 금지
+        if (!base_tm_opt) {
+            const bool date_ok = r.present.Y && r.present.M && r.present.D;
+            const bool time_ok = r.present.h && r.present.m && r.present.s;
+            if (!date_ok || !time_ok) {
+                r.error = u8"Missing tokens without base (require YYYY,MM,DD,hh,mm,ss)";
+                return r;
+            }
+        }
+
+        // === 범위 검증 ===
         if (r.present.h && (h < 0 || h > 23)) {
-            r.error = "시 범위 오류"; return r;
+            r.error = u8"Hour range error"; return r;
         }
         if (r.present.m && (m < 0 || m > 59)) {
-            r.error = "분 범위 오류"; return r;
+            r.error = u8"Minute range error"; return r;
         }
         if (r.present.s && (s < 0 || s > 59)) {
-            r.error = "초 범위 오류"; return r;
+            r.error = u8"Second range error"; return r;
         }
 
         if (r.present.Y || r.present.M || r.present.D) {
             if (r.present.M && (M < 1 || M > 12)) {
-                r.error = "월 범위 오류"; return r;
+                r.error = u8"Month range error"; return r;
             }
             if (!valid_ymd(Y, M, D)) {
-                r.error = "날짜 유효성 오류"; return r;
+                r.error = u8"Date Validation Error"; return r;
             }
         }
 
-        // 변환
+        // 변환용 tm 구성
         tmv.tm_year = Y - 1900;
         tmv.tm_mon = M - 1;
         tmv.tm_mday = D;
@@ -192,15 +208,27 @@ namespace j2::datetime {
         tmv.tm_isdst = -1;
 
         auto t = (tzmode == TimeZoneMode::UTC) ? tm_to_time_utc(tmv) : tm_to_time_local(tmv);
-        if (!t.has_value()) { r.error = "시각 변환 실패"; return r; }
+        if (!t.has_value()) { r.error = u8"Time conversion failure"; return r; }
 
+        // 성공 결과 설정
         r.ok = true;
-        r.epoch = *t;
-        r.millisecond = (r.present.SSS ? ms : 0);
-        r.epoch_ms = static_cast<std::int64_t>(r.epoch) * 1000 + r.millisecond;
-        r.broken = tmv;
+
+        if (base_tm_opt) {
+            r.broken = tmv;   // base가 있을 때만 tm 반환
+        }
+        else {
+            r.broken = std::nullopt; // base가 없으면 없음 처리
+        }
+
+        r.millisecond = (r.present.SSS ? ms : 0); // 밀리초 (0~999)
+
+        r.epoch = *t;               // UNIX epoch (초)
+
+        r.epoch_ms = static_cast<std::int64_t>(r.epoch) * 1000 + r.millisecond; // UNIX epoch (밀리초)
+
         r.timepoint = std::chrono::system_clock::time_point{
-            std::chrono::milliseconds{r.epoch_ms} };
+            std::chrono::milliseconds{r.epoch_ms} }; // C++ time_point
+
         return r;
     }
 
@@ -208,8 +236,7 @@ namespace j2::datetime {
         parse_strict_datetime(const std::string& datetime,
             const std::string& format,
             TimeZoneMode tzmode) {
-        std::tm base_now = now_in_zone(tzmode);
-        return parse_strict_datetime_with_base(datetime, format, tzmode, base_now);
+        return parse_strict_datetime_ex_impl(datetime, format, tzmode, nullptr);
     }
 
     J2LIB_API DateTimeParseResult
@@ -217,7 +244,16 @@ namespace j2::datetime {
             const std::string& format,
             TimeZoneMode tzmode,
             const std::tm& base_tm) {
-        return parse_strict_datetime_ex_impl(datetime, format, tzmode, base_tm);
+        return parse_strict_datetime_ex_impl(datetime, format, tzmode, &base_tm);
+    }
+
+    J2LIB_API DateTimeParseResult
+        parse_strict_datetime_optbase(const std::string& datetime,
+            const std::string& format,
+            TimeZoneMode tzmode,
+            const std::tm* base_or_null) {
+        // base_or_null == nullptr → 누락 토큰 금지
+        return parse_strict_datetime_ex_impl(datetime, format, tzmode, base_or_null);
     }
 
     J2LIB_API std::optional<std::int64_t>
@@ -310,18 +346,18 @@ namespace j2::datetime {
             has_date = true;
             if (p < str.size() && (str[p] == 'T' || str[p] == 't' || str[p] == ' ')) {
                 ++p;
-                if (!parse_time_extended()) { r.error = "시간 형식 오류"; return r; }
+                if (!parse_time_extended()) { r.error = u8"Time format error"; return r; }
                 has_time = true;
             }
         }
         else {
             p = p0;
             if (parse_time_extended()) has_time = true;
-            else { r.error = "ISO-8601 형식이 아님"; return r; }
+            else { r.error = u8"Not in ISO-8601 format"; return r; }
         }
 
         if (has_time && p < str.size() && str[p] == '.') {
-            if (!parse_fraction_ms(str, p, ms)) { r.error = "분수초 형식 오류"; return r; }
+            if (!parse_fraction_ms(str, p, ms)) { r.error = u8"Fractional ms seconds format error"; return r; }
         }
 
         if (p < str.size()) {
@@ -329,7 +365,7 @@ namespace j2::datetime {
             if (parse_tz_offset(str, tzp, off)) { has_tz = true; tz_offset_sec = off; p = tzp; }
         }
 
-        if (p != str.size()) { r.error = "여분의 입력 문자가 존재"; return r; }
+        if (p != str.size()) { r.error = u8"Extra input characters exist"; return r; }
 
         // 날짜가 없으면 오늘 날짜 보정
         if (!has_date) {
@@ -347,14 +383,14 @@ namespace j2::datetime {
         std::optional<std::time_t> t;
         if (has_tz) {
             auto t_as_utc = tm_to_time_utc(tmv);
-            if (!t_as_utc) { r.error = "UTC 변환 실패(timegm/_mkgmtime)"; return r; }
+            if (!t_as_utc) { r.error = u8"UTC conversion failed (timegem/_mkgmtime)"; return r; }
             t = t_as_utc.value() - tz_offset_sec; // 오프셋 적용
         }
         else {
             t = (fallback_tzmode == TimeZoneMode::UTC) ? tm_to_time_utc(tmv)
                 : tm_to_time_local(tmv);
         }
-        if (!t) { r.error = "시각 변환 실패"; return r; }
+        if (!t) { r.error = u8"Time conversion failure"; return r; }
 
         r.ok = true;
         r.epoch = *t;

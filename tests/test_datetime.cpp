@@ -52,28 +52,43 @@ TEST(DateTime_Strict, FullMatch_Localtime) {
 }
 
 TEST(DateTime_Strict, MissingTimeFieldsUseBase) {
-    // base_tm을 고정해 결정론적 테스트: 2030-01-02 09:08:07
+    // base_tm을 고정하여 결정론적 테스트 수행:
+    // 2030-01-02 09:08:07 (UTC 기준)
     std::tm base{};
     base.tm_year = 2030 - 1900;
-    base.tm_mon = 0;
-    base.tm_mday = 2;
+    base.tm_mon = 0;   // 1월
+    base.tm_mday = 2;   // 2일
     base.tm_hour = 9;
     base.tm_min = 8;
     base.tm_sec = 7;
     base.tm_isdst = -1;
 
-    // "mm:ss"(분:초) 형식으로 시각 파싱, 누락된 필드(년월일시)는 base에서 보정
-    auto r = parse_strict_datetime_with_base("01:02", "mm:ss", TimeZoneMode::UTC, base);
+    // 형식에 분:초만 제공 → 누락된 연/월/일/시를 base로 보정
+    auto r = parse_strict_datetime_with_base("01:02", "mm:ss",
+        TimeZoneMode::UTC, base);
 
-    EXPECT_TRUE(r.ok) << r.error;
-    EXPECT_EQ(r.broken.tm_year, 2030 - 1900);
-    EXPECT_EQ(r.broken.tm_mon, 0);
-    EXPECT_EQ(r.broken.tm_mday, 2);
-    EXPECT_EQ(r.broken.tm_hour, 9); // 현재(=base)의 시
-    EXPECT_EQ(r.broken.tm_min, 1);
-    EXPECT_EQ(r.broken.tm_sec, 2);
+    // 파싱 성공 및 broken 존재 여부 확인
+    ASSERT_TRUE(r.ok) << r.error;
+    ASSERT_TRUE(r.broken.has_value()) << "base 사용 시 broken 은 반드시 존재해야 합니다.";
+
+    // broken 값 확인 (입력 토큰이 아닌 필드는 base 값으로 보정되어야 합니다)
+    const std::tm& br = *r.broken;
+    EXPECT_EQ(br.tm_year, 2030 - 1900); // 연도: base
+    EXPECT_EQ(br.tm_mon, 0);           // 월:   base (1월 → 0)
+    EXPECT_EQ(br.tm_mday, 2);           // 일:   base
+    EXPECT_EQ(br.tm_hour, 9);           // 시:   base
+    EXPECT_EQ(br.tm_min, 1);           // 분:   입력값
+    EXPECT_EQ(br.tm_sec, 2);           // 초:   입력값
+
+    // present 플래그 확인: mm, ss만 true, 나머지는 false 여야 함
+    EXPECT_FALSE(r.present.Y);
+    EXPECT_FALSE(r.present.M);
+    EXPECT_FALSE(r.present.D);
+    EXPECT_FALSE(r.present.h);
+    EXPECT_TRUE(r.present.m);
+    EXPECT_TRUE(r.present.s);
+    EXPECT_FALSE(r.present.SSS);
 }
-
 TEST(DateTime_Strict, LiteralMismatchFails) {
 
     // 형식과 맞지 않는 문자열 파싱 시도
@@ -176,12 +191,12 @@ TEST(DateTime_Helpers, TimepointOnlyWrapper) {
 TEST(DateTime_Strict, MillisecondsOptional) {
 
     // 밀리초 포함/미포함 모두 파싱 가능
-    auto r1 = parse_strict_datetime("12:34:56.250", "hh:mm:ss.SSS", TimeZoneMode::UTC);
+    auto r1 = parse_strict_datetime("2025-01-02 12:34:56.250", "YYYY-MM-DD hh:mm:ss.SSS", TimeZoneMode::UTC);
     EXPECT_TRUE(r1.ok) << r1.error;
     EXPECT_EQ(r1.millisecond, 250);
 
     // 밀리초 미포함
-    auto r2 = parse_strict_datetime("12:34:56", "hh:mm:ss", TimeZoneMode::UTC);
+    auto r2 = parse_strict_datetime("2025-01-02 12:34:56", "YYYY-MM-DD hh:mm:ss", TimeZoneMode::UTC);
     EXPECT_TRUE(r2.ok) << r2.error;
     EXPECT_EQ(r2.millisecond, 0);
 }
