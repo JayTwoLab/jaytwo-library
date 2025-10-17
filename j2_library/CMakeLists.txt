@@ -54,9 +54,11 @@ if (UNIX AND NOT APPLE)
 endif()
 
 # -------------------------
-# 스레드 라이브러리
+# 외부 패키지 찾기
 # -------------------------
-find_package(Threads REQUIRED)
+find_package(Threads REQUIRED) # 스레드 라이브러리
+find_package(nlohmann_json CONFIG REQUIRED) # nlohmann_json 라이브러리 (include/j2_library/json/INSTALL.ko.md 참고)
+
 
 # -------------------------
 # 라이브러리 정의
@@ -69,6 +71,7 @@ file(GLOB SRC_FILES CONFIGURE_DEPENDS
     "${CMAKE_CURRENT_SOURCE_DIR}/src/directory/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/encoding/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/ini/*.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/json/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/string/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/thread/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/uuid/*.cpp"
@@ -130,7 +133,8 @@ target_compile_features(j2_library PUBLIC cxx_std_${J2_LIBRARY_CXX_STANDARD})
 # 필요한 시스템 라이브러리
 # -------------------------
 target_link_libraries(j2_library PRIVATE
-  Threads::Threads
+  Threads::Threads # 스레드 라이브러리
+  nlohmann_json::nlohmann_json # nlohmann_json 라이브러리
 )
 
 # -------------------------

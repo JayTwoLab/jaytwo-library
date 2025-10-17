@@ -73,7 +73,7 @@ cmake --install build
 
 ## 2. 설치된 라이브러리 사용하기
 
-### 2.1. Windows — MSVC (Visual Studio cl.exe)
+### 2.1. Windows — MSVC (Visual Studio)
 
 ```cmake
 # CMakeLists.txt (MSVC용)

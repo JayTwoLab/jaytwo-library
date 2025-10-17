@@ -59,7 +59,8 @@
             - `x64-windows` : `Visual Studio` 64비트
 			- `static` : 정적 라이브러리 (`DLL` 사용 않함)
 	   - 설치 시 `vcpkg` 경로를 지정하지 않으면 `CMake`에서 `vcpkg`를 찾지 못하는 경우가 있음.
-
+    - `nlohmann json` 설치
+	   - `vcpkg install nlohmann-json:x64-mingw-static`
 <br />
 
 ---
@@ -80,6 +81,8 @@
             - `x64-mingw` : `MingW` 64비트
 			- `static` : 정적 라이브러리 (DLL 사용 않함)
 	   - 설치 시 `vcpkg` 경로를 지정하지 않으면 `CMake`에서 `vcpkg`를 찾지 못하는 경우가 있음.
+    - `nlohmann json` 설치
+	   - `vcpkg install nlohmann-json:x64-mingw-static`
 		
 <br />
 
@@ -94,6 +97,10 @@
    - `Rocky/CentOS` : `sudo dnf install gtest gtest-devel -y`
    - `Ubuntu/Debian` : `sudo apt-get install libgtest-dev -y`
    - `Arch` : `sudo pacman -S gtest`
+- `nlohmann json` 설치 (`j2_library/include/j2_library/json/INSTALL.ko.md` 참고)
+   - `Rocky/CentOS` : `sudo dnf install nlohmann-json-devel -y`
+   - `Ubuntu(22 이상)/Debian` : `sudo apt-get install nlohmann-json3-dev -y`
+   - `Arch` : `sudo pacman -S nlohmann-json` 
 
 <br />
 
