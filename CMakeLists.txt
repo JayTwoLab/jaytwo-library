@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.26)
 project(j2_lib_super VERSION 0.1.0 LANGUAGES CXX)
 
 # -------------------------
-# 라이브러리 서브 프로젝트 
+# j2_library 라이브러리 서브 프로젝트 
 # -------------------------
 add_subdirectory(j2_library) # j2_library/CMakeLists.txt
 

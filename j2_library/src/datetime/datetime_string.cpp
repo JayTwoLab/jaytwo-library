@@ -426,15 +426,29 @@ namespace j2::datetime {
         std::time_t t = std::chrono::system_clock::to_time_t(tp);
         return time_t_to_utc_tm(t, out);
     }
+
     J2LIB_API bool get_local_tm(const std::chrono::system_clock::time_point& tp, std::tm& out) {
         std::time_t t = std::chrono::system_clock::to_time_t(tp);
         return time_t_to_local_tm(t, out);
     }
+
     J2LIB_API bool get_utc_tm(const DateTimeParseResult& r, std::tm& out) {
         return get_utc_tm(r.timepoint, out);
     }
+
     J2LIB_API bool get_local_tm(const DateTimeParseResult& r, std::tm& out) {
         return get_local_tm(r.timepoint, out);
+    }
+
+    J2LIB_API
+        std::optional<std::chrono::system_clock::time_point>
+        parse_datetime_timepoint(const std::string& text,
+            const std::string& format_or_literal,
+            TimeZoneMode tzmode)
+    {
+        auto r = parse_datetime_auto(text, format_or_literal, tzmode);
+        if (!r.ok) return std::nullopt;
+        return r.timepoint;
     }
 
 } // namespace j2::datetime

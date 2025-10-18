@@ -1,5 +1,5 @@
 #pragma once
-// datetime.hpp
+// datetime_string.hpp
 // - C++17 전용 날짜/시간 파서 유틸
 // - 두 가지 모드:
 //   (A) 형식 엄격 일치: "YYYY, MM, DD, hh, mm, ss, SSS" 토큰과 리터럴을
@@ -122,20 +122,15 @@ namespace j2::datetime {
     // r.timepoint(또는 임의의 system_clock::time_point)을 UTC/Local tm으로 변환
     J2LIB_API bool get_utc_tm(const DateTimeParseResult& r, std::tm& out);
     J2LIB_API bool get_local_tm(const DateTimeParseResult& r, std::tm& out);
-    J2LIB_API bool get_utc_tm(const std::chrono::system_clock::time_point& tp,
-        std::tm& out);
-    J2LIB_API bool get_local_tm(const std::chrono::system_clock::time_point& tp,
-        std::tm& out);
+
+    J2LIB_API bool get_utc_tm(const std::chrono::system_clock::time_point& tp, std::tm& out);
+    J2LIB_API bool get_local_tm(const std::chrono::system_clock::time_point& tp, std::tm& out);
 
     // 자주 쓰는 경우: time_point만 바로 받고 싶을 때
-    inline std::optional<std::chrono::system_clock::time_point>
+    J2LIB_API
+        std::optional<std::chrono::system_clock::time_point>
         parse_datetime_timepoint(const std::string& text,
             const std::string& format_or_literal,
-            TimeZoneMode tzmode = TimeZoneMode::Localtime)
-    {
-        auto r = parse_datetime_auto(text, format_or_literal, tzmode);
-        if (!r.ok) return std::nullopt;
-        return r.timepoint;
-    }
+            TimeZoneMode tzmode = TimeZoneMode::Localtime);
 
 } // namespace j2::datetime
