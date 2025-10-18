@@ -140,7 +140,7 @@ namespace j2::datetime {
     // 인자:
     //  out: 결과 문자열 버퍼
     //  value: 쓸 정수 값
-    void append_ndigits(std::string& out, int value, int width);
+    J2LIB_API void append_ndigits(std::string& out, int value, int width);
 
     // 내부 유틸: format의 pos 위치에서 tok 토큰과 일치하는지 검사
     // 인자:
@@ -148,14 +148,14 @@ namespace j2::datetime {
     //  pos: 검사 시작 위치
     //  tok: 검사할 토큰 문자열(예: "YYYY", "MM" 등)
     // 반환: 일치하면 true, 아니면 false
-    bool fmt_match(const std::string& fmt, size_t pos, const char* tok);
+    J2LIB_API bool fmt_match(const std::string& fmt, size_t pos, const char* tok);
 
     // 내부 유틸: std::tm 구조체를 format에 따라 포맷
     // 인자:
     //  tmv: 포맷할 std::tm 구조체
     //  format: 형식 문자열. 예: "YYYY-MM-DD hh:mm:ss.SSS"
     // 반환: 포맷된 문자열
-    std::string format_from_tm_core(const std::tm& tmv,
+    J2LIB_API std::string format_from_tm_core(const std::tm& tmv,
             const std::string& format);
 
     // ---------------- 포맷터 API ----------------
@@ -193,11 +193,20 @@ namespace j2::datetime {
 
     // ---------------- 변환 API ----------------
     // (4) std::tm + TimeZoneMode → time_point
+    // 인자:
+    //  tmv: 변환할 std::tm 구조체
+    //  tzmode: tmv가 UTC/Localtime 중 어느 타임존인지
+    // 반환: 변환된 time_point
     J2LIB_API
         std::chrono::system_clock::time_point
         to_timepoint(const std::tm& tmv, TimeZoneMode tzmode);
 
     // (5) time_point + TimeZoneMode → std::tm
+    // 인자:
+    //  tp: 변환할 time_point 값
+    //  tzmode: 변환할 타임존 모드(UTC/Localtime)
+    //  out: 변환된 std::tm 구조체를 받을 참조
+    // 반환: 성공 시 true, 실패 시 false
     J2LIB_API
         bool to_tm(const std::chrono::system_clock::time_point& tp,
             TimeZoneMode tzmode,
