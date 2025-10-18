@@ -40,7 +40,7 @@ namespace j2::datetime {
         bool ok = false;                           // 성공 여부
         std::time_t epoch = 0;                     // UNIX epoch (초)
         std::int64_t epoch_ms = 0;                 // UNIX epoch (밀리초)
-        std::optional<std::tm> broken{};                          // 변환 직전 tm(보정 포함).
+        std::optional<std::tm> broken{};           // 변환 직전 tm(보정 포함). (사용하지 않을 경우 std::nullopt)
         int millisecond = 0;                       // 밀리초(0~999)
         PresentFlags present{};                    // 형식 파서 전용: 등장 토큰
         std::string error;                         // 실패 사유
@@ -132,5 +132,75 @@ namespace j2::datetime {
         parse_datetime_timepoint(const std::string& text,
             const std::string& format_or_literal,
             TimeZoneMode tzmode = TimeZoneMode::Localtime);
+
+
+    // ---------------- 포맷터 유틸 ----------------
+
+    // 내부 유틸: 0 채움 숫자 쓰기
+    // 인자:
+    //  out: 결과 문자열 버퍼
+    //  value: 쓸 정수 값
+    void append_ndigits(std::string& out, int value, int width);
+
+    // 내부 유틸: format의 pos 위치에서 tok 토큰과 일치하는지 검사
+    // 인자:
+    //  fmt: 형식 문자열 
+    //  pos: 검사 시작 위치
+    //  tok: 검사할 토큰 문자열(예: "YYYY", "MM" 등)
+    // 반환: 일치하면 true, 아니면 false
+    bool fmt_match(const std::string& fmt, size_t pos, const char* tok);
+
+    // 내부 유틸: std::tm 구조체를 format에 따라 포맷
+    // 인자:
+    //  tmv: 포맷할 std::tm 구조체
+    //  format: 형식 문자열. 예: "YYYY-MM-DD hh:mm:ss.SSS"
+    // 반환: 포맷된 문자열
+    std::string format_from_tm_core(const std::tm& tmv,
+            const std::string& format);
+
+    // ---------------- 포맷터 API ----------------
+
+    // (1) std::tm + format
+    // 인자:
+    //  tmv: 포맷할 std::tm 구조체
+    //  format: 형식 문자열. 예: "YYYY-MM-DD hh:mm:ss.SSS"
+    // 반환: 포맷된 문자열
+    J2LIB_API
+        std::string format_datetime(const std::tm& tmv,
+            const std::string& format);
+
+    // (2) time_t + tzmode + format
+    // 인자:
+    //  t: 포맷할 time_t 값
+    //  tzmode: t를 UTC/Localtime 중 어느 타임존으로 변환할지 지정
+    //  format: 형식 문자열. 예: "YYYY-MM-DD hh:mm:ss.SSS"
+    // 반환: 포맷된 문자열
+    J2LIB_API
+        std::string format_datetime(std::time_t t,
+            TimeZoneMode tzmode,
+            const std::string& format);
+
+    // (3) time_point + tzmode + format
+    // 인자:
+    //  tp: 포맷할 time_point 값
+    //  tzmode: tp를 UTC/Localtime 중 어느 타임존으로 변환할지 지정
+    //  format: 형식 문자열. 예: "YYYY-MM-DD hh:mm:ss.SSS"
+    // 반환: 포맷된 문자열    
+    J2LIB_API
+        std::string format_datetime(const std::chrono::system_clock::time_point& tp,
+            TimeZoneMode tzmode,
+            const std::string& format);
+
+    // ---------------- 변환 API ----------------
+    // (4) std::tm + TimeZoneMode → time_point
+    J2LIB_API
+        std::chrono::system_clock::time_point
+        to_timepoint(const std::tm& tmv, TimeZoneMode tzmode);
+
+    // (5) time_point + TimeZoneMode → std::tm
+    J2LIB_API
+        bool to_tm(const std::chrono::system_clock::time_point& tp,
+            TimeZoneMode tzmode,
+            std::tm& out);
 
 } // namespace j2::datetime

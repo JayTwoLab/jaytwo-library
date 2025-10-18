@@ -224,3 +224,133 @@ TEST(DateTime_Errors, RangeChecks) {
     EXPECT_FALSE(parse_strict_datetime("12:00:61", "hh:mm:ss", TimeZoneMode::UTC).ok); // 초 범위
 }
 
+// ============================= 새로 추가된 테스트들 =============================
+// (1)~(3) 포맷터 + (4) to_timepoint + (5) to_tm 검증
+
+TEST(DateTime_Format, FromTm_CoreAndLiterals) {
+    // tm을 구성하고 format_from_tm_core로 직접 포맷
+    std::tm tmv{};
+    tmv.tm_year = 2025 - 1900;
+    tmv.tm_mon = 10 - 1;
+    tmv.tm_mday = 18;
+    tmv.tm_hour = 9;
+    tmv.tm_min = 7;
+    tmv.tm_sec = 5;
+
+    // 토큰과 리터럴이 섞인 케이스
+    std::string s = format_from_tm_core(tmv, "YYYY/MM/DD hh:mm:ss [KST]");
+    EXPECT_EQ(s, "2025/10/18 09:07:05 [KST]");
+
+    // 숫자 패딩(append_ndigits 경유) 검증
+    std::string s2 = format_from_tm_core(tmv, "YYYY-MM-DD hh:mm:ss");
+    EXPECT_EQ(s2, "2025-10-18 09:07:05");
+}
+
+TEST(DateTime_Format, AppendDigitsAndFmtMatchUnits) {
+    // append_ndigits 직접 확인
+    std::string out = "X=";
+    append_ndigits(out, 7, 3);  // 007
+    EXPECT_EQ(out, "X=007");
+
+    // fmt_match 간단 확인
+    EXPECT_TRUE(fmt_match(std::string("YYYY-MM"), 0, "YYYY"));
+    EXPECT_FALSE(fmt_match(std::string("YYYY-MM"), 1, "YYYY")); // 1칸 밀리면 불일치
+}
+
+TEST(DateTime_Format, FromTimeT_UTC) {
+    // 2025-10-17 00:30:05 UTC
+    std::time_t t = make_utc_time_t(2025, 10, 17, 0, 30, 5);
+    ASSERT_NE(t, (std::time_t)-1);
+
+    // UTC 기준 포맷
+    std::string s = format_datetime(t, TimeZoneMode::UTC, "YYYY-MM-DD hh:mm:ss");
+    EXPECT_EQ(s, "2025-10-17 00:30:05");
+}
+
+TEST(DateTime_Format, FromTimePoint_UTC) {
+    // time_point → UTC 포맷
+    std::time_t t = make_utc_time_t(2025, 10, 17, 0, 30, 5);
+    ASSERT_NE(t, (std::time_t)-1);
+    auto tp = std::chrono::system_clock::from_time_t(t);
+
+    std::string s = format_datetime(tp, TimeZoneMode::UTC, "YYYY/MM/DD hh:mm:ss");
+    EXPECT_EQ(s, "2025/10/17 00:30:05");
+}
+
+TEST(DateTime_Convert, TmToTimePoint_UTC) {
+    // (4) tm + UTC → time_point
+    std::tm tmv{};
+    tmv.tm_year = 2025 - 1900;
+    tmv.tm_mon = 10 - 1;
+    tmv.tm_mday = 17;
+    tmv.tm_hour = 0;
+    tmv.tm_min = 30;
+    tmv.tm_sec = 5;
+    tmv.tm_isdst = -1;
+
+    auto tp = to_timepoint(tmv, TimeZoneMode::UTC);
+    auto got = std::chrono::system_clock::to_time_t(tp);
+    auto exp = make_utc_time_t(2025, 10, 17, 0, 30, 5);
+    ASSERT_NE(exp, (std::time_t)-1);
+    EXPECT_EQ(got, exp);
+}
+
+TEST(DateTime_Convert, TmLocal_RoundTrip_LocalConsistency) {
+    // (4) tm + Localtime → time_point → (5) Localtime tm
+    // 로컬 타임존에 의존적이므로 "라운드트립 일치"만 확인
+    std::tm base{};
+    base.tm_year = 2031 - 1900;
+    base.tm_mon = 2 - 1;
+    base.tm_mday = 3;
+    base.tm_hour = 4;
+    base.tm_min = 5;
+    base.tm_sec = 6;
+    base.tm_isdst = -1;
+
+    auto tp = to_timepoint(base, TimeZoneMode::Localtime);
+
+    std::tm back{};
+    ASSERT_TRUE(to_tm(tp, TimeZoneMode::Localtime, back));
+
+    EXPECT_EQ(back.tm_year, base.tm_year);
+    EXPECT_EQ(back.tm_mon, base.tm_mon);
+    EXPECT_EQ(back.tm_mday, base.tm_mday);
+    EXPECT_EQ(back.tm_hour, base.tm_hour);
+    EXPECT_EQ(back.tm_min, base.tm_min);
+    EXPECT_EQ(back.tm_sec, base.tm_sec);
+}
+
+TEST(DateTime_Convert, TimePointToTm_UTC_ThenBack) {
+    // (5) time_point + UTC → tm  그리고 다시 (4)로 되돌렸을 때 epoch 동일해야 함
+    auto exp = make_utc_time_t(2028, 1, 2, 3, 4, 5);
+    ASSERT_NE(exp, (std::time_t)-1);
+    auto tp = std::chrono::system_clock::from_time_t(exp);
+
+    std::tm utc{};
+    ASSERT_TRUE(to_tm(tp, TimeZoneMode::UTC, utc));
+    EXPECT_EQ(utc.tm_year, 2028 - 1900);
+    EXPECT_EQ(utc.tm_mon, 1 - 1);
+    EXPECT_EQ(utc.tm_mday, 2);
+    EXPECT_EQ(utc.tm_hour, 3);
+    EXPECT_EQ(utc.tm_min, 4);
+    EXPECT_EQ(utc.tm_sec, 5);
+
+    auto round = to_timepoint(utc, TimeZoneMode::UTC);
+    EXPECT_EQ(std::chrono::system_clock::to_time_t(round), exp);
+}
+
+TEST(DateTime_Integration, FormatAfterConversions) {
+    // tm → time_point(UTC) → 포맷(UTC)
+    std::tm tmv{};
+    tmv.tm_year = 2040 - 1900;
+    tmv.tm_mon = 12 - 1;
+    tmv.tm_mday = 31;
+    tmv.tm_hour = 23;
+    tmv.tm_min = 59;
+    tmv.tm_sec = 58;
+    tmv.tm_isdst = -1;
+
+    auto tp = to_timepoint(tmv, TimeZoneMode::UTC);
+    auto s = format_datetime(tp, TimeZoneMode::UTC, "YYYY-MM-DD hh:mm:ss");
+    EXPECT_EQ(s, "2040-12-31 23:59:58");
+}
