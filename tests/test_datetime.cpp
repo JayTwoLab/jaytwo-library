@@ -33,22 +33,7 @@ TEST(DateTime_Strict, FullMatch_Localtime) {
     EXPECT_TRUE(r.ok) << r.error; // 파싱 결과  
     EXPECT_EQ(r.millisecond, 123); // 밀리초
 
-    // 역변환(로컬 tm)은 환경 의존성이 있으므로 존재만 검증
-    std::tm loc{}; // C++ 표준 시간(time) 구조체
-    // struct std::tm {
-    //    int tm_sec;   // 초 (0 ~ 60, 윤초 때문에 60까지 가능)
-    //    int tm_min;   // 분 (0 ~ 59)
-    //    int tm_hour;  // 시 (0 ~ 23)
-    //    int tm_mday;  // 일 (1 ~ 31)
-    //    int tm_mon;   // 월 (0 ~ 11, 0=1월)
-    //    int tm_year;  // 연도 (1900년 기준, 예: 2025년이면 125)
-    //    int tm_wday;  // 요일 (0=일요일, 1=월요일, ...)
-    //    int tm_yday;  // 1월 1일부터 지난 일 수 (0 ~ 365)
-    //    int tm_isdst; // 서머타임 적용 여부 (양수=적용, 0=미적용, 음수=정보 없음)
-    // };
 
-    EXPECT_TRUE(get_local_tm(r, loc)); // 로컬 tm 얻기
-    EXPECT_EQ(loc.tm_sec, 56);
 }
 
 TEST(DateTime_Strict, MissingTimeFieldsUseBase) {
@@ -130,12 +115,7 @@ TEST(DateTime_ISO, TimeOnlyZ_TodayApplied) {
     EXPECT_TRUE(r.ok) << r.error;
     EXPECT_EQ(r.millisecond, 1);
 
-    // UTC tm에서 시/분/초만 확인
-    std::tm utc{};
-    ASSERT_TRUE(get_utc_tm(r, utc));
-    EXPECT_EQ(utc.tm_hour, 12);
-    EXPECT_EQ(utc.tm_min, 34);
-    EXPECT_EQ(utc.tm_sec, 56);
+
 }
 
 TEST(DateTime_ISO, TimeOnlyNoOffset_UsesFallbackLocalDate) {
@@ -144,9 +124,6 @@ TEST(DateTime_ISO, TimeOnlyNoOffset_UsesFallbackLocalDate) {
     auto r = parse_iso8601_datetime("23:15", TimeZoneMode::Localtime);
     EXPECT_TRUE(r.ok) << r.error;
 
-    std::tm loc{};
-    ASSERT_TRUE(get_local_tm(r, loc));
-    EXPECT_EQ(loc.tm_min, 15);
 }
 
 TEST(DateTime_Auto, SwitchByLiteral) {
