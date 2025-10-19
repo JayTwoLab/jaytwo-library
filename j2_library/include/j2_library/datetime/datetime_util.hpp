@@ -49,7 +49,7 @@ namespace j2::datetime {
     //  D: 일(1~31)
     // 반환: 유효하면 true, 아니면 false
     // 예제:
-    //  valid_ymd(2025, 2, 29) → false
+    //  valid_ymd(2025, 2, 29) → false (2025년은 윤년 아님)
     J2LIB_API bool valid_ymd(int Y, int M, int D);
 
     // 현재 시각을 지정된 타임존 모드(UTC/Localtime)로 얻기

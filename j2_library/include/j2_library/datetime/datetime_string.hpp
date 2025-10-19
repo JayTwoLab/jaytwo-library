@@ -1,22 +1,5 @@
 #pragma once
 
-// - C++17 전용 날짜/시간 파서 유틸
-// - 두 가지 모드:
-//   (A) 형식 엄격 일치: "YYYY, MM, DD, hh, mm, ss, SSS" 토큰과 리터럴을
-//       정확히 매칭
-//       · 형식에 없는 토큰은 tzmode 기준의 현재 날짜/시간으로 보정
-//       · 예: "mm:ss" → 시/년월일은 현재, 분/초는 입력값
-//   (B) ISO-8601: YYYY-MM-DDThh:mm[:ss][.frac][Z|±HH:MM|±HHMM|±HH]
-//       · 날짜가 없고 시간만 → 현재 날짜 보정
-//       · 분수초는 1~9자리 허용, 밀리초는 앞 3자리 사용(부족 시 0 패딩)
-// - 타임존 처리:
-//   · (A) 형식 파서: 인자의 TimeZoneMode(UTC/Localtime) 기준의 현재를 사용
-//   · (B) ISO 파서: 문자열의 Z/±오프셋이 우선, 없으면 TimeZoneMode 기준
-// - 결과: time_t(초), epoch_ms(밀리초), time_point(system_clock) 제공
-//
-// 주의:
-// - UTC 변환은 timegm(리눅스/맥)/_mkgmtime(윈도우)에 의존합니다.
-
 #include <string>
 #include <ctime>
 #include <cstdint>
@@ -29,6 +12,23 @@
 #include "j2_library/datetime/datetime_common.hpp"
 
 namespace j2::datetime {
+
+    // - C++17 전용 날짜/시간 파서 
+    // - 두 가지 모드:
+    //   (A) 형식 엄격 일치: "YYYY, MM, DD, hh, mm, ss, SSS" 토큰과 리터럴을
+    //       정확히 매칭
+    //       · 형식에 없는 토큰은 tzmode 기준의 현재 날짜/시간으로 보정
+    //       · 예: "mm:ss" → 시/년월일은 현재, 분/초는 입력값
+    //   (B) ISO-8601: YYYY-MM-DDThh:mm[:ss][.frac][Z|±HH:MM|±HHMM|±HH]
+    //       · 날짜가 없고 시간만 → 현재 날짜 보정
+    //       · 분수초는 1~9자리 허용, 밀리초는 앞 3자리 사용(부족 시 0 패딩)
+    // - 타임존 처리:
+    //   · (A) 형식 파서: 인자의 TimeZoneMode(UTC/Localtime) 기준의 현재를 사용
+    //   · (B) ISO 파서: 문자열의 Z/±오프셋이 우선, 없으면 TimeZoneMode 기준
+    // - 결과: time_t(초), epoch_ms(밀리초), time_point(system_clock) 제공
+    //
+    // 주의:
+    // - UTC 변환은 timegm(리눅스/맥)/_mkgmtime(윈도우)에 의존합니다.
 
     // 형식 파서에서 실제 등장한 토큰 표기
     // YYYY : 년, MM : 월, DD : 일, hh : 시, mm : 분, ss : 초, SSS : 밀리초
