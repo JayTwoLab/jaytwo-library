@@ -31,13 +31,34 @@ endif()
 
 #########################################
 # vcpkg 설정 적용
-if (MSVC)
+
+if (MSVC) # Visual Studio 인 경우 vcpkg 사용 (테스트 환경: VS2022 x64)
   option(USE_VCPKG "[MSVC] Use vcpkg." ON)
 endif()
 
-if (MINGW)
+if (MINGW) #MingW 인 경우 vcpkg 사용 (테스트 환경: MingW 13.1.0 x64)
   option(USE_VCPKG "[MINGW] Use vcpkg." ON)
 endif()
+
+# 현재 리눅스 환경에서는 vcpkg 사용 안함. 
+# if (UNIX AND NOT MSVC AND NOT MINGW)
+#   option(USE_VCPKG "[LINUX] Use vcpkg." ON)
+#
+#	# /etc/os-release 파일에서 ID 값 읽기
+#	file(READ "/etc/os-release" OS_RELEASE_CONTENT)
+#	string(REGEX MATCH "ID=([a-zA-Z0-9_-]+)" _ ${OS_RELEASE_CONTENT})
+#	set(OS_ID "${CMAKE_MATCH_1}")
+#
+#	# 배포판별 조건 분기
+#	if(OS_ID STREQUAL "ubuntu")
+#	  message(STATUS "Detected Ubuntu Linux")
+#	elseif(OS_ID STREQUAL "rocky" OR OS_ID STREQUAL "centos" OR OS_ID STREQUAL "rhel")
+#	  message(STATUS "Detected Rocky/CentOS/RedHat Linux")
+#	else()
+#	  message(STATUS "Detected other Linux: ${OS_ID}")
+#	endif
+# 
+# endif()
 
 if (USE_VCPKG)
   message("-- Use vcpkg. --")
