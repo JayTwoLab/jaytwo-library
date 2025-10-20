@@ -1,9 +1,6 @@
-#include "j2_library/string/string.hpp"
 
-#include <sstream>
-#include <algorithm>
-#include <cctype>
-#include <charconv>
+
+#include "j2_library/string/string_basic.hpp"
 
 // 내부 유틸: ASCII 대/소문자 변환 (유니코드는 별도 라이브러리 권장)
 static inline unsigned char j2_to_lower_ascii(unsigned char c) {

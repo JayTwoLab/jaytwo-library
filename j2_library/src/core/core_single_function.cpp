@@ -1,8 +1,5 @@
 
-#include <algorithm>
-#include <cctype>
-
-#include "j2_library/core/single_function.hpp"
+#include "j2_library/core/core_single_function.hpp"
 
 namespace j2::core {
 

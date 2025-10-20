@@ -21,51 +21,47 @@
 
 // -- bit components --
 
-#include "j2_library/bit/bit_array.hpp" // For bit_array class definition 
+#include "j2_library/bit/bit.hpp" 
 
 // --  core components --
 
-#include "j2_library/core/single_function.hpp" // For Single Function definitions
+#include "j2_library/core/core.hpp" 
 
 // -- date/time components --
 
-#include "j2_library/datetime/datetime.hpp" // For DateTime parsing utilities   
+#include "j2_library/datetime/datetime.hpp" 
 
 // -- directory components --
 
-#include "j2_library/directory/directory.hpp" // For directory manipulation functions
+#include "j2_library/directory/directory.hpp" 
 
 // -- encoding components --
 
-#include "j2_library/encoding/encoding.hpp" // For encoding related functions
+#include "j2_library/encoding/encoding.hpp" 
 
 // -- ini components --
 
-#include "j2_library/ini/ini.hpp" // For INI parser class definition
+#include "j2_library/ini/ini.hpp" 
 
 // -- macro components --
 
-#include "j2_library/macro/setter_getter.hpp" // For DEFINE_MEMBER_AND_SETTER macro
-
-#include "j2_library/macro/try_opt.hpp" // For TRY_OPT and related macros
+#include "j2_library/macro/macro.hpp"
 
 // -- overload components --
 
-#include "j2_library/overload/overload.hpp" // For overload utility
+#include "j2_library/overload/overload.hpp" 
 
 // -- string components --
 
-#include "j2_library/string/mutex_string.hpp" // For mutex_string class definition
-
-#include "j2_library/string/string.hpp" // For string manipulation functions
-
-#include "j2_library/string/to_console_encoding.hpp" // For to_console_encoding function
-
-#include "j2_library/string/to_string.hpp" // For to_string and is_equal functions
+#include "j2_library/string/string.hpp"
 
 // -- thread components --
 
-#include "j2_library/thread/dynamic_thread.hpp" // For DynamicThread class definition
+#include "j2_library/thread/thread.hpp"
+
+// -- uuid components --
+
+#include "j2_library/uuid/uuid.hpp" 
 
 // TODO: Add more core components as needed
 
