@@ -4,12 +4,11 @@
 
 #include "j2_library/file/file.hpp"
 
-// using namespace j2::file;
-
 // 테스트: 경로와 이름이 정상적으로 얻어지는지
 TEST(ExecutablePathTest, PathAndDirNotEmpty) {
     auto path = j2::file::executable_path(); // 경로 + 파일명 (표준 path 객체 반환)
     auto dir = j2::file::executable_dir(); // 경로만 (표준 path 객체 반환)
+    // NOTE: path 객체는 문자열로 변환 가능 : path.string() 또는 path.u8string()
 
     EXPECT_FALSE(path.empty()); // 예> "C:\Program Files\Hello.exe"
     EXPECT_FALSE(dir.empty()); // 예> "C:\Program Files"
