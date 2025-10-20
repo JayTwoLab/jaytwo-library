@@ -78,10 +78,10 @@ namespace j2::directory {
     // 디렉터리 생성 옵션 구조체
     // -----------------------------------------------------------------------
     struct J2LIB_API CreateDirOptions {
-        bool make_parents = true;       // 상위 디렉터리 자동 생성 여부
-        bool succeed_if_exists = true;  // 이미 존재 시 성공으로 간주 여부
-        bool follow_symlinks = false;   // 심볼릭 링크 따라갈지 여부
-        bool set_permissions = false;   // 생성 후 권한 설정 여부
+        bool make_parents      = true;  // 상위 디렉터리 자동 생성 여부
+        bool succeed_if_exists = true;  // 디렉터리 이미 존재 시 성공으로 간주 여부
+        bool follow_symlinks   = false; // 심볼릭 링크 따라갈지 여부
+        bool set_permissions   = false; // 생성 후 권한 설정 여부
 
         // 기본 권한: 소유자 전체, 그룹 읽기/실행, 기타 읽기/실행
         std::filesystem::perms perms_mask =
@@ -118,14 +118,13 @@ namespace j2::directory {
         // - 언어(Language)와 옵션(CreateDirOptions)을 설정합니다.
         // - 기본값: Language::Korean, 부모 자동 생성 옵션 활성화
         //
-        // 예시:
-        // DirectoryMaker maker(Language::English, {});
-        explicit DirectoryMaker(Language lang = Language::Korean,
+        explicit DirectoryMaker(
+            Language lang = Language::English,
             CreateDirOptions opt = {}) noexcept;
 
         // 현재 언어 설정을 반환합니다.
         // 예시:
-        // Language lang = maker.language();
+        // Language lang = maker.language(); // 영어(권장) 또는 한국어
         Language language() const noexcept { return lang_; }
 
         // 언어를 변경합니다.
@@ -144,14 +143,14 @@ namespace j2::directory {
         // maker.set_options(opt);
         void set_options(const CreateDirOptions& opt) noexcept { opt_ = opt; }
 
+        //  NOTICE: 디렉터리 생성 함수
         // 지정한 경로의 디렉터리를 생성합니다.
         // 옵션에 따라 부모 경로 생성, 권한 설정 등이 적용됩니다.
         //
         // 예시:
         // CreateDirResult res = maker.create_directory_tree("data/output");
         // if (res) std::cout << "성공" << std::endl;
-        CreateDirResult create_directory_tree(
-            const std::filesystem::path& target) const noexcept;
+        CreateDirResult create_directory_tree(const std::filesystem::path& target) const noexcept;
 
         // CreatePathCode를 문자열로 변환합니다.
         // 예시:
@@ -163,7 +162,8 @@ namespace j2::directory {
         static CreatePathCode map_errc_(const std::error_code& ec) noexcept;
 
         // 안전하게 파일 상태를 조회
-        std::filesystem::file_status safe_status_(const std::filesystem::path& p,
+        std::filesystem::file_status safe_status_(
+            const std::filesystem::path& p,
             bool follow_symlinks,
             std::error_code& ec) const noexcept;
 
