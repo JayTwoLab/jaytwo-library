@@ -63,22 +63,10 @@ find_package(nlohmann_json CONFIG REQUIRED) # nlohmann_json 라이브러리 (inc
 
 # -------------------------
 # 라이브러리 정의
-#  TODO: cpp 파일이 추가되면 아래 glob 패턴에 맞게 추가할 것
+#  src 모든 하위 디렉토리를 자동으로 추가.
+#  src/ 전체를 재귀적으로 뒤져서 .cpp 전부 포함.
 # -------------------------
-file(GLOB SRC_FILES CONFIGURE_DEPENDS
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/bit/*.cpp" 
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/core/*.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/datetime/*.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/directory/*.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/encoding/*.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/ini/*.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/json/*.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/string/*.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/thread/*.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/uuid/*.cpp"
-)
-
+file(GLOB_RECURSE SRC_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 
 # -------------------------
 # 라이브러리 추가
