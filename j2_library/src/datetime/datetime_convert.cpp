@@ -61,18 +61,18 @@ namespace j2::datetime {
 #endif
     }
 
-    J2LIB_API bool get_utc_tm(const std::chrono::system_clock::time_point& tp, std::tm& out) {
+    bool get_utc_tm(const std::chrono::system_clock::time_point& tp, std::tm& out) {
         std::time_t t = std::chrono::system_clock::to_time_t(tp);
         return time_t_to_utc_tm(t, out);
     }
 
-    J2LIB_API bool get_local_tm(const std::chrono::system_clock::time_point& tp, std::tm& out) {
+    bool get_local_tm(const std::chrono::system_clock::time_point& tp, std::tm& out) {
         std::time_t t = std::chrono::system_clock::to_time_t(tp);
         return time_t_to_local_tm(t, out);
     }
 
     // (4) std::tm + TimeZoneMode → time_point
-    J2LIB_API std::chrono::system_clock::time_point to_timepoint(const std::tm& tmv, TimeZoneMode tzmode) {
+    std::chrono::system_clock::time_point to_timepoint(const std::tm& tmv, TimeZoneMode tzmode) {
         std::optional<std::time_t> t;
         if (tzmode == TimeZoneMode::UTC)
             t = j2::datetime::tm_to_time_utc(tmv);
@@ -86,7 +86,7 @@ namespace j2::datetime {
     }
 
     // (5) time_point + TimeZoneMode → std::tm
-    J2LIB_API  bool to_tm(const std::chrono::system_clock::time_point& tp, TimeZoneMode tzmode, std::tm& out) {
+    bool to_tm(const std::chrono::system_clock::time_point& tp, TimeZoneMode tzmode, std::tm& out) {
         std::time_t t = std::chrono::system_clock::to_time_t(tp);
         if (tzmode == TimeZoneMode::UTC)
             return j2::datetime::time_t_to_utc_tm(t, out);

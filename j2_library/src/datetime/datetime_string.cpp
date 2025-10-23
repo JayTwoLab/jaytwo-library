@@ -1,10 +1,6 @@
 #include "j2_library/datetime/datetime.hpp"
 
-
 namespace j2::datetime {
-
-
-
 
     // ---------------- (A) 형식 파서 ----------------
 
@@ -115,23 +111,20 @@ namespace j2::datetime {
         return r;
     }
 
-    J2LIB_API DateTimeParseResult
-        parse_strict_datetime(const std::string& datetime,
+    DateTimeParseResult parse_strict_datetime(const std::string& datetime,
             const std::string& format,
             TimeZoneMode tzmode) {
         return parse_strict_datetime_ex_impl(datetime, format, tzmode, nullptr);
     }
 
-    J2LIB_API DateTimeParseResult
-        parse_strict_datetime_with_base(const std::string& datetime,
+    DateTimeParseResult parse_strict_datetime_with_base(const std::string& datetime,
             const std::string& format,
             TimeZoneMode tzmode,
             const std::tm& base_tm) {
         return parse_strict_datetime_ex_impl(datetime, format, tzmode, &base_tm);
     }
 
-    J2LIB_API DateTimeParseResult
-        parse_strict_datetime_optbase(const std::string& datetime,
+    DateTimeParseResult parse_strict_datetime_optbase(const std::string& datetime,
             const std::string& format,
             TimeZoneMode tzmode,
             const std::tm* base_or_null) {
@@ -139,8 +132,7 @@ namespace j2::datetime {
         return parse_strict_datetime_ex_impl(datetime, format, tzmode, base_or_null);
     }
 
-    J2LIB_API std::optional<std::int64_t>
-        parse_strict_datetime_epoch_ms(const std::string& datetime,
+    std::optional<std::int64_t> parse_strict_datetime_epoch_ms(const std::string& datetime,
             const std::string& format,
             TimeZoneMode tzmode) {
         auto r = parse_strict_datetime(datetime, format, tzmode);
@@ -287,14 +279,12 @@ namespace j2::datetime {
 
     // -------- 공개 API --------
 
-    J2LIB_API DateTimeParseResult
-        parse_iso8601_datetime(const std::string& iso8601,
+    DateTimeParseResult parse_iso8601_datetime(const std::string& iso8601,
             TimeZoneMode fallback_tzmode) {
         return parse_iso8601_strict(iso8601, fallback_tzmode);
     }
 
-    J2LIB_API DateTimeParseResult
-        parse_datetime_auto(const std::string& text,
+    DateTimeParseResult parse_datetime_auto(const std::string& text,
             const std::string& format_or_literal,
             TimeZoneMode tzmode) {
         if (format_or_literal == "ISO8601") {
@@ -304,9 +294,7 @@ namespace j2::datetime {
     }
 
 
-    J2LIB_API
-        std::optional<std::chrono::system_clock::time_point>
-        parse_datetime_timepoint(const std::string& text,
+    std::optional<std::chrono::system_clock::time_point> parse_datetime_timepoint(const std::string& text,
             const std::string& format_or_literal,
             TimeZoneMode tzmode)
     {
