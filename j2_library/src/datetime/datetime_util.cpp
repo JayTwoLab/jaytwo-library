@@ -74,7 +74,7 @@ namespace j2::datetime {
 
     // 내부 유틸: 0 채움 숫자 쓰기
     J2LIB_API
-        void j2::datetime::append_ndigits(std::string& out, int value, int width) {
+        void append_ndigits(std::string& out, int value, int width) {
         int v = value;
         if (v < 0) v = 0;
         char buf[32];
@@ -88,7 +88,7 @@ namespace j2::datetime {
 
     // 내부 유틸: 토큰 일치 검사
     J2LIB_API
-        bool j2::datetime::fmt_match(const std::string& fmt, size_t fp, const char* tok) {
+        bool fmt_match(const std::string& fmt, size_t fp, const char* tok) {
         for (int i = 0; tok[i]; ++i) {
             if (fp + static_cast<size_t>(i) >= fmt.size()) return false;
             if (fmt[fp + static_cast<size_t>(i)] != tok[i]) return false;
@@ -98,7 +98,7 @@ namespace j2::datetime {
 
     // 핵심 포맷터: tm → 문자열
     J2LIB_API
-        std::string j2::datetime::format_from_tm_core(const std::tm& tmv,
+        std::string format_from_tm_core(const std::tm& tmv,
             const std::string& format) {
         std::string out;
         out.reserve(format.size() + 16);
@@ -138,14 +138,14 @@ namespace j2::datetime {
 
 
     // (1) std::tm + format
-    J2LIB_API std::string j2::datetime::format_datetime(
+    J2LIB_API std::string format_datetime(
         const std::tm& tmv,
         const std::string& format) {
         return format_from_tm_core(tmv, format);
     }
 
     // (2) time_t + tzmode + format
-    J2LIB_API std::string j2::datetime::format_datetime(
+    J2LIB_API std::string format_datetime(
         std::time_t t,
         j2::datetime::TimeZoneMode tzmode,
         const std::string& format) {
@@ -158,7 +158,7 @@ namespace j2::datetime {
     }
 
     // (3) time_point + tzmode + format
-    J2LIB_API std::string j2::datetime::format_datetime(
+    J2LIB_API std::string format_datetime(
             const std::chrono::system_clock::time_point& tp,
             j2::datetime::TimeZoneMode tzmode,
             const std::string& format) {
