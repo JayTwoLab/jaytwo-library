@@ -72,9 +72,7 @@ namespace j2::datetime {
     }
 
     // (4) std::tm + TimeZoneMode → time_point
-    J2LIB_API
-        std::chrono::system_clock::time_point
-        j2::datetime::to_timepoint(const std::tm& tmv, TimeZoneMode tzmode) {
+    J2LIB_API std::chrono::system_clock::time_point to_timepoint(const std::tm& tmv, TimeZoneMode tzmode) {
         std::optional<std::time_t> t;
         if (tzmode == TimeZoneMode::UTC)
             t = j2::datetime::tm_to_time_utc(tmv);
@@ -88,10 +86,7 @@ namespace j2::datetime {
     }
 
     // (5) time_point + TimeZoneMode → std::tm
-    J2LIB_API
-        bool j2::datetime::to_tm(const std::chrono::system_clock::time_point& tp,
-            TimeZoneMode tzmode,
-            std::tm& out) {
+    J2LIB_API  bool to_tm(const std::chrono::system_clock::time_point& tp, TimeZoneMode tzmode, std::tm& out) {
         std::time_t t = std::chrono::system_clock::to_time_t(tp);
         if (tzmode == TimeZoneMode::UTC)
             return j2::datetime::time_t_to_utc_tm(t, out);
