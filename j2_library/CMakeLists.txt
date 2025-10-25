@@ -58,8 +58,33 @@ endif()
 # 외부 패키지 찾기
 #  TODO: 패키지 의존성이 추가되면 여기에 추가할 것
 # -------------------------
-find_package(Threads REQUIRED) # 스레드 라이브러리
-find_package(nlohmann_json CONFIG REQUIRED) # nlohmann_json 라이브러리 (include/j2_library/json/INSTALL.ko.md 참고)
+
+# 스레드 라이브러리
+find_package(Threads REQUIRED) 
+
+# nlohmann_json 라이브러리 (include/j2_library/json/INSTALL.ko.md 참고)
+# find_package(nlohmann_json CONFIG REQUIRED)  
+
+find_package(nlohmann_json CONFIG QUIET) # 우선 시스템/패키지 매니저에서 nlohmann_json 찾기 시도
+if (nlohmann_json_FOUND)
+    message(STATUS "Found nlohmann_json from package manager") # 패키지 찾았음.
+else()
+    message(WARNING "nlohmann_json not found, using third-party version")
+
+    # 프로젝트 내 third-party 경로를 서브 디렉토리로 추가
+    # 예: third-party/nlohmann_json/CMakeLists.txt 가 존재한다고 가정
+    # ${CMAKE_CURRENT_SOURCE_DIR}
+    # ├─ CMakeLists.txt
+    # └─ third-party/
+    #     └─ nlohmann_json/
+    #         ├─ CMakeLists.txt
+    #         └─ single_include/
+    #             └─ nlohmann/
+    #                 └─ json.hpp
+    add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/third-party/nlohmann_json")
+
+    # /jaytwo-library/j2_library/third-party/
+endif()
 
 # -------------------------
 # 라이브러리 정의
@@ -123,10 +148,13 @@ target_compile_features(j2_library PUBLIC cxx_std_${J2_LIBRARY_CXX_STANDARD})
 # 필요한 시스템 라이브러리
 #  TODO: 라이브러리 의존성이 추가되면 여기에 추가할 것
 # -------------------------
-target_link_libraries(j2_library PRIVATE
-  Threads::Threads # 스레드 라이브러리
-  nlohmann_json::nlohmann_json # nlohmann_json 라이브러리
-)
+
+# 스레드 라이브러리
+target_link_libraries(j2_library PRIVATE Threads::Threads) 
+
+# nlohmann_json 라이브러리
+target_link_libraries(j2_library PRIVATE nlohmann_json::nlohmann_json) 
+
 
 # -------------------------
 # 설치/패키징
