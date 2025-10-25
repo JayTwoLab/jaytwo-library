@@ -1,3 +1,6 @@
 [submodule "j2_library/third-party/nlohmann_json"]
 	path = j2_library/third-party/nlohmann_json
 	url = https://github.com/nlohmann/json.git
+[submodule "j2_library/third-party/spdlog"]
+	path = j2_library/third-party/spdlog
+	url = https://github.com/gabime/spdlog.git

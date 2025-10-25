@@ -67,9 +67,11 @@ endif()
 #  TODO: 패키지 의존성이 추가되면 여기에 추가할 것
 # -------------------------
 
+################################
 # 스레드 라이브러리
 find_package(Threads REQUIRED) 
 
+################################
 # nlohmann_json 라이브러리 (include/j2_library/json/INSTALL.ko.md 참고)
 # nlohmann_json: 패키지 우선, 실패 시 로컬 vendor 인터페이스 타깃 구성 + 같은 export set 포함
 find_package(nlohmann_json CONFIG QUIET)
@@ -105,14 +107,48 @@ else()
   install(TARGETS nlohmann_json_vendor
           EXPORT j2_libraryTargets)
 endif()
- 
+
+################################
+# spdlog: 패키지 우선, 없으면 third-party 사용
+find_package(spdlog CONFIG QUIET)
+if (spdlog_FOUND)
+  message(STATUS "Found spdlog from package manager")
+else()
+  message(WARNING "spdlog not found, using third-party vendor (header-only)")
+
+  set(SPDLOG_INC "${CMAKE_CURRENT_SOURCE_DIR}/third-party/spdlog/include")
+  if (NOT EXISTS "${SPDLOG_INC}")
+    message(FATAL_ERROR "Expected spdlog include directory not found: ${SPDLOG_INC}")
+  endif()
+
+  add_library(spdlog_vendor INTERFACE)
+  target_include_directories(spdlog_vendor INTERFACE
+    $<BUILD_INTERFACE:${SPDLOG_INC}>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+  )
+
+  add_library(spdlog::spdlog ALIAS spdlog_vendor)
+
+  # 헤더 설치
+  install(DIRECTORY "${SPDLOG_INC}/"
+          DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+          FILES_MATCHING PATTERN "*.hpp" PATTERN "*.h")
+
+  install(TARGETS spdlog_vendor
+          EXPORT j2_libraryTargets)
+endif()
+
+
 
 # -------------------------
 # 라이브러리 정의
 #  src 모든 하위 디렉토리를 자동으로 추가.
-#  src/ 전체를 재귀적으로 뒤져서 .cpp 전부 포함.
+#  src/ 전체를 재귀적으로 뒤져서 .cpp .c 전부 포함.
 # -------------------------
-file(GLOB_RECURSE SRC_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
+file(GLOB_RECURSE SRC_FILES CONFIGURE_DEPENDS
+  "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
+  "${CMAKE_CURRENT_SOURCE_DIR}/src/*.c"
+)
 
 # -------------------------
 # 라이브러리 추가
@@ -171,7 +207,7 @@ target_compile_features(j2_library PUBLIC cxx_std_${J2_LIBRARY_CXX_STANDARD})
 # -------------------------
 target_link_libraries(j2_library PRIVATE Threads::Threads)  # 스레드 라이브러리
 target_link_libraries(j2_library PUBLIC nlohmann_json::nlohmann_json)  # nlohmann_json 라이브러리
-
+target_link_libraries(j2_library PUBLIC spdlog::spdlog) # spdlog 라이브러리
 
 # -------------------------
 # 설치/패키징
