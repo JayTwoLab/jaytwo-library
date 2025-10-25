@@ -18,7 +18,7 @@ add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/../j2_library"
 # =========================
 # 테스트 옵션 및 GTest 설정
 # =========================
-option(J2_ENABLE_TESTS "Build unit tests for j2_library" ON)
+option(J2_ENABLE_TESTS "Build unit tests for j2_library" ON) # cmake 명령어 인자에 -DJ2_ENABLE_TESTS=OFF 로 구글 테스트 비활성 가능
 
 if (J2_ENABLE_TESTS)
   include(CTest)
