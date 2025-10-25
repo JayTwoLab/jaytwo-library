@@ -40,3 +40,21 @@ cd build
 cmake ..
 sudo cmake --install .
 ```
+
+---
+## (4) `git submodule` 설정을 이용하여 다운로드 하는 방법
+
+- `git clone` 시 서브모듈까지 한 번에 받으려면 `--recurse-submodules` 옵션을 사용
+```bash
+# git clone --recurse-submodules https://github.com/사용할-레포.git
+
+git clone --recurse-submodules https://github.com/JayTwoLab/jaytwo-library.git
+```
+
+- `git clone`을 한 상태라면, 서브모듈 초기화와 업데이트
+```bash
+# git clone https://github.com/JayTwoLab/jaytwo-library.git 한 이후
+
+git submodule update --init --recursive
+```
+
