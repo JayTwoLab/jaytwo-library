@@ -7,3 +7,9 @@
 [submodule "j2_library/third-party/googletest"]
 	path = j2_library/third-party/googletest
 	url = https://github.com/google/googletest.git
+[submodule "j2_library/third-party/simpleini"]
+	path = j2_library/third-party/simpleini
+	url = https://github.com/brofield/simpleini.git
+[submodule "j2_library/third-party/asio"]
+	path = j2_library/third-party/asio
+	url = https://github.com/chriskohlhoff/asio.git

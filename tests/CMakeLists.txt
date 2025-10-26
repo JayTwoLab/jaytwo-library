@@ -1,7 +1,9 @@
 # test/CMakeLists.txt
 cmake_minimum_required(VERSION 3.26)
 
-project(j2_test VERSION 0.1.0 LANGUAGES CXX) # 프로젝트 선언
+# 프로젝트 선언
+set(J2_TESTS_VERSION "0.1.0")
+project(j2_test VERSION ${J2_TESTS_VERSION} LANGUAGES CXX) 
 
 set(CMAKE_CXX_STANDARD 17)                 # C++17
 set(CMAKE_CXX_STANDARD_REQUIRED ON)        # 지정한 표준을 반드시 사용
@@ -18,7 +20,8 @@ add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/../j2_library"
 # =========================
 # 테스트 옵션 및 GTest 설정
 # =========================
-option(J2_ENABLE_TESTS "Build unit tests for j2_library" ON) # cmake 명령어 인자에 -DJ2_ENABLE_TESTS=OFF 로 구글 테스트 비활성 가능
+option(J2_ENABLE_TESTS "Build unit tests for j2_library" ON) # 디폴트로 테스트 기능 활성화(ON)
+# cmake 명령어 인자에 -DJ2_ENABLE_TESTS=OFF 로 구글 테스트 비활성 가능
 
 if (J2_ENABLE_TESTS)
   include(CTest)

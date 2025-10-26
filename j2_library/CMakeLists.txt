@@ -4,10 +4,8 @@ cmake_minimum_required(VERSION 3.26)
 # -------------------------
 # 프로젝트 선언
 # -------------------------
-project(j2_library
-  VERSION 0.1.0
-  LANGUAGES CXX
-)
+set(J2_LIBRARY_VERSION "0.1.0") # j2 라이브러리 프로젝트 버전 
+project(j2_library  VERSION ${J2_LIBRARY_VERSION}  LANGUAGES CXX)
 # 이 서브프로젝트는 단독으로도 동작해야 하므로 project() 선언을 포함합니다.
 # 프로젝트 VERSION은 주로 설치/패키징에 사용됩니다.
 # cmake 파일에서 VERSION을 설정하면 헤더 파일(version.hpp, 자동 생성)에 자동으로 반영됩니다.
@@ -138,7 +136,110 @@ else()
           EXPORT j2_libraryTargets)
 endif()
 
+###################################
+# --- SimpleIni: 패키지 우선, 실패 시 시스템 헤더 또는 서브모듈(로컬 코드) 폴백 ---
 
+# 1) vcpkg/Conan 등에서 CONFIG 패키지 시도 (있으면 simpleini::simpleini 타깃을 씁니다)
+find_package(simpleini CONFIG QUIET)
+
+if (simpleini_FOUND)
+  message(STATUS "Found simpleini from package manager")
+  # 단일 공개 타깃(j2_simpleini)로 래핑해 일관된 링크 사용
+  add_library(j2_simpleini INTERFACE)
+  target_link_libraries(j2_simpleini INTERFACE simpleini::simpleini)
+
+else()
+  message(WARNING "simpleini not found; trying system include then third-party fallback")
+
+  # 2) 시스템 헤더(예: /usr/include, vcpkg include 등)로 설치돼 있는지 먼저 탐색
+  #    찾히면 그 경로로 인터페이스 타깃 구성
+  find_path(SIMPLEINI_INCLUDE_DIR
+    NAMES SimpleIni.h
+    PATH_SUFFIXES include
+  )
+
+  if (SIMPLEINI_INCLUDE_DIR)
+    message(STATUS "Found SimpleIni.h in system include: ${SIMPLEINI_INCLUDE_DIR}")
+
+    add_library(j2_simpleini INTERFACE)
+    target_include_directories(j2_simpleini INTERFACE
+      $<BUILD_INTERFACE:${SIMPLEINI_INCLUDE_DIR}>
+      $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+    )
+
+    # 소비 코드에서 일관된 이름을 쓰도록 표준 별칭 제공
+    add_library(simpleini::simpleini ALIAS j2_simpleini)
+
+    # 시스템 헤더는 우리가 설치하지 않습니다(이미 시스템에 있음). export만 함께.
+    install(TARGETS j2_simpleini
+            EXPORT j2_libraryTargets)
+
+  else()
+    # 3) 최종 폴백: git submodule 등 로컬 코드 사용
+    #    예) j2_library/third-party/simpleini/SimpleIni.h
+    set(SIMPLEINI_LOCAL_INC "${CMAKE_CURRENT_SOURCE_DIR}/third-party/simpleini")
+    if (NOT EXISTS "${SIMPLEINI_LOCAL_INC}/SimpleIni.h")
+      message(FATAL_ERROR "SimpleIni.h not found. Expected at: ${SIMPLEINI_LOCAL_INC}/SimpleIni.h")
+    endif()
+
+    add_library(j2_simpleini INTERFACE)
+    target_include_directories(j2_simpleini INTERFACE
+      $<BUILD_INTERFACE:${SIMPLEINI_LOCAL_INC}>
+      $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+    )
+    add_library(simpleini::simpleini ALIAS j2_simpleini)
+
+    # 로컬 헤더를 설치(설치 후 INSTALL_INTERFACE 경로가 유효해짐)
+    install(FILES "${SIMPLEINI_LOCAL_INC}/SimpleIni.h"
+            DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+
+    # export 세트에 포함 (다른 타깃들과 동일 export로 묶음)
+    install(TARGETS j2_simpleini
+            EXPORT j2_libraryTargets)
+  endif()
+endif()
+
+###############################
+# ---- Boost.Asio 우선, 실패 시 standalone Asio 폴백 ----
+
+# vcpkg/MSVC 환경이면 통상 CONFIG 모드가 잘 동작합니다.
+# 필요 시 MODULE 모드도 병행하거나 최소 버전을 지정하세요.
+find_package(Boost 1.74 CONFIG QUIET COMPONENTS asio system)
+
+if (Boost_FOUND)
+  message(STATUS "Found Boost.Asio (Boost::asio) and Boost.System (Boost::system)")
+  set(J2_HAVE_BOOST_ASIO TRUE)
+
+  # 단일 공개 타깃(j2_asio)에 연결하기 위해 INTERFACE 타깃을 래핑해 둡니다.
+  add_library(j2_asio INTERFACE)
+  target_link_libraries(j2_asio INTERFACE Boost::asio Boost::system)
+
+else()
+  message(WARNING "Boost.Asio not found; falling back to standalone Asio submodule (ASIO_STANDALONE)")
+
+  # standalone asio include 루트
+  set(ASIO_STANDALONE_INC "${CMAKE_CURRENT_SOURCE_DIR}/third-party/asio/asio/include")
+  if (NOT EXISTS "${ASIO_STANDALONE_INC}")
+    message(FATAL_ERROR "Standalone Asio include path not found: ${ASIO_STANDALONE_INC}")
+  endif()
+
+  # 헤더온리 인터페이스 타깃
+  add_library(j2_asio INTERFACE)
+  target_include_directories(j2_asio INTERFACE
+    $<BUILD_INTERFACE:${ASIO_STANDALONE_INC}>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+  )
+  target_compile_definitions(j2_asio INTERFACE ASIO_STANDALONE)
+
+  # 설치 시 헤더 동반 배포(원치 않으면 제거)
+  install(DIRECTORY "${ASIO_STANDALONE_INC}/"
+          DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+          FILES_MATCHING PATTERN "*.hpp" PATTERN "*.h")
+
+  # export 세트에 포함 (nlohmann_json, spdlog와 동일 패턴)
+  install(TARGETS j2_asio
+          EXPORT j2_libraryTargets)
+endif()
 
 # -------------------------
 # 라이브러리 정의
@@ -206,8 +307,11 @@ target_compile_features(j2_library PUBLIC cxx_std_${J2_LIBRARY_CXX_STANDARD})
 #  TODO: 라이브러리 의존성이 추가되면 여기에 추가할 것
 # -------------------------
 target_link_libraries(j2_library PRIVATE Threads::Threads)  # 스레드 라이브러리
+
 target_link_libraries(j2_library PUBLIC nlohmann_json::nlohmann_json)  # nlohmann_json 라이브러리
 target_link_libraries(j2_library PUBLIC spdlog::spdlog) # spdlog 라이브러리
+target_link_libraries(j2_library PUBLIC j2_asio) # Asio 라이브러리 (Boost.Asio 또는 standalone Asio)
+target_link_libraries(j2_library PUBLIC simpleini::simpleini) # SimpleIni 라이브
 
 # -------------------------
 # 설치/패키징
