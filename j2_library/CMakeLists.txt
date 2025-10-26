@@ -222,40 +222,41 @@ endif()
 # 필요 시 MODULE 모드도 병행하거나 최소 버전을 지정하세요.
 find_package(Boost 1.74 CONFIG QUIET COMPONENTS asio system)
 
+add_library(j2_asio INTERFACE)
+
 if (Boost_FOUND)
   message(STATUS "Found Boost.Asio (Boost::asio) and Boost.System (Boost::system)")
   set(J2_HAVE_BOOST_ASIO TRUE)
-
-  # 단일 공개 타깃(j2_asio)에 연결하기 위해 INTERFACE 타깃을 래핑해 둡니다.
-  add_library(j2_asio INTERFACE)
   target_link_libraries(j2_asio INTERFACE Boost::asio Boost::system)
 
 else()
   message(WARNING "Boost.Asio not found; falling back to standalone Asio submodule (ASIO_STANDALONE)")
 
-  # standalone asio include 루트
   set(ASIO_STANDALONE_INC "${CMAKE_CURRENT_SOURCE_DIR}/third-party/asio/asio/include")
   if (NOT EXISTS "${ASIO_STANDALONE_INC}")
     message(FATAL_ERROR "Standalone Asio include path not found: ${ASIO_STANDALONE_INC}")
   endif()
 
-  # 헤더온리 인터페이스 타깃
-  add_library(j2_asio INTERFACE)
   target_include_directories(j2_asio INTERFACE
     $<BUILD_INTERFACE:${ASIO_STANDALONE_INC}>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
   )
   target_compile_definitions(j2_asio INTERFACE ASIO_STANDALONE)
 
-  # 설치 시 헤더 동반 배포(원치 않으면 제거)
   install(DIRECTORY "${ASIO_STANDALONE_INC}/"
           DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
           FILES_MATCHING PATTERN "*.hpp" PATTERN "*.h")
 
-  # export 세트에 포함 (nlohmann_json, spdlog와 동일 패턴)
-  install(TARGETS j2_asio
-          EXPORT j2_libraryTargets)
+  if (WIN32)
+    target_link_libraries(j2_asio INTERFACE ws2_32)
+  endif()
 endif()
+
+# find_package(Threads REQUIRED)
+target_link_libraries(j2_asio INTERFACE Threads::Threads)
+
+install(TARGETS j2_asio
+        EXPORT j2_libraryTargets)
 
 # -------------------------
 # 라이브러리 정의
