@@ -211,9 +211,6 @@ else()
   add_compile_options(-include "${WIN_NET_SHIM}")
 endif()
 
-#if (WIN32)
-  #target_link_libraries(j2_library INTERFACE ws2_32)
-#endif()
 
 ###############################
 # ---- Boost.Asio 우선, 실패 시 standalone Asio 폴백 ----
