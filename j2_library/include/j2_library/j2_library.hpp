@@ -43,6 +43,10 @@
 
 #include "j2_library/ini/ini.hpp" 
 
+// -- logging components --
+
+#include "j2_library/log/log.hpp" 
+
 // -- macro components --
 
 #include "j2_library/macro/macro.hpp"
