@@ -12,7 +12,7 @@ namespace j2::file {
         Stem      // 확장자 제외 (Hello)
     };
 
-    // std::string 버전
+    // 실행 파일 이름 반환. 예: Hello.exe 또는 Hello
     J2LIB_API std::string executable_name(
         std::error_code& ec,
         NameType type = NameType::Filename,
@@ -23,7 +23,7 @@ namespace j2::file {
         NameType type = NameType::Filename,
         const ExecPathOptions& opt = {});
 
-    // std::wstring 버전
+    // 실행 파일 이름 반환. 예: L"Hello.exe" 또는 L"Hello" 
     J2LIB_API std::wstring executable_name_w(
         std::error_code& ec,
         NameType type = NameType::Filename,
