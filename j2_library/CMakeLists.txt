@@ -199,6 +199,22 @@ else()
   endif()
 endif()
 
+##############################
+# Windows 네트워크 셤 헤더 경로
+set(WIN_NET_SHIM "${CMAKE_CURRENT_SOURCE_DIR}/include/j2_library/network/win_net_shim.hpp")
+
+if (MSVC)
+  # MSVC/clang-cl: /FI<file> 로 선행 포함
+  add_compile_options("/FI${WIN_NET_SHIM}")
+else()
+  # GCC/Clang: -include <file> 로 선행 포함
+  add_compile_options(-include "${WIN_NET_SHIM}")
+endif()
+
+#if (WIN32)
+  #target_link_libraries(j2_library INTERFACE ws2_32)
+#endif()
+
 ###############################
 # ---- Boost.Asio 우선, 실패 시 standalone Asio 폴백 ----
 
