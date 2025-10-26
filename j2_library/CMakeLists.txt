@@ -225,12 +225,26 @@ find_package(Boost 1.74 CONFIG QUIET COMPONENTS asio system)
 add_library(j2_asio INTERFACE)
 
 if (Boost_FOUND)
-  message(STATUS "Found Boost.Asio (Boost::asio) and Boost.System (Boost::system)")
-  set(J2_HAVE_BOOST_ASIO TRUE)
-  target_link_libraries(j2_asio INTERFACE Boost::asio Boost::system)
+  message(STATUS "Boost found. Using Boost headers (+ Boost.System if available).")
+
+  # 1) 헤더 타깃 우선(Boost::headers가 있으면 그것을, 없으면 Boost::boost 대안)
+  if (TARGET Boost::headers)
+    target_link_libraries(j2_asio INTERFACE Boost::headers)
+  elseif (TARGET Boost::boost)
+    target_link_libraries(j2_asio INTERFACE Boost::boost)
+  elseif (DEFINED Boost_INCLUDE_DIRS)
+    target_include_directories(j2_asio INTERFACE ${Boost_INCLUDE_DIRS})
+  endif()
+
+  # 2) system 라이브러리는 실제로 필요하므로 타깃이 있으면 연결
+  if (NOT TARGET Boost::system)
+    # 어떤 배포판은 CONFIG에 system 타깃이 없을 수 있어 보완
+    find_package(Boost 1.74 REQUIRED COMPONENTS system)
+  endif()
+  target_link_libraries(j2_asio INTERFACE Boost::system)
 
 else()
-  message(WARNING "Boost.Asio not found; falling back to standalone Asio submodule (ASIO_STANDALONE)")
+  message(WARNING "Boost not found; falling back to standalone Asio (ASIO_STANDALONE)")
 
   set(ASIO_STANDALONE_INC "${CMAKE_CURRENT_SOURCE_DIR}/third-party/asio/asio/include")
   if (NOT EXISTS "${ASIO_STANDALONE_INC}")
@@ -242,15 +256,16 @@ else()
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
   )
   target_compile_definitions(j2_asio INTERFACE ASIO_STANDALONE)
-
-  install(DIRECTORY "${ASIO_STANDALONE_INC}/"
-          DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-          FILES_MATCHING PATTERN "*.hpp" PATTERN "*.h")
-
   if (WIN32)
     target_link_libraries(j2_asio INTERFACE ws2_32)
   endif()
+
+  # (원하면) standalone 헤더 동반 설치
+  install(DIRECTORY "${ASIO_STANDALONE_INC}/"
+          DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+          FILES_MATCHING PATTERN "*.hpp" PATTERN "*.h")
 endif()
+
 
 # find_package(Threads REQUIRED)
 target_link_libraries(j2_asio INTERFACE Threads::Threads)
