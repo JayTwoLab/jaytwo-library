@@ -8,7 +8,7 @@
 #include <gtest/gtest.h>
 #include "j2_library/j2_library.hpp"
 
-// Google Test로 변환한 DirectoryMaker 테스트
+// Google Test로 변환한 directory_maker 테스트
 // 빌드 시: directory.cpp 와 함께 링크 필요 (console_kor는 불필요)
 // 주의: 소스 인코딩 UTF-8, MSVC는 /utf-8 권장
 
@@ -24,9 +24,9 @@ namespace {
         return base;
     }
 
-    // 한국어 메시지를 기본으로 하는 DirectoryMaker 준비
-    j2::directory::DirectoryMaker make_default_ko() {
-        j2::directory::DirectoryMaker mk;
+    // 한국어 메시지를 기본으로 하는 directory_maker 준비
+    j2::directory::directory_maker make_default_ko() {
+        j2::directory::directory_maker mk;
         j2::directory::CreateDirOptions opt;
         opt.make_parents = true;   // 부모 자동 생성
         opt.succeed_if_exists = true;   // 이미 존재해도 성공
