@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 3.26)
 
 # 최상위 프로젝트
-project(j2_lib_super VERSION 0.1.0 LANGUAGES CXX)
+set(J2_LIB_SUPER_VERSION "0.1.0")
+project(j2_lib_super VERSION ${J2_LIB_SUPER_VERSION} LANGUAGES CXX)
 
 # -------------------------
 # j2_library 라이브러리 서브 프로젝트 

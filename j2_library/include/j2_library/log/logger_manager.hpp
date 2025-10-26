@@ -27,12 +27,13 @@
 
 #include <SimpleIni.h>
 
+#include "j2_library/export.hpp"
 #include "j2_library/network/network.hpp"
 
 // INI 기반 spdlog 구성/리로드/디스크 감시/UDP 알림을 제공하는 로거 매니저
 namespace j2::log {
 
-class logger_manager {
+class J2LIB_API logger_manager {
 public:
     logger_manager();
     ~logger_manager();
@@ -45,7 +46,9 @@ public:
     std::shared_ptr<spdlog::logger> getLogger() const;
 
     bool reloadIfChanged();
+
     bool startAutoReload(unsigned interval_sec = 60);
+
     void stopAutoReload();
 
 private:
