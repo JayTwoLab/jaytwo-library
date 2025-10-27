@@ -54,13 +54,13 @@
 	- `vcpkg` 설치 경로를 윈도 횐경 변수 `PATH`에 추가할 것
 	- `vcpkg` 설치 경로를 윈도 횐경 변수 `VCPKG_ROOT`에 추가할 것
 - `vcpkg` 로 종속성있는 패키지 설치
-    - `Google Test` 설치
-       - `vcpkg install gtest:x64-windows-static --vcpkg-root=C:\Users\j2\vcpkg`
-            - `x64-windows` : `Visual Studio` 64비트
-			- `static` : 정적 라이브러리 (`DLL` 사용 않함)
-	   - 설치 시 `vcpkg` 경로를 지정하지 않으면 `CMake`에서 `vcpkg`를 찾지 못하는 경우가 있음.
-    - `nlohmann json` 설치
-	   - `vcpkg install nlohmann-json:x64-mingw-static`
+	```
+	vcpkg install boost-asio:x64-windows-static
+	vcpkg install gtest:x64-windows-static
+	vcpkg install nlohmann-json:x64-windows-static
+	vcpkg install simpleini:x64-windows-static
+	vcpkg install spdlog:x64-windows-static
+	```
 <br />
 
 ---
@@ -76,13 +76,13 @@
 	- `vcpkg` 설치 경로를 `PATH`에 추가할 것
     - `vcpkg` 설치 경로를 윈도 횐경 변수 `VCPKG_ROOT`에 추가할 것
 - `vcpkg` 로 종속성있는 패키지 설치
-    - `Google Test` 설치
-	   - `vcpkg install gtest:x64-mingw-static --vcpkg-root=C:\Users\j2\vcpkg`
-            - `x64-mingw` : `MingW` 64비트
-			- `static` : 정적 라이브러리 (DLL 사용 않함)
-	   - 설치 시 `vcpkg` 경로를 지정하지 않으면 `CMake`에서 `vcpkg`를 찾지 못하는 경우가 있음.
-    - `nlohmann json` 설치
-	   - `vcpkg install nlohmann-json:x64-mingw-static`
+	```
+	vcpkg install boost-asio:x64-mingw-static
+	vcpkg install gtest:x64-mingw-static
+	vcpkg install nlohmann-json:x64-mingw-static
+	vcpkg install simpleini:x64-mingw-static
+	vcpkg install spdlog:x64-mingw-static
+	```
 		
 <br />
 
@@ -93,14 +93,18 @@
 ##### 1.2.1. `Linux` (`non-vcpkg`)
 
 - 리눅스에서도 `vcpkg`로 설치 가능하지만, 패키지 관리자를 이용하는 것이 더 편리함.
-- `Google Test` 설치
-   - `Rocky/CentOS` : `sudo dnf install gtest gtest-devel -y`
-   - `Ubuntu/Debian` : `sudo apt-get install libgtest-dev -y`
-   - `Arch` : `sudo pacman -S gtest`
-- `nlohmann json` 설치 (`j2_library/include/j2_library/json/INSTALL.ko.md` 참고)
-   - `Rocky/CentOS` : `sudo dnf install nlohmann-json-devel -y`
-   - `Ubuntu(22 이상)/Debian` : `sudo apt-get install nlohmann-json3-dev -y`
-   - `Arch` : `sudo pacman -S nlohmann-json` 
+
+###### `Rocky/CentOS`
+- `sudo dnf install boost-devel gtest-devel json-devel spdlog-devel`
+- `simpleini` 패키지 없음 → `GitHub`에서 수동 설치 필요.
+   - `j2_library_/third-party/simpleini` 에서 소스코드 복사하여 사용 가능.
+
+###### `Ubuntu/Debian`
+- `sudo apt install libboost-all-dev libgtest-dev nlohmann-json3-dev libspdlog-dev`
+
+###### `openSUSE / SUSE`
+- `sudo zypper install boost-devel gtest-devel nlohmann_json spdlog-devel`
+- `simpleini` 패키지 없음 → `GitHub`에서 수동 설치 필요.
 
 <br />
 
