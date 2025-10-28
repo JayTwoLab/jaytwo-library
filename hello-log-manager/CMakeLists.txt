@@ -22,6 +22,8 @@ add_executable(j2_log_manager_template ${SRC_FILES})
 target_link_libraries(j2_log_manager_template PRIVATE j2_library) # j2_library를 링크
 
 target_include_directories(j2_log_manager_template PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}") # 인클루드 경로
+
 # target_link_directories(j2_log_manager_template PRIVATE ...) # 링크 디렉토리 (필요 시)
 
-
+# 현재 CMakeLists.txt 파일이 있는 디렉터리를 매크로로 정의 (main.cpp 에서 사용)
+target_compile_definitions(j2_log_manager_template PRIVATE CMAKE_SOURCE_DIR_PATH="${CMAKE_CURRENT_LIST_DIR}")
