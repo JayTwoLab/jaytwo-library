@@ -51,6 +51,10 @@
 
 #include "j2_library/macro/macro.hpp"
 
+// -- network components --
+
+#include "j2_library/network/network.hpp"
+
 // -- overload components --
 
 #include "j2_library/overload/overload.hpp" 
