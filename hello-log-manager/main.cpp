@@ -33,7 +33,7 @@ int main() {
     std::string envName = ""; // 환경 변수로 INI 경로 설정하지 않으면 "" 사용
     // std::string envName       = "LOG_MANAGER_CONFIG_PATH";
 
-    j2::LoggerManager logMgr;
+    j2::log::logger_manager logMgr;
     if (!logMgr.init(defaultConfig, sectionName, loggerName, envName)) {
         return 1;
     }
