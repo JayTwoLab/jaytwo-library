@@ -66,3 +66,18 @@ if (USE_VCPKG)
   setup_platform_defaults_with_vcpkg() # vcpkg를 사용한 플랫폼 기본 설정
 endif()
 
+##############################
+# Windows 네트워크 셤 헤더 경로
+if (DEFINED J2_LIBRARY_ROOT_PATH)
+  set(WIN_NET_SHIM "${J2_LIBRARY_ROOT_PATH}/include/j2_library/network/win_net_shim.hpp")
+
+  if (MSVC)
+    # MSVC/clang-cl: /FI<file> 로 선행 포함
+    add_compile_options("/FI${WIN_NET_SHIM}")
+  else()
+    # GCC/Clang: -include <file> 로 선행 포함
+    add_compile_options(-include "${WIN_NET_SHIM}")
+  endif()
+endif()
+
+

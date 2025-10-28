@@ -17,12 +17,15 @@ if (TARGET j2_library OR TARGET j2_library::j2_library)
   return()
 endif()
 
+# j2_library 루트 경로 설정 (전역 변수)
+set(J2_LIBRARY_ROOT_PATH "${CMAKE_CURRENT_SOURCE_DIR}" CACHE PATH "Path to j2_library root")
+
 # -------------------------
 # C++ 표준 설정 (예: 17, 20, 23)
 # -------------------------
 set(J2_LIBRARY_CXX_STANDARD 17
-  CACHE STRING "C++ standards for use by j2_library (e.g., 17, 20, 23)")
-set(CMAKE_CXX_STANDARD ${J2_LIBRARY_CXX_STANDARD}) 
+   CACHE STRING "C++ standards for use by j2_library (e.g., 17, 20, 23)")
+set(CMAKE_CXX_STANDARD ${J2_LIBRARY_CXX_STANDARD})
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON) # 지정한 표준을 반드시 사용
 
@@ -39,7 +42,7 @@ include(GNUInstallDirs)
 # -------------------------
 # j2_cmake 모듈 포함
 # -------------------------
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake") #  CMAKE_CURRENT_SOURCE_DIR → 현재 처리 중인 CMakeLists.txt 파일이 위치한 디렉토리
+list(APPEND CMAKE_MODULE_PATH "${J2_LIBRARY_ROOT_PATH}/cmake") 
 include(j2_cmake OPTIONAL RESULT_VARIABLE _J2_CMAKE_FOUND) # j2_cmake.cmake 모듈 포함
 if(NOT _J2_CMAKE_FOUND)
  message(FATAL_ERROR "[j2_libarary] Mandatory module j2_cmake.cmake not found, please check CMAKE_MODULE_PATH settings.")
@@ -79,7 +82,7 @@ else()
   message(WARNING "nlohmann_json not found, using third-party vendor (header-only)")
 
   # 로컬(서브모듈) 헤더 경로
-  set(NLOHMANN_JSON_INC "${CMAKE_CURRENT_SOURCE_DIR}/third-party/nlohmann_json/include")
+  set(NLOHMANN_JSON_INC "${J2_LIBRARY_ROOT_PATH}/third-party/nlohmann_json/include")
   if (NOT EXISTS "${NLOHMANN_JSON_INC}")
     message(FATAL_ERROR "Expected nlohmann_json include directory not found: ${NLOHMANN_JSON_INC}")
   endif()
@@ -114,7 +117,7 @@ if (spdlog_FOUND)
 else()
   message(WARNING "spdlog not found, using third-party vendor (header-only)")
 
-  set(SPDLOG_INC "${CMAKE_CURRENT_SOURCE_DIR}/third-party/spdlog/include")
+  set(SPDLOG_INC "${J2_LIBRARY_ROOT_PATH}/third-party/spdlog/include")
   if (NOT EXISTS "${SPDLOG_INC}")
     message(FATAL_ERROR "Expected spdlog include directory not found: ${SPDLOG_INC}")
   endif()
@@ -177,7 +180,7 @@ else()
   else()
     # 3) 최종 폴백: git submodule 등 로컬 코드 사용
     #    예) j2_library/third-party/simpleini/SimpleIni.h
-    set(SIMPLEINI_LOCAL_INC "${CMAKE_CURRENT_SOURCE_DIR}/third-party/simpleini")
+    set(SIMPLEINI_LOCAL_INC "${J2_LIBRARY_ROOT_PATH}/third-party/simpleini")
     if (NOT EXISTS "${SIMPLEINI_LOCAL_INC}/SimpleIni.h")
       message(FATAL_ERROR "SimpleIni.h not found. Expected at: ${SIMPLEINI_LOCAL_INC}/SimpleIni.h")
     endif()
@@ -199,17 +202,7 @@ else()
   endif()
 endif()
 
-##############################
-# Windows 네트워크 셤 헤더 경로
-set(WIN_NET_SHIM "${CMAKE_CURRENT_SOURCE_DIR}/include/j2_library/network/win_net_shim.hpp")
 
-if (MSVC)
-  # MSVC/clang-cl: /FI<file> 로 선행 포함
-  add_compile_options("/FI${WIN_NET_SHIM}")
-else()
-  # GCC/Clang: -include <file> 로 선행 포함
-  add_compile_options(-include "${WIN_NET_SHIM}")
-endif()
 
 
 ###############################
@@ -243,7 +236,7 @@ if (Boost_FOUND)
 else()
   message(WARNING "Boost not found; falling back to standalone Asio (ASIO_STANDALONE)")
 
-  set(ASIO_STANDALONE_INC "${CMAKE_CURRENT_SOURCE_DIR}/third-party/asio/asio/include")
+  set(ASIO_STANDALONE_INC "${J2_LIBRARY_ROOT_PATH}/third-party/asio/asio/include")
   if (NOT EXISTS "${ASIO_STANDALONE_INC}")
     message(FATAL_ERROR "Standalone Asio include path not found: ${ASIO_STANDALONE_INC}")
   endif()
@@ -366,7 +359,7 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/generated/j2_library/version.hpp
 # 패키지 Config 파일 생성
 # -------------------------
 configure_package_config_file(
-  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/j2_libraryConfig.cmake.in
+  ${J2_LIBRARY_ROOT_PATH}/cmake/j2_libraryConfig.cmake.in
   ${CMAKE_CURRENT_BINARY_DIR}/j2_libraryConfig.cmake
   INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/j2_library
 )

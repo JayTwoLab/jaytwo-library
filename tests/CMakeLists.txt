@@ -9,13 +9,15 @@ set(CMAKE_CXX_STANDARD 17)                 # C++17
 set(CMAKE_CXX_STANDARD_REQUIRED ON)        # 지정한 표준을 반드시 사용
 set(CMAKE_CXX_EXTENSIONS OFF)              # 순수 표준 모드 사용
 
+# j2_library 루트 경로 설정 (전역 변수)
+set(J2_LIBRARY_ROOT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../j2_library" CACHE PATH "Path to j2_library root")
+
 # j2_cmake 모듈 경로 추가 및 포함
-list(PREPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/../j2_library/cmake")
+list(PREPEND CMAKE_MODULE_PATH "${J2_LIBRARY_ROOT_PATH}/cmake")
 include(j2_cmake) # 필요한 경우 선택적으로 가져와도 됨
 
 # 같은 소스 트리의 j2_library를 빌드(별도 바이너리 디렉터리 지정)
-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/../j2_library"
-                 "${CMAKE_CURRENT_BINARY_DIR}/j2_library_build")
+add_subdirectory("${J2_LIBRARY_ROOT_PATH}" "${CMAKE_CURRENT_BINARY_DIR}/j2_library_build")
 
 # =========================
 # 테스트 옵션 및 GTest 설정
@@ -44,7 +46,7 @@ if (J2_ENABLE_TESTS)
     # set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
     # 서브모듈 폴백 추가(빌드 전용)
-    add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/../j2_library/third-party/googletest"
+    add_subdirectory("${J2_LIBRARY_ROOT_PATH}/third-party/googletest"
                      "${CMAKE_CURRENT_BINARY_DIR}/googletest_build"
                      EXCLUDE_FROM_ALL)
 
@@ -75,7 +77,7 @@ if (J2_ENABLE_TESTS)
   # include 경로(테스트 소스 및 라이브러리 헤더)
   target_include_directories(${PROJECT_NAME} PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../j2_library/include"
+    "${J2_LIBRARY_ROOT_PATH}/include"
   )
 
   # 라이브러리 링크

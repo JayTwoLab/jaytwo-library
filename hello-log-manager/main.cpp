@@ -11,14 +11,14 @@
     #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
 #endif
 
+#define hname "hello_logger"
+
 #define ht(...) SPDLOG_LOGGER_TRACE   (spdlog::get(hname), __VA_ARGS__)  // trace
 #define hd(...) SPDLOG_LOGGER_DEBUG   (spdlog::get(hname), __VA_ARGS__)  // debug
 #define hi(...) SPDLOG_LOGGER_INFO    (spdlog::get(hname), __VA_ARGS__)  // info
 #define hw(...) SPDLOG_LOGGER_WARN    (spdlog::get(hname), __VA_ARGS__)  // warn
 #define he(...) SPDLOG_LOGGER_ERROR   (spdlog::get(hname), __VA_ARGS__)  // error
 #define hc(...) SPDLOG_LOGGER_CRITICAL(spdlog::get(hname), __VA_ARGS__)  // critical
-
-#define hname "hello_logger"
 
 int main() {
     // 기본 설정 파일명을 j2_logger_manager_config.ini 로 변경
