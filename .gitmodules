@@ -13,3 +13,6 @@
 [submodule "j2_library/third-party/asio"]
 	path = j2_library/third-party/asio
 	url = https://github.com/chriskohlhoff/asio.git
+[submodule "j2_library/third-party/immer"]
+	path = j2_library/third-party/immer
+	url = https://github.com/arximboldi/immer.git
