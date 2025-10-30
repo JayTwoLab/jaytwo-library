@@ -60,6 +60,7 @@
 	vcpkg install nlohmann-json:x64-windows-static
 	vcpkg install simpleini:x64-windows-static
 	vcpkg install spdlog:x64-windows-static
+	vcpkg install immer:x64-windows-static    
 	```
 <br />
 
@@ -82,6 +83,7 @@
 	vcpkg install nlohmann-json:x64-mingw-static
 	vcpkg install simpleini:x64-mingw-static
 	vcpkg install spdlog:x64-mingw-static
+    vcpkg install immer:x64-mingw-static
 	```
 		
 <br />
@@ -101,17 +103,21 @@
     $ pwd
      /home/j2/workspace/dev/github/jaytwo-library # 현재 경로는 프로젝트 루트 경로
 	$ git submodule update --init --depth 1 ./j2_library/third-party/simpleini # simpleini 서브모듈 초기화
-	Submodule 'j2_library/third-party/simpleini' (https://github.com/brofield/simpleini.git) registered for path 'j2_library/third-party/simpleini'
-	Cloning into '/home/j2/workspace/dev/github/jaytwo-library/j2_library/third-party/simpleini'...
-	Submodule path 'j2_library/third-party/simpleini': checked out '6048871ea9ee0ec24be5bd099d161a10567d7dc2'
+	```
+- `immer` 패키지 없음 → `GitHub`에서 수동 설치 필요. https://github.com/immer/immer
+	```
+	$ pwd
+	/home/j2/workspace/dev/github/jaytwo-library # 현재 경로는 프로젝트 루트 경로
+	$ git submodule update --init --depth 1 ./j2_library/third-party/immer # immer 서브모듈 초기화
 	```
 
 ###### `Ubuntu/Debian`
-- `sudo apt install libboost-all-dev libgtest-dev nlohmann-json3-dev libspdlog-dev`
+- `sudo apt install libboost-all-dev libgtest-dev nlohmann-json3-dev libspdlog-dev libimmer-dev`
 
 ###### `openSUSE / SUSE`
 - `sudo zypper install boost-devel gtest-devel nlohmann_json spdlog-devel`
 - `simpleini` 패키지 없음 → `GitHub`에서 수동 설치 필요. https://github.com/brofield/simpleini
+- `immer` 패키지 없음 → `GitHub`에서 수동 설치 필요. https://github.com/immer/immer
 
 <br />
 
