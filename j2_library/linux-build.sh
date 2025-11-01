@@ -7,6 +7,8 @@ cd build
 #  - 설치 경로에 따라 -DCMAKE_INSTALL_PREFIX 값을 변경하세요.
 #  - 디버그/릴리즈 모드에 따라 -DCMAKE_BUILD_TYPE 값을 변경하세요.
 cmake -S .. -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="/home/j2/workspace/dev/lib"
+# clang 사용하는 경우
+#   cmake -S .. -B build -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang ... 
 
 # 라이브러리 빌드 (cpu 코어 수 만큼 병렬 빌드)
 cmake --build build -j$(nproc)

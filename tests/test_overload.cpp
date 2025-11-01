@@ -68,8 +68,8 @@ TEST(Overload, DeductionGuideAndInvocability)
     };
         
     // 정적 확인: h가 int, std::string에 대해 호출 가능한지 점검합니다.
-    static_assert(std::is_invocable_v<decltype(h), int>, u8"int 인자에 대해 호출 가능해야 합니다.");
-    static_assert(std::is_invocable_v<decltype(h), std::string>, u8"std::string 인자에 대해 호출 가능해야 합니다.");
+    static_assert(std::is_invocable_v<decltype(h), int>, "It must be callable for int factor.");
+    static_assert(std::is_invocable_v<decltype(h), std::string>, "It must be callable for the std::string factor.");
 
     // 실제 호출에서도 예외 없이 동작해야 합니다.
     EXPECT_NO_THROW(h(0));
