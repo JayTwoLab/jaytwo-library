@@ -4,6 +4,7 @@
 #include <vector>
 #include <cstddef>
 #include <cstdint>
+#include <locale>
 
 #include "j2_library/export.hpp" // J2LIB_API
 
@@ -15,6 +16,9 @@ namespace j2::encoding
     // UTF-8 <-> UTF-16
     J2LIB_API bool utf8_to_utf16(const std::string& utf8, std::u16string& out);
     J2LIB_API bool utf16_to_utf8(const std::u16string& u16, std::string& out);
+
+    J2LIB_API std::wstring utf8_to_utf16(const std::string& utf8);
+    J2LIB_API std::string utf16_to_utf8(const std::wstring& utf16);
 
     // UTF-8 <-> UTF-32
     J2LIB_API bool utf8_to_utf32(const std::string& utf8, std::u32string& out);

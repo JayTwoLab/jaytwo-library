@@ -4,6 +4,7 @@
 #include <system_error>
 #include <vector>
 #include <cstring>
+#include <codecvt> // C++20 폐지 예정 (향후 Boost.Locale 대체)
 
 #if defined(_WIN32)
 // #define NOMINMAX
@@ -217,6 +218,20 @@ namespace j2::encoding
 #else
         return utf8_from_u16_codecvt(u16, out);
 #endif
+    }
+
+    std::wstring utf8_to_utf16(const std::string& utf8)
+    {
+        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> conv;
+        return conv.from_bytes(utf8);
+        // return boost::locale::conv::to_utf<wchar_t>(utf8, "UTF-8");
+    }
+
+    std::string utf16_to_utf8(const std::wstring& utf16)
+    {
+        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> conv;
+        return conv.to_bytes(utf16);
+        // return boost::locale::conv::from_utf<wchar_t>(utf16, "UTF-8"); 
     }
 
     // =============================

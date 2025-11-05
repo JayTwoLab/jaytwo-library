@@ -30,34 +30,10 @@ namespace fs = std::filesystem;
 #include <io.h>
 #include <fcntl.h>
 
-// UTF-8 → UTF-16 변환
-static std::wstring utf8_to_wide(const std::string& s) {
-    if (s.empty()) return std::wstring();
-    int wlen = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, s.c_str(),
-        static_cast<int>(s.size()), nullptr, 0);
-    if (wlen <= 0) return L"";
-    std::wstring w(wlen, L'\0');
-    MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, s.c_str(),
-        static_cast<int>(s.size()), &w[0], wlen);
-    return w;
-}
-
-// UTF-16 → UTF-8 변환
-static std::string wide_to_utf8(const std::wstring& w) {
-    if (w.empty()) return std::string();
-    int len = WideCharToMultiByte(CP_UTF8, 0, w.c_str(), static_cast<int>(w.size()),
-        nullptr, 0, nullptr, nullptr);
-    if (len <= 0) return std::string();
-    std::string s(len, '\0');
-    WideCharToMultiByte(CP_UTF8, 0, w.c_str(), static_cast<int>(w.size()),
-        &s[0], len, nullptr, nullptr);
-    return s;
-}
-
 // fs::path → UTF-8 문자열
 static std::string path_to_utf8(const fs::path& p) {
     // 윈도우에선 네이티브가 UTF-16이므로 wstring → UTF-8
-    return wide_to_utf8(p.wstring());
+    return j2::encoding::utf16_to_utf8(p.wstring());
 }
 
 // stdout이 실제 콘솔인지 판별 (콘솔이면 TRUE)
@@ -76,7 +52,8 @@ static void print_u8(const std::string& s) {
     if (is_stdout_console()) {
         HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
         if (h && h != INVALID_HANDLE_VALUE) {
-            std::wstring w = utf8_to_wide(s);
+            std::wstring w = j2::encoding::utf8_to_utf16(s);
+
             DWORD written = 0;
             if (!w.empty()) {
                 WriteConsoleW(h, w.c_str(), static_cast<DWORD>(w.size()), &written, nullptr);
