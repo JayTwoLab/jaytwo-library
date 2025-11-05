@@ -31,9 +31,9 @@ namespace j2::file {
         // 결과 항목
         struct entry {
             fs::path path;   // 발견한 경로
-            bool is_file = false;
-            bool is_dir = false;
-            bool is_symlink = false;
+            bool is_file = false; // 파일 여부
+            bool is_dir = false; // 디렉토리 여부
+            bool is_symlink = false; // 심볼릭 링크 여부
 
             // 메타데이터(없을 수도 있음)
             std::optional<std::chrono::system_clock::time_point> mtime;
@@ -68,16 +68,16 @@ namespace j2::file {
             std::optional<std::regex> name_regex;    // 파일/디렉토리 "이름" 정규식
 
             // 시간/크기 필터
-            std::optional<std::chrono::system_clock::time_point> mtime_since;
-            std::optional<std::chrono::system_clock::time_point> mtime_until;
+            std::optional<std::chrono::system_clock::time_point> mtime_since; // 시각 이후
+            std::optional<std::chrono::system_clock::time_point> mtime_until; // 시각 이전
             std::optional<std::uintmax_t> min_size;  // 바이트
             std::optional<std::uintmax_t> max_size;  // 바이트
             bool compute_size = false;               // 파일 크기 수집 여부
 
             // 결과 제어
-            std::size_t limit_results = 0;           // 0 = 제한 없음
-            sort_key sort_by = sort_key::none;
-            bool sort_ascending = true;
+            std::size_t limit_results = 0;     // 0 = 제한 없음, 양수 = 최대 결과 수
+            sort_key sort_by = sort_key::none; // 정렬하지 않으면 먼저 발견된 순서대로 결과 유지
+            bool sort_ascending = true;        // 정렬시 오름차순 정렬 여부
 
             // 방문자(스트리밍) 콜백: true=계속, false=중단
             std::function<bool(const entry&)> on_visit;
