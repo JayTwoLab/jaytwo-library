@@ -37,11 +37,19 @@
 
 // -- encoding components --
 
-#include "j2_library/encoding/encoding.hpp" 
+#include "j2_library/encoding/encoding.hpp"
+
+// -- file components --
+
+#include "j2_library/file/file.hpp"
 
 // -- ini components --
 
 #include "j2_library/ini/ini.hpp" 
+
+// -- json components --
+
+#include "j2_library/json/json.hpp"
 
 // -- logging components --
 
