@@ -4,5 +4,6 @@
 
 #include "j2_library/file/executable_name.hpp" 
 
+#include "j2_library/file/file_finder.hpp"
 
 

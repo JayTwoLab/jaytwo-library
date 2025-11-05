@@ -16,6 +16,7 @@ option(BUILD_EXAMPLES "Build Example" ON) # 값을 OFF 설정하거나, cmake -D
 if (BUILD_EXAMPLES)
   add_subdirectory(hello-template) # hello world 예제
   add_subdirectory(hello-log-manager) # 로그 관리 예제
+  add_subdirectory(hello-file-finder) # 파일 찾기 예제
 endif()
 
 # -------------------------
