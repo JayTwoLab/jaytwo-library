@@ -17,6 +17,7 @@
 #include <cstdint>
 #include <functional>
 #include <regex>
+#include <utility>
 
 namespace j2::file {
 
@@ -88,7 +89,11 @@ namespace j2::file {
             const finder_options& opt) noexcept;
 
     public:
-        explicit file_finder(finder_options opt = {}) : opts_(std::move(opt)) {}
+        file_finder() = default;                                  // 기본 생성자
+        explicit file_finder(finder_options opt)                  // 옵션 지정 생성자
+            : opts_(std::move(opt)) {
+        }
+
         void set_options(const finder_options& opt) { opts_ = opt; }
         const finder_options& options() const { return opts_; }
 
@@ -105,7 +110,7 @@ namespace j2::file {
         static void print_entry_safe(const entry& e, std::ostream& os) noexcept;
 
     private:
-        finder_options opts_;                // ← options_ → opts_
+        finder_options opts_{};                // ← options_ → opts_
         std::vector<std::string> last_errors_;
     };
 

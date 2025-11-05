@@ -22,7 +22,10 @@
 namespace fs = std::filesystem;
 
 #if defined(_WIN32)
-#define NOMINMAX
+
+#ifndef NOMINMAX
+    #define NOMINMAX
+#endif
 #include <windows.h>
 #include <io.h>
 #include <fcntl.h>
