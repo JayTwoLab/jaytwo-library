@@ -138,27 +138,30 @@ static void test_recursive_case_sensitive(const fs::path& base) {
     print_case(u8"[B] 재귀/대소문자구분 picture.txt", ok, /*expected*/true);
 }
 
-// (C) 윈도우: 와이드 리터럴 — 보고서.txt
+// (C) 와이드 리터럴 — 보고서.txt
 static void test_windows_wide_literal(const fs::path& base) {
 #if defined(_WIN32)
     bool ok = j2::file::exists(base, L"보고서.txt", /*recursive*/false);
     print_case(u8"[C] 비재귀/와이드 리터럴 '보고서.txt'", ok, /*expected*/true);
 #else
-    (void)base;
-    print_case(u8"[C] (윈도우 전용 테스트)", true, /*expected*/true);
+    // POSIX: 로캘이 UTF-8이면 대개 통과. (비결정성 감수)
+    bool ok = j2::file::exists(base, fs::path(L"보고서.txt"), /*recursive*/false);
+    print_case(u8"[C] POSIX/와이드 '보고서.txt' (로캘 UTF-8 가정)", ok, /*expected*/true);
 #endif
 }
 
-// (D) 윈도우: UTF-8 리터럴 + u8path — 보고서_최종본.txt
+// (D) UTF-8 리터럴 + u8path — 보고서_최종본.txt
 static void test_windows_u8path_literal(const fs::path& base) {
 #if defined(_WIN32)
     bool ok = j2::file::exists(base, fs::u8path(u8"보고서_최종본.txt"));
     print_case(u8"[D] 비재귀/u8path '보고서_최종본.txt'", ok, /*expected*/true);
 #else
-    (void)base;
-    print_case(u8"[D] (윈도우 전용 테스트)", true, /*expected*/true);
+    // POSIX: 일반 path("…")와 결과가 같을 것이므로 그냥 검증해도 됨
+    bool ok = j2::file::exists(base, fs::u8path(u8"보고서_최종본.txt"));
+    print_case(u8"[D] POSIX/u8path '보고서_최종본.txt'", ok, /*expected*/true);
 #endif
 }
+
 
 // (E) 대소문자 구분 네거티브 — World.TXT(없다고 가정)
 static void test_case_sensitive_negative(const fs::path& base) {
