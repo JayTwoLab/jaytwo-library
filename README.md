@@ -25,7 +25,7 @@
 		- Ubuntu/Debian : `sudo apt-get install cmake`
 		- Rocky/CentOS : `sudo dnf install cmake`
 		- Arch : `sudo pacman -S cmake`
-- `ninja` 설치 (선택 사항)
+- `ninja` 설치 (설치 권장)
 	- [Ninja 다운로드](https://ninja-build.org/)
 		- 윈도우: scoop, chocolatey, winget 등 패키지 관리자를 이용하여 설치 가능
 	- `CMake`에서 `Ninja`를 빌드 도구로 사용할 경우 설치
@@ -125,9 +125,14 @@
 
 ### 2. 빌드
 
-#### 2.1. 라이브러리 빌드
+- 관련 소스 코드 모두 받기 권장
+   - `git clone --recurse-submodules https://github.com/jaytwo/j2_library.git`
+
+<br />
 
 ---
+
+#### 2.1. 라이브러리 빌드
 
 ##### 2.1.1. `Visual Studio` 에서 라이브러리 빌드 및 설치
 
@@ -146,6 +151,7 @@ cmake -S .. ^
  -A x64 ^
  -DCMAKE_BUILD_TYPE=Release ^
  -DCMAKE_INSTALL_PREFIX="C:/install/j2_library"
+@REM -DBUILD_SHARED_LIBS=ON 옵션을 주면 DLL 로 빌드됨
 
 @REM 라이브러리 빌드
 cmake --build build --config Release
@@ -174,6 +180,7 @@ cmake -S .. ^
  -G "MinGW Makefiles" ^
  -DCMAKE_BUILD_TYPE=Release ^
  -DCMAKE_INSTALL_PREFIX="C:/mingw-install/j2_library"
+@REM -DBUILD_SHARED_LIBS=ON 옵션을 주면 DLL 로 빌드됨
 
 @REM 라이브러리 빌드
 cmake --build build
@@ -201,6 +208,7 @@ cmake -S .. \
  -B build \
  -DCMAKE_BUILD_TYPE=Release \
  -DCMAKE_INSTALL_PREFIX="/home/j2/workspace/dev/lib"
+# -DBUILD_SHARED_LIBS=ON 옵션을 주면 so 로 빌드됨
 
 # 라이브러리 빌드 (cpu 코어 수 만큼 병렬 빌드)
 cmake --build build -j$(nproc)
@@ -250,7 +258,7 @@ cmake -S . -B build -G "Visual Studio 17 2022" -A x64 -DCMAKE_BUILD_TYPE=Release
 cmake --build build --config Release
 ```
 
-- `CMakeSettings.json` 셋팅 (`MSVC`)
+- `CMakeSettings.json` 셋팅 (`MSVC` 권장)
 	- `Visual Studio` IDE에서 빌드 구성을 쉽게 전환할 수 있도록 `CMakeSettings.json` 파일을 프로젝트 루트에 생성합니다.
 	```json
 	{

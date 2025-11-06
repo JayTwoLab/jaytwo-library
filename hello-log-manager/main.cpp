@@ -32,8 +32,8 @@ int main() {
     std::string sectionName = "Log"; // INI 파일의 섹션 이름
     std::string loggerName = hname; // spdlog 에서 사용할 로거 이름
 
-    std::string envName = ""; // 환경 변수로 INI 경로 설정하지 않으면 "" 사용
-    // std::string envName       = "LOG_MANAGER_CONFIG_PATH"; // LOG_MANAGER_CONFIG_PATH 환경변수에 값이 있는 경우, 해당 값을 INI 파일 경로로 간주하여 파일을 연다. 
+    std::string envName = ""; // OS 환경 변수를 이용하여 INI 경로를 설정하지 않으면 값을 ""으로 설정
+    // std::string envName = "LOG_MANAGER_CONFIG_PATH"; // LOG_MANAGER_CONFIG_PATH 환경변수에 값이 있는 경우, 해당 값을 INI 파일 경로로 간주하여 파일을 연다. 
 
     j2::log::logger_manager logMgr;
     if (!logMgr.init(filePathStr, sectionName, loggerName, envName)) {

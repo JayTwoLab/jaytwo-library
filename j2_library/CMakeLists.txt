@@ -140,10 +140,14 @@ else()
 endif()
 
 ###################################
-# --- SimpleIni: 패키지 우선, 실패 시 시스템 헤더 또는 서브모듈(로컬 코드) 폴백 ---
+# simpleini: 패키지 우선, 실패 시 시스템 헤더 또는 서브모듈(로컬 코드) 폴백 
 
 # 1) vcpkg/Conan 등에서 CONFIG 패키지 시도 (있으면 simpleini::simpleini 타깃을 씁니다)
+
 find_package(simpleini CONFIG QUIET)
+
+message(STATUS "simpleini_FOUND = ${simpleini_FOUND}")
+message(STATUS "simpleini_DIR = ${simpleini_DIR}")
 
 if (simpleini_FOUND)
   message(STATUS "Found simpleini from package manager")

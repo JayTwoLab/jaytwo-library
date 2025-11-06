@@ -21,12 +21,16 @@ namespace j2::file {
 
     // -------------------- 내부 유틸 --------------------
 
+#if defined(_WIN32)
+
+#else
     // ASCII 범위만 소문자화(한글 등 비ASCII에는 영향 없음)
     static std::string to_lower_ascii(std::string s) {
         std::transform(s.begin(), s.end(), s.begin(),
             [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
         return s;
     }
+#endif
 
     static bool is_hidden_unixlike(const fs::path& p) {
         const auto name = p.filename().string();

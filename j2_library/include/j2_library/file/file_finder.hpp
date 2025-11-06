@@ -19,11 +19,13 @@
 #include <regex>
 #include <utility>
 
+#include "j2_library/export.hpp"
+
 namespace j2::file {
 
     namespace fs = std::filesystem;
 
-    class file_finder {
+    class J2LIB_API file_finder {
     public:
         // 정렬 키
         enum class sort_key { none = 0, path, name, mtime, size };
@@ -118,13 +120,13 @@ namespace j2::file {
     // 기본값: recursive=false(비재귀), case_insensitive=true(대소문자 무시)
     //
     // 문자열 버전(호환용)
-    bool exists(const std::filesystem::path& root,
+    J2LIB_API bool exists(const std::filesystem::path& root,
         const std::string& filename,
         bool recursive = false,
         bool case_insensitive = true) noexcept;
 
     // 경로 버전(권장: 유니코드 안전)
-    bool exists(const std::filesystem::path& root,
+    J2LIB_API bool exists(const std::filesystem::path& root,
         const std::filesystem::path& filename,
         bool recursive = false,
         bool case_insensitive = true) noexcept;

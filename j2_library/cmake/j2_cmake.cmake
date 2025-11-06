@@ -11,6 +11,7 @@ include(j2_utf8) # j2_utf8.cmake 모듈 포함
 if (MSVC)
   cmake_policy(SET CMP0091 NEW)
   add_compile_options(/wd4251)
+  add_compile_definitions(_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING)
 endif()
 
 #########################################
