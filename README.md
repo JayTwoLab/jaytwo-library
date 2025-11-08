@@ -46,6 +46,7 @@
 ##### 1.1.1. `Visual Studio` 에서 `vcpkg` 를 설치하여 라이브러리를 사용하는 방법
 
 - `vcpkg` 설치
+    - `Visual Studio` 설치본에 `vcpkg`가 있는 경우 삭제하고, 하단의 방법으로 새로 설치 권장 
     - `git clone https://github.com/microsoft/vcpkg.git`
 	    - 보통 사용자 계정 폴더에 설치함 : `C:\Users\j2\vcpkg`
     - 명령을 실행하여 `vcpkg.exe`를 생성

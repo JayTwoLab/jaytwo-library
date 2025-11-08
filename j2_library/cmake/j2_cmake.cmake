@@ -21,6 +21,12 @@ if (MSVC)
 endif()
 
 #########################################
+# gcc spdlog 경고 무시
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    add_compile_options(-Wno-stringop-overflow)
+endif()
+
+#########################################
 # 경고/샌리타이저 모듈(있으면 사용)
 if (COMMAND j2_enable_warnings)
   j2_enable_warnings(j2_library) # j2_warnings.cmake 모듈 포함
