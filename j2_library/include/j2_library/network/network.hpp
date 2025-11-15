@@ -14,4 +14,12 @@
     using asio_error_code_t = boost::system::error_code;
 #endif
 
+  
+#include "j2_library/network/ethernet.hpp"
+
+#include "j2_library/network/tcp/tcp_server.hpp"
+#include "j2_library/network/tcp/tcp_client.hpp"
+
+#include "j2_library/network/udp/udp_receiver.hpp"
+#include "j2_library/network/udp/udp_sender.hpp"
 
