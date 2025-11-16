@@ -9,7 +9,7 @@
     #  define WIN32_LEAN_AND_MEAN
     #endif
 
-    // 순서 매우 중요: winsock2 -> ws2tcpip -> windows
+    // Order is very important: winsock2 -> ws2tcpip -> windows
     #include <winsock2.h>
     #include <ws2tcpip.h>
     #include <windows.h>
