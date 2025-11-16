@@ -15,8 +15,8 @@ add_subdirectory(j2_library) # j2_library/CMakeLists.txt
 option(BUILD_EXAMPLES "Build Example" ON) # 값을 OFF 설정하거나, cmake -DBUILD_EXAMPLES=OFF 로 하면 예제 빌드하지 않음.
 if (BUILD_EXAMPLES)
   add_subdirectory(hello-template) # hello world 예제
-  add_subdirectory(hello-log-manager) # 로그 관리 예제
   add_subdirectory(hello-file-finder) # 파일 찾기 예제
+  add_subdirectory(example) 
 endif()
 
 # -------------------------

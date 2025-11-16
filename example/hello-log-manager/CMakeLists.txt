@@ -1,4 +1,3 @@
-# hello-log-manager/CMakeLists.txt
 cmake_minimum_required(VERSION 3.26)
 
 project(j2_log_manager_template LANGUAGES CXX) # 프로젝트 선언
@@ -8,7 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON) # 지정한 표준을 반드시 사용
 set(CMAKE_CXX_EXTENSIONS OFF) # OFF: 컴파일러 확장 기능을 쓰지 않고 순수한 표준 모드만 사용
 
 # j2_library 루트 경로 설정 (전역 변수)
-set(J2_LIBRARY_ROOT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../j2_library" CACHE PATH "Path to j2_library root")
+set(J2_LIBRARY_ROOT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../j2_library" CACHE PATH "Path to j2_library root")
 
 list(PREPEND CMAKE_MODULE_PATH "${J2_LIBRARY_ROOT_PATH}/cmake")
 include(j2_cmake) # j2_cmake.cmake 모듈 포함 (필요한 모듈만 선택적으로 포함도 가능)
