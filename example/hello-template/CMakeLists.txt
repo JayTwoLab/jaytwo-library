@@ -7,6 +7,9 @@ set(CMAKE_CXX_STANDARD 17) # C++17
 set(CMAKE_CXX_STANDARD_REQUIRED ON) # 지정한 표준을 반드시 사용
 set(CMAKE_CXX_EXTENSIONS OFF) # OFF: 컴파일러 확장 기능을 쓰지 않고 순수한 표준 모드만 사용
 
+########################################################
+# {{
+
 # j2_library 루트 경로 설정 (전역 변수)
 set(J2_LIBRARY_ROOT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../j2_library" CACHE PATH "Path to j2_library root")
 
@@ -34,12 +37,21 @@ add_subdirectory("${J2_LIBRARY_ROOT_PATH}" "${CMAKE_CURRENT_BINARY_DIR}/j2_libra
 ## 예를 들어 `math.hpp`를 고치면 `math.cpp`와 `main.cpp` 둘 다 재컴파일될 수 있습니다.
 ##
 
+# }} 
+########################################################
+
 file(GLOB SRC_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/*.c")
 add_executable(j2_hello_template ${SRC_FILES}) 
+
+########################################################
+# {{
 
 target_link_libraries(j2_hello_template PRIVATE j2_library) # j2_library를 링크
 
 target_include_directories(j2_hello_template PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}") # 인클루드 경로
 # target_link_directories(j2_hello_template PRIVATE ...) # 링크 디렉토리 (필요 시)
+
+# }} 
+########################################################
 
 
