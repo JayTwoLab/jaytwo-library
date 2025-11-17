@@ -127,7 +127,7 @@
 ### 2. 빌드
 
 - 관련 소스 코드 모두 받기 권장
-   - `git clone --recurse-submodules https://github.com/jaytwo/j2_library.git`
+   - `git clone --recurse-submodules https://github.com/JayTwoLab/jaytwo-library.git`
 
 <br />
 
