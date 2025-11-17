@@ -418,6 +418,14 @@ if(FALSE)  # immer 임시 비활성화
     target_link_libraries(j2_library PUBLIC j2_immer) 
 endif()
 
+# GCC 버전에 따라 <filesystem> 라이브러리 링크 설정
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    # GCC 8.x 에서는 std::filesystem 이 별도 라이브러리(stdc++fs)에 들어 있는 경우가 많음
+    if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9)
+        # GCC 8.x 전용 설정: -lstdc++fs 링크
+        target_link_libraries(j2_library PRIVATE stdc++fs)
+    endif()
+endif()
 
 # -------------------------
 # 설치/패키징
