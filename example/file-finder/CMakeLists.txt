@@ -41,13 +41,6 @@ target_include_directories(${EXE_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}") # 
 # }} 
 ########################################################
 
-if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9)
-        # GCC 8.x 은 std::filesystem 이 별도 라이브러리에 있으므로 필요한 옵션
-        message("GCC 8.x detected: Linking with stdc++fs")
-        add_link_options(-lstdc++fs)
-    endif()
-endif()
 
 
 # 현재 CMakeLists.txt 파일이 있는 디렉터리를 매크로로 정의 (main.cpp 에서 테스트 용도)
