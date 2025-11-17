@@ -26,18 +26,6 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     add_compile_options(-Wno-stringop-overflow)
 endif()
 
-#####################################################
-# GCC 버전에 따라 <filesystem> 라이브러리 링크 설정
-# GCC 버전에 따라 전역 링크 옵션 추가
-if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9)
-        # GCC 8.x 은 std::filesystem 이 별도 라이브러리에 있으므로 필요한 옵션
-        message("GCC 8.x detected: Linking with stdc++fs")
-        add_link_options(-lstdc++fs)
-    endif()
-endif()
-
-
 #########################################
 # 경고/샌리타이저 모듈(있으면 사용)
 if (COMMAND j2_enable_warnings)
