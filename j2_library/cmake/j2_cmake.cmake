@@ -89,11 +89,13 @@ endif()
 
 #####################################################
 # GCC 버전에 따라 <filesystem> 라이브러리 링크 설정
+# GCC 버전에 따라 전역 링크 옵션 추가
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    # GCC 8.x 에서는 std::filesystem 이 별도 라이브러리(stdc++fs)에 들어 있는 경우가 많음
     if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9)
-        # GCC 8.x 전용 설정: -lstdc++fs 링크
-        target_link_libraries(my_app PRIVATE stdc++fs)
+        # GCC 8.x 은 std::filesystem 이 별도 라이브러리에 있으므로 필요한 옵션
+        add_link_options(-lstdc++fs)
     endif()
 endif()
+
+
 
