@@ -39,6 +39,7 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
         target_link_libraries(${EXE_NAME} PRIVATE stdc++fs)
     endif()
 endif()
+target_link_libraries(j2_log_manager PRIVATE stdc++fs)
 
 
 target_link_libraries(${EXE_NAME} PRIVATE j2_library) # j2_library 라이브러리를 링크
