@@ -30,15 +30,6 @@ add_executable(${EXE_NAME} ${SRC_FILES})
 ########################################################
 # {{
 
-target_link_libraries(${EXE_NAME} PRIVATE j2_library) # j2_library 라이브러리를 링크
-
-target_include_directories(${EXE_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}") # 인클루드 경로
-
-# target_link_directories(${EXE_NAME} PRIVATE ...) # 추가 링크 디렉토리 (필요 시)
-
-# }} 
-########################################################
-
 
 # GCC 버전에 따라 <filesystem> 라이브러리 링크 설정
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
@@ -49,6 +40,15 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     endif()
 endif()
 
+
+target_link_libraries(${EXE_NAME} PRIVATE j2_library) # j2_library 라이브러리를 링크
+
+target_include_directories(${EXE_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}") # 인클루드 경로
+
+# target_link_directories(${EXE_NAME} PRIVATE ...) # 추가 링크 디렉토리 (필요 시)
+
+# }} 
+########################################################
 
 
 
