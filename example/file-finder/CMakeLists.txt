@@ -35,22 +35,11 @@ add_executable(${EXE_NAME} ${SRC_FILES})
 
 target_link_libraries(${EXE_NAME} PRIVATE j2_library) # j2_library를 링크
 
-# GCC 버전에 따라 <filesystem> 라이브러리 링크 설정
-if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    # GCC 8.x 에서는 std::filesystem 이 별도 라이브러리(stdc++fs)에 들어 있는 경우가 많음
-    if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9)
-        # GCC 8.x 전용 설정: -lstdc++fs 링크
-        target_link_libraries(${EXE_NAME} PRIVATE stdc++fs)
-    endif()
-endif()
-
 target_include_directories(${EXE_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}") # 인클루드 경로
 # target_link_directories(${EXE_NAME} PRIVATE ...) # 링크 디렉토리 (필요 시)
 
 # }} 
 ########################################################
-
-
 
 # 현재 CMakeLists.txt 파일이 있는 디렉터리를 매크로로 정의 (main.cpp 에서 테스트 용도)
 target_compile_definitions(${EXE_NAME} PRIVATE CMAKE_SOURCE_DIR_PATH="${CMAKE_CURRENT_LIST_DIR}")
