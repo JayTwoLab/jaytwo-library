@@ -17,12 +17,15 @@ set(CMAKE_CXX_EXTENSIONS OFF) # OFF: 컴파일러 확장 기능을 쓰지 않고
 # 루트 경로는 상대 경로 또는 절대 경로로 지정 가능
 set(J2_LIBRARY_ROOT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../j2_library" CACHE PATH "Path to j2_library root")
 
+# j2_library 라이브러리 루트 디렉토리 설정
+#  - j2_library 라이브러리를 현재 프로젝트의 아웃풋과 같은 소스 트리에서 빌드하도록 설정
+#  - 별도의 빌드 디렉토리를 사용하여 충돌 방지
+#  - j2_library 라이브러리가 이미 특정 경로에 설치된 경우에는 해당 경로를 지정하여 사용할 수도 있음
+add_subdirectory("${J2_LIBRARY_ROOT_PATH}" "${CMAKE_CURRENT_BINARY_DIR}/j2_library_build")
+
 # j2_library CMake 모듈 포함
 list(PREPEND CMAKE_MODULE_PATH "${J2_LIBRARY_ROOT_PATH}/cmake")
 include(j2_cmake) # 디폴트 모듈(j2_cmake.cmake) 포함 (필요한 모듈만 선택적으로 포함도 가능)
-
-# j2_library 라이브러리를 같은 소스 트리에서 빌드
-add_subdirectory("${J2_LIBRARY_ROOT_PATH}" "${CMAKE_CURRENT_BINARY_DIR}/j2_library_build")
 
 ##
 ## NOTE: 빌드 동작 방식

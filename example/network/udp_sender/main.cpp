@@ -29,8 +29,10 @@ int main() {
         return 1;
     }
 
+    sender.send_data_to("Hello Unicast", "127.0.0.1", 12345); // Send unicast
+
     sender.set_multicast_ttl(2); // Multicast Egress TTL Settings (Optional)
-    sender.send_data_to("Hello Multicast", "239.0.0.1", 12345); // Send multicast
+    sender.send_data_to("Hello Multicast", "239.255.255.250", 12347); // Send multicast 
 
     sender.send_data_to("Hello Broadcast", "255.255.255.255", 12345); // Broadcast transmission
 
