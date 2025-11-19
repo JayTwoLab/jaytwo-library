@@ -28,10 +28,12 @@ int main() {
     }
 #endif
 
-    MyTcoServerHandler handler;
+    MyTcoServerHandler handler; // Custom handler for events
 
     // IPv4 tcp server 
     j2::network::tcp::tcp_server server_ipv4;
+
+    // set callbacks 
     server_ipv4.setOnConnectCallback(
         [&handler](int client_socket, const std::string& message) {
             handler.onConnect(client_socket, "[IPv4] " + message);
@@ -61,6 +63,8 @@ int main() {
 
     // IPv6 tcp server 
     j2::network::tcp::tcp_server server_ipv6;
+
+    // set callbacks
     server_ipv6.setOnConnectCallback(
         [&handler](int client_socket, const std::string& message) {
             handler.onConnect(client_socket, "[IPv6] " + message);
