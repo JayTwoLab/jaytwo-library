@@ -1,5 +1,6 @@
 
 #include "j2_library/log/logger_manager.hpp"
+#include "j2_library/network/udp/udp_sender.hpp"
 
 namespace j2::log {
 
@@ -574,18 +575,27 @@ bool logger_manager::sendUdpAlert(const std::string& msg) {
     if (udpPort_ == 0) return false;
     if (msg.empty()) return false;
 
-    try {
-        net::io_context io;
-        net::ip::udp::endpoint ep(net::ip::make_address(udpIp_), udpPort_);
-        net::ip::udp::socket sock(io);
-        sock.open(net::ip::udp::v4());
-        sock.send_to(net::buffer(msg), ep);
-        sock.close();
-        return true;
-    }
-    catch (...) {
+    // Boost.Asio 사용 코드
+    //try {
+    //    net::io_context io;
+    //    net::ip::udp::endpoint ep(net::ip::make_address(udpIp_), udpPort_);
+    //    net::ip::udp::socket sock(io);
+    //    sock.open(net::ip::udp::v4());
+    //    sock.send_to(net::buffer(msg), ep);
+    //    sock.close();
+    //    return true;
+    //}
+    //catch (...) {
+    //    return false;
+    // }
+
+    // j2_library 자체 udp 송신 기능
+    j2::network::udp::udp_sender sender;
+    if ( sender.send_data_to(msg, udpIp_, udpPort_) < 0 ) {
         return false;
     }
+    return true;
+
 }
 
 } // namespace j2::log
