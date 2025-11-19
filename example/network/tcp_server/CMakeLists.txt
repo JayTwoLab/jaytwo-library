@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.26)
 
-project(j2_tcp_server LANGUAGES CXX) # 프로젝트 선언
+project(j2_tcp_server_project LANGUAGES CXX) # 프로젝트 선언
 
 set(EXE_NAME "j2_tcp_server") # 실행 파일 이름 설정
 
