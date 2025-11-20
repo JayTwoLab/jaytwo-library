@@ -6,7 +6,7 @@ cd build
 # cmake 실행 (릴리즈 빌드, 설치 경로 지정)
 #  - 설치 경로에 따라 -DCMAKE_INSTALL_PREFIX 값을 변경하세요.
 #  - 디버그/릴리즈 모드에 따라 -DCMAKE_BUILD_TYPE 값을 변경하세요.
-cmake -S .. -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="/home/j2/workspace/dev/lib"
+cmake -S .. -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="/home/j2/dev/lib/j2_library"
 # clang 사용하는 경우
 #   cmake -S .. -B build -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang ... 
 

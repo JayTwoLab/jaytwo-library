@@ -129,6 +129,12 @@
 - 관련 소스 코드 모두 받기 권장
    - `git clone --recurse-submodules https://github.com/JayTwoLab/jaytwo-library.git`
 
+- 써드 파티는 패키지를 직접 설치하여 사용할 수도 있음.
+	- `Windows` : `vcpkg` 를 사용하여 설치
+	- `Linux` : 패키지 관리자를 사용하여 설치 (vcpkg를 사용할 수도 있음)
+
+- `third_party` 를 `git` `sub module` 로 받지 않고 빌드하는 경우, `CMake` 옵션에서 `-DJ2_THIRD_PARTY_ROOT_PATH=/user/hello/third-party` 등과 같이 경로를 지정하여 빌드할 수도 있음.
+
 <br />
 
 ---
