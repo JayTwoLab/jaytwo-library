@@ -1,16 +1,6 @@
-// UTF-8 한글 출력이 윈도우 콘솔/리눅스 터미널 모두에서 정상 동작하도록 구성한 통합 예제
-// - 윈도우 콘솔: WriteConsoleW(UTF-16) 사용
-// - 윈도우 리다이렉트/파이프: UTF-8 바이트로 출력
-// - POSIX(리눅스/맥): UTF-8 바이트로 출력
-// - j2::file::exists() 테스트 케이스들을 모두 포함
-//
-// 빌드 전제:
-//   - 소스 인코딩은 UTF-8
-//   - MSVC: /utf-8 권장
-//
-// 주의:
-//   - Windows에서 비ASCII 경로는 fs::u8path(u8"...") 또는 L"..." 만 사용할 것
-//   - fs::path("한글")은 예외 발생 가능(ACP 변환 실패)
+// -------- main --------
+
+int main();
 
 #include <iostream>
 #include <string>
@@ -21,10 +11,49 @@
 
 namespace fs = std::filesystem;
 
+// 함수 선언부 (main에서 사용하는 함수들)
+static void dump_tree(const fs::path& base);
+static void test_non_recursive_basic(const fs::path& base);
+static void test_recursive_case_sensitive(const fs::path& base);
+static void test_windows_wide_literal(const fs::path& base);
+static void test_windows_u8path_literal(const fs::path& base);
+static void test_case_sensitive_negative(const fs::path& base);
+static void test_not_found(const fs::path& base);
+static void test_relative_hello_demo();
+static void test_korean_name_variants(const fs::path& base);
+static void test_nonrec_vs_rec(const fs::path& base);
+
+// -------- main --------
+
+int main() {
+    // 기준 경로를 CMake에서 주입하거나, 없으면 실행 디렉토리로 대체
+#ifndef CMAKE_SOURCE_DIR_PATH
+#define CMAKE_SOURCE_DIR_PATH "."
+#endif
+    fs::path base = fs::path(CMAKE_SOURCE_DIR_PATH);
+
+    dump_tree(base);
+
+    test_non_recursive_basic(base);
+    test_recursive_case_sensitive(base);
+    test_windows_wide_literal(base);
+    test_windows_u8path_literal(base);
+    test_case_sensitive_negative(base);
+    test_not_found(base);
+    test_relative_hello_demo();
+    test_korean_name_variants(base);
+    test_nonrec_vs_rec(base);
+
+    return 0;
+}
+
+// 이하 기존 함수 정의부 (생략 없이 기존 코드 그대로 유지)
+
+// ... (아래에 기존의 모든 함수 정의가 이어집니다)
 #if defined(_WIN32)
 
 #ifndef NOMINMAX
-    #define NOMINMAX
+#define NOMINMAX
 #endif
 #include <windows.h>
 #include <io.h>
@@ -191,28 +220,4 @@ static void test_nonrec_vs_rec(const fs::path& base) {
         + ", rec=" + (rec ? "TRUE" : "FALSE")
         + u8"  (하위 폴더에 있으면 nonrec=FALSE, rec=TRUE 가 됩니다)";
     println_u8(line);
-}
-
-// -------- main --------
-
-int main() {
-    // 기준 경로를 CMake에서 주입하거나, 없으면 실행 디렉토리로 대체
-#ifndef CMAKE_SOURCE_DIR_PATH
-#define CMAKE_SOURCE_DIR_PATH "."
-#endif
-    fs::path base = fs::path(CMAKE_SOURCE_DIR_PATH);
-
-    dump_tree(base);
-
-    test_non_recursive_basic(base);
-    test_recursive_case_sensitive(base);
-    test_windows_wide_literal(base);
-    test_windows_u8path_literal(base);
-    test_case_sensitive_negative(base);
-    test_not_found(base);
-    test_relative_hello_demo();
-    test_korean_name_variants(base);
-    test_nonrec_vs_rec(base);
-
-    return 0;
 }
