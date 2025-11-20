@@ -1,19 +1,18 @@
-
-# 빌드 경로 생성
+# Create build directory
 mkdir build 
 cd build
 
-# cmake 실행 (릴리즈 빌드, 설치 경로 지정)
-#  - 설치 경로에 따라 -DCMAKE_INSTALL_PREFIX 값을 변경하세요.
-#  - 디버그/릴리즈 모드에 따라 -DCMAKE_BUILD_TYPE 값을 변경하세요.
+# Run cmake (Release build, specify install path)
+#  - Change the -DCMAKE_INSTALL_PREFIX value according to your desired install path.
+#  - Change the -DCMAKE_BUILD_TYPE value for Debug/Release mode.
 cmake -S .. -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="/home/j2/dev/lib/j2_library"
-# clang 사용하는 경우
+# If using clang
 #   cmake -S .. -B build -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang ... 
 
-# 라이브러리 빌드 (cpu 코어 수 만큼 병렬 빌드)
+# Build the library (parallel build using number of CPU cores)
 cmake --build build -j$(nproc)
 
-# 라이브러리 설치 
+# Install the library 
 cmake --install build
-# 설치 경로가 /usr/local/... 등의 시스템 경로인 경우, 설치 시 sudo(root 권한) 필요함.
+# If the install path is a system directory like /usr/local/..., sudo (root privileges) is required for installation.
 #  sudo cmake --install build
