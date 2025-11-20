@@ -1,6 +1,7 @@
 #pragma once
 
-#include "j2_library/network/win_net_shim.hpp" // Windows network header setup
+// Windows network header setup
+#include "j2_library/network/win_net_shim.hpp" 
 
 // Common network utilities and type definitions
 #include "j2_library/network/ethernet.hpp"
