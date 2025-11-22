@@ -267,6 +267,37 @@ target_link_libraries(j2_asio INTERFACE Threads::Threads)
 install(TARGETS j2_asio
         EXPORT j2_libraryTargets)
 
+
+################################
+# curl 라이브러리 (패키지 우선, 없으면 third-party 사용)
+find_package(CURL CONFIG QUIET)
+if (CURL_FOUND)
+  message(STATUS "Found CURL from package manager")
+else()
+  message(WARNING "CURL not found, using third-party vendor (source or headers only)")
+  set(CURL_THIRD_PARTY_PATH "${J2_THIRD_PARTY_ROOT_PATH}/curl")
+  if (EXISTS "${CURL_THIRD_PARTY_PATH}/CMakeLists.txt")
+    add_subdirectory(${CURL_THIRD_PARTY_PATH} EXCLUDE_FROM_ALL)
+  else()
+    message(FATAL_ERROR "CURL not found: install via package manager or add to third-party/curl")
+  endif()
+endif()
+
+################################
+# googletest 라이브러리 (패키지 우선, 없으면 third-party 사용)
+find_package(GTest CONFIG QUIET)
+if (GTest_FOUND)
+  message(STATUS "Found GTest from package manager")
+else()
+  message(WARNING "GTest not found, using third-party vendor")
+  set(GTEST_THIRD_PARTY_PATH "${J2_THIRD_PARTY_ROOT_PATH}/googletest")
+  if (EXISTS "${GTEST_THIRD_PARTY_PATH}/CMakeLists.txt")
+    add_subdirectory(${GTEST_THIRD_PARTY_PATH} EXCLUDE_FROM_ALL)
+  else()
+    message(FATAL_ERROR "GTest not found: install via package manager or add to third-party/googletest")
+  endif()
+endif()
+
 #######################################
 # --- immer: 패키지 우선, 실패 시 서브모듈/로컬 헤더 폴백 ---
 
@@ -414,6 +445,21 @@ target_link_libraries(j2_library PUBLIC j2_asio)
 
 # SimpleIni 라이브러리
 target_link_libraries(j2_library PUBLIC simpleini::simpleini)
+
+# curl 라이브러리 링크
+if (CURL_FOUND)
+  target_link_libraries(j2_library PUBLIC CURL::libcurl)
+elseif (TARGET libcurl)
+  target_link_libraries(j2_library PUBLIC libcurl)
+endif()
+
+# googletest 라이브러리 링크 추가
+if (GTest_FOUND)
+  target_link_libraries(j2_library PUBLIC GTest::gtest GTest::gtest_main)
+elseif (TARGET gtest)
+  target_link_libraries(j2_library PUBLIC gtest gtest_main)
+endif()
+
 
 # immer 라이브러리
 if(FALSE)  # immer 임시 비활성화
