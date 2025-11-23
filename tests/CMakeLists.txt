@@ -88,4 +88,6 @@ if (J2_ENABLE_TESTS)
   include(GoogleTest)
   gtest_discover_tests(${PROJECT_NAME})
 
+
 endif() # J2_ENABLE_TESTS
+

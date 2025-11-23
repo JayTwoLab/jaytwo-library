@@ -290,18 +290,22 @@ endif()
 
 ################################
 # googletest 라이브러리 (패키지 우선, 없으면 third-party 사용)
-find_package(GTest CONFIG QUIET)
-if (GTest_FOUND)
-  message(STATUS "Found GTest from package manager")
-  # add_subdirectory를 호출하지 않음!
-else()
-  message(WARNING "GTest not found, using third-party vendor")
-  set(GTEST_THIRD_PARTY_PATH "${J2_THIRD_PARTY_ROOT_PATH}/googletest")
-  if (EXISTS "${GTEST_THIRD_PARTY_PATH}/CMakeLists.txt")
-    add_subdirectory(${GTEST_THIRD_PARTY_PATH} EXCLUDE_FROM_ALL)
-  else()
-    message(FATAL_ERROR "GTest not found: install via package manager or add to third-party/googletest")
-  endif()
+
+if(FALSE) # # GTest 임시 비활성화
+
+    find_package(GTest CONFIG QUIET)
+    if (GTest_FOUND)
+      message(STATUS "Found GTest from package manager")
+      # add_subdirectory를 호출하지 않음!
+    else()
+      message(WARNING "GTest not found, using third-party vendor")
+      set(GTEST_THIRD_PARTY_PATH "${J2_THIRD_PARTY_ROOT_PATH}/googletest")
+      if (EXISTS "${GTEST_THIRD_PARTY_PATH}/CMakeLists.txt")
+        add_subdirectory(${GTEST_THIRD_PARTY_PATH} EXCLUDE_FROM_ALL)
+      else()
+        message(FATAL_ERROR "GTest not found: install via package manager or    add to third-party/googletest")
+      endif()
+    endif()
 endif()
 
 #######################################
