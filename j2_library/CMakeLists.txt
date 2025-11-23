@@ -268,26 +268,22 @@ install(TARGETS j2_asio
         EXPORT j2_libraryTargets)
 
 
-################################
-# curl 라이브러리 (패키지 우선, 없으면 third-party 사용)
+  
 
-find_package(CURL CONFIG QUIET)
+################################
+# curl 라이브러리 (필수: 반드시 find_package(CURL REQUIRED)로 탐색, 없으면 에러)
+
+find_package(CURL REQUIRED CONFIG)
 if(NOT CURL_FOUND)
-    find_package(CURL MODULE QUIET)
+    find_package(CURL REQUIRED MODULE)
 endif()
 
 if (CURL_FOUND)
   message(STATUS "Found CURL from package manager")
 else()
-  message(WARNING "CURL not found, using third-party vendor (source or headers only)")
-  set(CURL_THIRD_PARTY_PATH "${J2_THIRD_PARTY_ROOT_PATH}/curl")
-  if (EXISTS "${CURL_THIRD_PARTY_PATH}/CMakeLists.txt")
-    set(CURL_DISABLE_PSL ON CACHE BOOL "Disable PSL support in vendored curl" FORCE)
-    add_subdirectory(${CURL_THIRD_PARTY_PATH} EXCLUDE_FROM_ALL)
-  else()
-    message(FATAL_ERROR "CURL not found: install via package manager or add to third-party/curl")
-  endif()
+  message(FATAL_ERROR "CURL not found: install via package manager or add to third-party/curl")
 endif()
+
 
 ################################
 # googletest 라이브러리
@@ -312,70 +308,70 @@ endif()
 
 #######################################
 # --- immer: 패키지 우선, 실패 시 서브모듈/로컬 헤더 폴백 ---
-
-if(FALSE) # # immer 임시 비활성화
-
-  # 1) 패키지 매니저(vcpkg/Conan 등)에서 CONFIG 패키지 시도
-  find_package(immer CONFIG QUIET)
-
-  # immer 타깃 이름은 배포에 따라 다릅니다(immer::immer 또는 immer).
-  # 단일 공개 래퍼 타깃(j2_immer)을 항상 제공해, 소비 측은 j2_immer만 링크하면 됩니다.
-  add_library(j2_immer INTERFACE)
-
-  if (immer_FOUND)
-    message(STATUS "Found immer from package manager")
-
-    if (TARGET immer::immer)
-      target_link_libraries(j2_immer INTERFACE immer::immer)
-    elseif (TARGET immer)
-      target_link_libraries(j2_immer INTERFACE immer)
-    else()
-      message(FATAL_ERROR
-        "immer package was found, but no known target appeared (expected 'immer::immer' or 'immer').")
-    endif()
-
-  else()
-    message(WARNING "immer not found; using third-party vendor (header-only)")
-
-    # 2) 서브모듈/로컬 경로에서 헤더 루트 자동 탐지
-    #    - 레포 구조가 'third-party/immer/immer/...'
-    #      또는 'third-party/immer/include/immer/...' 인 두 경우를 모두 지원
-    set(_IMMER_ROOT "${J2_THIRD_PARTY_ROOT_PATH}/immer")
-    set(IMMER_LOCAL_INC "")
-    if (EXISTS "${_IMMER_ROOT}/immer/vector.hpp" OR EXISTS "${_IMMER_ROOT}/immer/immer.hpp")
-      set(IMMER_LOCAL_INC "${_IMMER_ROOT}")                # .../third-party/immer
-    elseif (EXISTS "${_IMMER_ROOT}/include/immer/vector.hpp" OR EXISTS "${_IMMER_ROOT}/include/immer/immer.hpp")
-      set(IMMER_LOCAL_INC "${_IMMER_ROOT}/include")       # .../third-party/immer/include
-    else()
-      message(FATAL_ERROR
-        "immer headers not found under: ${_IMMER_ROOT}\n"
-        "Expected 'immer/...' or 'include/immer/...'.")
-    endif()
-
-    # 빌드/설치 인터페이스 분리 (설치 산출물에서 소스 경로가 보이지 않도록)
-    target_include_directories(j2_immer INTERFACE
-      $<BUILD_INTERFACE:${IMMER_LOCAL_INC}>
-      $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
-    )
-
-    # immer는 최소 C++14 요구 (프로젝트 전역이 C++17이라도 명시해 두면 안전)
-    target_compile_features(j2_immer INTERFACE cxx_std_14)
-
-    # 소비 코드가 'immer::immer'를 기대하는 경우를 대비해 별칭 제공(이미 있으면 생략)
-    if (NOT TARGET immer::immer)
-      add_library(immer::immer ALIAS j2_immer)
-    endif()
-
-    # 로컬 헤더 설치 (include/immer/* 로 배치)
-    install(DIRECTORY "${IMMER_LOCAL_INC}/immer"
-            DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-  endif()
-
-  # 항상 j2_immer를 export 세트에 포함 (j2_library가 PUBLIC으로 링크해도 export 누락 에러 방지)
-  install(TARGETS j2_immer
-          EXPORT j2_libraryTargets)
-
-endif()
+# 
+# if(FALSE) # # immer 임시 비활성화
+# 
+#   # 1) 패키지 매니저(vcpkg/Conan 등)에서 CONFIG 패키지 시도
+#   find_package(immer CONFIG QUIET)
+# 
+#   # immer 타깃 이름은 배포에 따라 다릅니다(immer::immer 또는 immer).
+#   # 단일 공개 래퍼 타깃(j2_immer)을 항상 제공해, 소비 측은 j2_immer만 링크하면 됩니다.
+#   add_library(j2_immer INTERFACE)
+# 
+#   if (immer_FOUND)
+#     message(STATUS "Found immer from package manager")
+# 
+#     if (TARGET immer::immer)
+#       target_link_libraries(j2_immer INTERFACE immer::immer)
+#     elseif (TARGET immer)
+#       target_link_libraries(j2_immer INTERFACE immer)
+#     else()
+#       message(FATAL_ERROR
+#         "immer package was found, but no known target appeared (expected 'immer::immer'  #or 'immer').")
+#     endif()
+# 
+#   else()
+#     message(WARNING "immer not found; using third-party vendor (header-only)")
+# 
+#     # 2) 서브모듈/로컬 경로에서 헤더 루트 자동 탐지
+#     #    - 레포 구조가 'third-party/immer/immer/...'
+#     #      또는 'third-party/immer/include/immer/...' 인 두 경우를 모두 지원
+#     set(_IMMER_ROOT "${J2_THIRD_PARTY_ROOT_PATH}/immer")
+#     set(IMMER_LOCAL_INC "")
+#     if (EXISTS "${_IMMER_ROOT}/immer/vector.hpp" OR EXISTS "${_IMMER_ROOT}/immer/ #immer.hpp")
+#       set(IMMER_LOCAL_INC "${_IMMER_ROOT}")                # .../third-party/immer
+#     elseif (EXISTS "${_IMMER_ROOT}/include/immer/vector.hpp" OR EXISTS "${_IMMER_ROOT}/ #include/immer/immer.hpp")
+#       set(IMMER_LOCAL_INC "${_IMMER_ROOT}/include")       # .../third-party/immer/ include
+#     else()
+#       message(FATAL_ERROR
+#         "immer headers not found under: ${_IMMER_ROOT}\n"
+#         "Expected 'immer/...' or 'include/immer/...'.")
+#     endif()
+# 
+#     # 빌드/설치 인터페이스 분리 (설치 산출물에서 소스 경로가 보이지 않도록)
+#     target_include_directories(j2_immer INTERFACE
+#       $<BUILD_INTERFACE:${IMMER_LOCAL_INC}>
+#       $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+#     )
+# 
+#     # immer는 최소 C++14 요구 (프로젝트 전역이 C++17이라도 명시해 두면 안전)
+#     target_compile_features(j2_immer INTERFACE cxx_std_14)
+# 
+#     # 소비 코드가 'immer::immer'를 기대하는 경우를 대비해 별칭 제공(이미 있으면 생략)
+#     if (NOT TARGET immer::immer)
+#       add_library(immer::immer ALIAS j2_immer)
+#     endif()
+# 
+#     # 로컬 헤더 설치 (include/immer/* 로 배치)
+#     install(DIRECTORY "${IMMER_LOCAL_INC}/immer"
+#             DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+#   endif()
+# 
+#   # 항상 j2_immer를 export 세트에 포함 (j2_library가 PUBLIC으로 링크해도 export 누락 #에 러 방지)
+#   install(TARGETS j2_immer
+#           EXPORT j2_libraryTargets)
+# 
+# endif()
 
 
 # -------------------------

@@ -3,6 +3,9 @@
 # 플랫폼별 네트워크 라이브러리 설정 (사전(pre-) 설정)
 # 
 
+###########################################
+# socket 라이브러리 설정 (tcp, udp 등)
+
 if(WIN32)
     # Windows 설정
     add_definitions(-D_WIN32_WINNT=0x0A00) # Win10=0x0A00, Win11=0x0A00
@@ -41,3 +44,6 @@ else()
     message(WARNING "Unsupported platform: ${CMAKE_SYSTEM_NAME}")
     set(NETWORK_PLATFORM_LIBS "")
 endif()
+
+###########################################
+
