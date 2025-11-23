@@ -87,7 +87,7 @@ else()
   message(WARNING "nlohmann_json not found, using third-party vendor (header-only)")
   
   # 로컬(서브모듈) 헤더 경로
-  set(NLOHMANN_JSON_INC "#{J2_THIRD_PARTY_ROOT_PATH}/nlohmann_json/include")
+  set(NLOHMANN_JSON_INC "${J2_THIRD_PARTY_ROOT_PATH}/nlohmann_json/include")
   if (NOT EXISTS "${NLOHMANN_JSON_INC}")
     message(FATAL_ERROR "Expected nlohmann_json include directory not found: ${NLOHMANN_JSON_INC}")
   endif()
@@ -122,7 +122,7 @@ if (spdlog_FOUND)
 else()
   message(WARNING "spdlog not found, using third-party vendor (header-only)")
 
-  set(SPDLOG_INC "#{J2_THIRD_PARTY_ROOT_PATH}/spdlog/include")
+  set(SPDLOG_INC "${J2_THIRD_PARTY_ROOT_PATH}/spdlog/include")
   if (NOT EXISTS "${SPDLOG_INC}")
     message(FATAL_ERROR "Expected spdlog include directory not found: ${SPDLOG_INC}")
   endif()
@@ -189,7 +189,7 @@ else()
   else()
     # 3) 최종 폴백: git submodule 등 로컬 코드 사용
     #    예) j2_library/third-party/simpleini/SimpleIni.h
-    set(SIMPLEINI_LOCAL_INC "#{J2_THIRD_PARTY_ROOT_PATH}/simpleini")
+    set(SIMPLEINI_LOCAL_INC "${J2_THIRD_PARTY_ROOT_PATH}/simpleini")
     if (NOT EXISTS "${SIMPLEINI_LOCAL_INC}/SimpleIni.h")
       message(FATAL_ERROR "SimpleIni.h not found. Expected at: ${SIMPLEINI_LOCAL_INC}/SimpleIni.h")
     endif()
@@ -242,7 +242,7 @@ if (Boost_FOUND)
 else()
   message(WARNING "Boost not found; falling back to standalone Asio (ASIO_STANDALONE)")
 
-  set(ASIO_STANDALONE_INC "#{J2_THIRD_PARTY_ROOT_PATH}/asio/asio/include")
+  set(ASIO_STANDALONE_INC "${J2_THIRD_PARTY_ROOT_PATH}/asio/asio/include")
   if (NOT EXISTS "${ASIO_STANDALONE_INC}")
     message(FATAL_ERROR "Standalone Asio include path not found: ${ASIO_STANDALONE_INC}")
   endif()
@@ -328,7 +328,7 @@ if(FALSE) # # immer 임시 비활성화
           # 2) 서브모듈/로컬 경로에서 헤더 루트 자동 탐지
           #    - 레포 구조가 'third-party/immer/immer/...'
           #      또는 'third-party/immer/include/immer/...' 인 두 경우를 모두 지원
-          set(_IMMER_ROOT "#{J2_THIRD_PARTY_ROOT_PATH}/immer")
+          set(_IMMER_ROOT "${J2_THIRD_PARTY_ROOT_PATH}/immer")
           set(IMMER_LOCAL_INC "")
           if (EXISTS "${_IMMER_ROOT}/immer/vector.hpp" OR EXISTS "${_IMMER_ROOT}/immer/immer.hpp")
             set(IMMER_LOCAL_INC "${_IMMER_ROOT}")                # .../third-party/immer
