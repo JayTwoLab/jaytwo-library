@@ -103,32 +103,41 @@
 
 - 리눅스에서도 `vcpkg`로 설치 가능하지만, 패키지 관리자를 이용하는 것이 더 편리함.
 
+<br />
+
+ 
 ###### `Rocky/CentOS`
-- `sudo dnf install boost-devel gtest-devel json-devel spdlog-devel curl-devel openssl-devel`
+
+- 설치 명령
+```
+sudo dnf install boost-devel gtest-devel json-devel spdlog-devel curl-devel openssl-devel
+```
 
 - `simpleini` 패키지 없음 → `GitHub`에서 수동 설치 필요. https://github.com/brofield/simpleini
-	```
-    $ pwd
-     /home/j2/workspace/dev/github/jaytwo-library # 현재 경로는 프로젝트 루트 경로
-	$ git submodule update --init --depth 1 ./j2_library/third-party/simpleini # simpleini 서브모듈 초기화
-	```
+```
+$ pwd
+    /home/j2/workspace/dev/github/jaytwo-library # 현재 경로는 프로젝트 루트 경로
+$ git submodule update --init --depth 1 ./j2_library/third-party/simpleini # simpleini 서브모듈 초기화
+```
 
 - `immer` 패키지 없음 → `GitHub`에서 수동 설치 필요. https://github.com/immer/immer
-	```
-	$ pwd
-	/home/j2/workspace/dev/github/jaytwo-library # 현재 경로는 프로젝트 루트 경로
-	$ git submodule update --init --depth 1 ./j2_library/third-party/immer # immer 서브모듈 초기화
-	```
+```
+$ pwd
+/home/j2/workspace/dev/github/jaytwo-library # 현재 경로는 프로젝트 루트 경로
+$ git submodule update --init --depth 1 ./j2_library/third-party/immer # immer 서브모듈 초기화
+```
+
+<br />
 
 ###### `Ubuntu/Debian`
-- `sudo apt install libboost-all-dev libgtest-dev nlohmann-json3-dev libspdlog-dev libimmer-dev libcurl4-openssl-dev libssl-dev libpsl-dev`
+
+- 설치 명령
+```
+sudo apt install libboost-all-dev libgtest-dev nlohmann-json3-dev libspdlog-dev libimmer-dev libcurl4-openssl-dev libssl-dev libpsl-dev
+```
+
 - NOTICE: 우분투에서 설치 점검 필요
- 
-###### `openSUSE / SUSE`
-- `sudo zypper install boost-devel gtest-devel nlohmann_json spdlog-devel curl-devel openssl-devel`
-- NOTICE: openSUSE에서 설치 점검 필요
-- `simpleini` 패키지 없음 → `GitHub`에서 수동 설치 필요. https://github.com/brofield/simpleini
-- `immer` 패키지 없음 → `GitHub`에서 수동 설치 필요. https://github.com/immer/immer
+
 
 <br />
 
