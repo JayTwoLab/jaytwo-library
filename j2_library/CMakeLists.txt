@@ -277,6 +277,8 @@ else()
   message(WARNING "CURL not found, using third-party vendor (source or headers only)")
   set(CURL_THIRD_PARTY_PATH "${J2_THIRD_PARTY_ROOT_PATH}/curl")
   if (EXISTS "${CURL_THIRD_PARTY_PATH}/CMakeLists.txt")
+    # 
+    set(CURL_DISABLE_PSL ON CACHE BOOL "Disable PSL support in vendored curl" FORCE)
     add_subdirectory(${CURL_THIRD_PARTY_PATH} EXCLUDE_FROM_ALL)
   else()
     message(FATAL_ERROR "CURL not found: install via package manager or add to third-party/curl")
