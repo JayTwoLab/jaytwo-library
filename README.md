@@ -104,13 +104,15 @@
 - 리눅스에서도 `vcpkg`로 설치 가능하지만, 패키지 관리자를 이용하는 것이 더 편리함.
 
 ###### `Rocky/CentOS`
-- `sudo dnf install boost-devel gtest-devel json-devel spdlog-devel curl-devel openssl-devel libpsl.x86_64`
+- `sudo dnf install boost-devel gtest-devel json-devel spdlog-devel curl-devel openssl-devel`
+
 - `simpleini` 패키지 없음 → `GitHub`에서 수동 설치 필요. https://github.com/brofield/simpleini
 	```
     $ pwd
      /home/j2/workspace/dev/github/jaytwo-library # 현재 경로는 프로젝트 루트 경로
 	$ git submodule update --init --depth 1 ./j2_library/third-party/simpleini # simpleini 서브모듈 초기화
 	```
+
 - `immer` 패키지 없음 → `GitHub`에서 수동 설치 필요. https://github.com/immer/immer
 	```
 	$ pwd

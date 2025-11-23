@@ -293,6 +293,7 @@ endif()
 find_package(GTest CONFIG QUIET)
 if (GTest_FOUND)
   message(STATUS "Found GTest from package manager")
+  # add_subdirectory를 호출하지 않음!
 else()
   message(WARNING "GTest not found, using third-party vendor")
   set(GTEST_THIRD_PARTY_PATH "${J2_THIRD_PARTY_ROOT_PATH}/googletest")
@@ -525,6 +526,10 @@ install(EXPORT j2_libraryTargets
   NAMESPACE j2_library::
   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/j2_library
 )
+
+
+
+
 
 
 
