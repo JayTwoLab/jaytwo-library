@@ -271,18 +271,21 @@ install(TARGETS j2_asio
 ################################
 # curl 라이브러리 (패키지 우선, 없으면 third-party 사용)
 find_package(CURL CONFIG QUIET)
+if(NOT CURL_FOUND)
+    find_package(CURL MODULE QUIET)
+endif()
+
 if (CURL_FOUND)
   message(STATUS "Found CURL from package manager")
 else()
   message(WARNING "CURL not found, using third-party vendor (source or headers only)")
   set(CURL_THIRD_PARTY_PATH "${J2_THIRD_PARTY_ROOT_PATH}/curl")
   if (EXISTS "${CURL_THIRD_PARTY_PATH}/CMakeLists.txt")
-    # 
     set(CURL_DISABLE_PSL ON CACHE BOOL "Disable PSL support in vendored curl" FORCE)
     add_subdirectory(${CURL_THIRD_PARTY_PATH} EXCLUDE_FROM_ALL)
   else()
     message(FATAL_ERROR "CURL not found: install via package manager or add to third-party/curl")
-  endif() 
+  endif()
 endif()
 
 ################################
