@@ -104,7 +104,7 @@
 - 리눅스에서도 `vcpkg`로 설치 가능하지만, 패키지 관리자를 이용하는 것이 더 편리함.
 
 ###### `Rocky/CentOS`
-- `sudo dnf install boost-devel gtest-devel json-devel spdlog-devel curl-devel openssl-devel`
+- `sudo dnf install boost-devel gtest-devel json-devel spdlog-devel curl-devel openssl-devel libpsl.x86_64`
 - `simpleini` 패키지 없음 → `GitHub`에서 수동 설치 필요. https://github.com/brofield/simpleini
 	```
     $ pwd
@@ -119,10 +119,12 @@
 	```
 
 ###### `Ubuntu/Debian`
-- `sudo apt install libboost-all-dev libgtest-dev nlohmann-json3-dev libspdlog-dev libimmer-dev libcurl4-openssl-dev libssl-dev`
-
+- `sudo apt install libboost-all-dev libgtest-dev nlohmann-json3-dev libspdlog-dev libimmer-dev libcurl4-openssl-dev libssl-dev libpsl-dev`
+- NOTICE: 우분투에서 설치 점검 필요
+ 
 ###### `openSUSE / SUSE`
 - `sudo zypper install boost-devel gtest-devel nlohmann_json spdlog-devel curl-devel openssl-devel`
+- NOTICE: openSUSE에서 설치 점검 필요
 - `simpleini` 패키지 없음 → `GitHub`에서 수동 설치 필요. https://github.com/brofield/simpleini
 - `immer` 패키지 없음 → `GitHub`에서 수동 설치 필요. https://github.com/immer/immer
 

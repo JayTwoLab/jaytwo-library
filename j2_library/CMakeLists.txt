@@ -280,7 +280,7 @@ else()
     add_subdirectory(${CURL_THIRD_PARTY_PATH} EXCLUDE_FROM_ALL)
   else()
     message(FATAL_ERROR "CURL not found: install via package manager or add to third-party/curl")
-  endif()
+  endif() 
 endif()
 
 ################################
