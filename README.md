@@ -63,7 +63,8 @@
 	 simpleini:x64-windows-static ^
 	 spdlog:x64-windows-static ^
 	 immer:x64-windows-static ^
-     curl:x64-windows-static
+     curl:x64-windows-static ^
+	 openssl:x64-windows-static
 	```
 <br />
 
@@ -88,7 +89,8 @@
 	 simpleini:x64-mingw-static ^
 	 spdlog:x64-mingw-static ^
      immer:x64-mingw-static ^ 
-	 curl:x64-mingw-static 
+	 curl:x64-mingw-static ^
+     openssl:x64-mingw-static
 	```
 		
 <br />
@@ -102,7 +104,7 @@
 - 리눅스에서도 `vcpkg`로 설치 가능하지만, 패키지 관리자를 이용하는 것이 더 편리함.
 
 ###### `Rocky/CentOS`
-- `sudo dnf install boost-devel gtest-devel json-devel spdlog-devel curl-devel`
+- `sudo dnf install boost-devel gtest-devel json-devel spdlog-devel curl-devel openssl-devel`
 - `simpleini` 패키지 없음 → `GitHub`에서 수동 설치 필요. https://github.com/brofield/simpleini
 	```
     $ pwd
@@ -117,10 +119,10 @@
 	```
 
 ###### `Ubuntu/Debian`
-- `sudo apt install libboost-all-dev libgtest-dev nlohmann-json3-dev libspdlog-dev libimmer-dev libcurl4-openssl-dev`
+- `sudo apt install libboost-all-dev libgtest-dev nlohmann-json3-dev libspdlog-dev libimmer-dev libcurl4-openssl-dev libssl-dev`
 
 ###### `openSUSE / SUSE`
-- `sudo zypper install boost-devel gtest-devel nlohmann_json spdlog-devel curl-devel`
+- `sudo zypper install boost-devel gtest-devel nlohmann_json spdlog-devel curl-devel openssl-devel`
 - `simpleini` 패키지 없음 → `GitHub`에서 수동 설치 필요. https://github.com/brofield/simpleini
 - `immer` 패키지 없음 → `GitHub`에서 수동 설치 필요. https://github.com/immer/immer
 
