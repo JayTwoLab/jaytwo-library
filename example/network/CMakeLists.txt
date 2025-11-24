@@ -10,6 +10,7 @@ add_subdirectory(udp_sender)
 
 # rest api
 add_subdirectory(rest_get)
+add_subdirectory(rest_post)
 
 
 
