@@ -25,7 +25,8 @@
 #include <spdlog/sinks/dist_sink.h>
 #include <spdlog/pattern_formatter.h>
 
-#include <SimpleIni.h>
+// #include <SimpleIni.h>
+#include "j2_library/ini/ini.hpp"
 
 #include "j2_library/export.hpp"
 #include "j2_library/network/network.hpp"
@@ -98,7 +99,8 @@ private:
     std::string iniPath_;
     std::string logSection_ = "Log";
     std::string loggerName_;
-    CSimpleIniA ini_;
+    // CSimpleIniA ini_;
+    j2::ini::Ini ini_; 
 
     bool utcMode_ = false;
 

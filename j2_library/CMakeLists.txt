@@ -75,12 +75,15 @@ endif()
 
 ################################
 # 스레드 라이브러리
+
 find_package(Threads REQUIRED) 
 
 ################################
 # nlohmann_json 라이브러리 (include/j2_library/json/INSTALL.ko.md 참고)
 # nlohmann_json: 패키지 우선, 실패 시 로컬 vendor 인터페이스 타깃 구성 + 같은 export set 포함
+
 find_package(nlohmann_json CONFIG QUIET)
+
 if (nlohmann_json_FOUND)
   message(STATUS "Found nlohmann_json from package manager")
 else()
@@ -116,7 +119,9 @@ endif()
 
 ################################
 # spdlog: 패키지 우선, 없으면 third-party 사용
+
 find_package(spdlog CONFIG QUIET)
+
 if (spdlog_FOUND)
   message(STATUS "Found spdlog from package manager")
 else()
@@ -149,67 +154,72 @@ endif()
 
 # 1) vcpkg/Conan 등에서 CONFIG 패키지 시도 (있으면 simpleini::simpleini 타깃을 씁니다)
 
-find_package(simpleini CONFIG QUIET)
+# if (FALSE) # simpleini 임시 비활성화
+# 
+#   find_package(simpleini CONFIG QUIET)
+# 
+#   message(STATUS "simpleini_FOUND = ${simpleini_FOUND}")
+#   message(STATUS "simpleini_DIR = ${simpleini_DIR}")
+# 
+#   if (simpleini_FOUND)
+#     message(STATUS "Found simpleini from package manager")
+#     # 단일 공개 타깃(j2_simpleini)로 래핑해 일관된 링크 사용
+#     add_library(j2_simpleini INTERFACE)
+#     target_link_libraries(j2_simpleini INTERFACE simpleini::simpleini)
+# 
+#   else()
+#     message(WARNING "simpleini not found; trying system include then third-party fallback")
+# 
+#     # 2) 시스템 헤더(예: /usr/include, vcpkg include 등)로 설치돼 있는지 먼저 탐색
+#     #    찾히면 그 경로로 인터페이스 타깃 구성
+#     find_path(SIMPLEINI_INCLUDE_DIR
+#       NAMES SimpleIni.h
+#       PATH_SUFFIXES include
+#     )
+# 
+#     if (SIMPLEINI_INCLUDE_DIR)
+#       message(STATUS "Found SimpleIni.h in system include: ${SIMPLEINI_INCLUDE_DIR}")
+# 
+#       add_library(j2_simpleini INTERFACE)
+#       target_include_directories(j2_simpleini INTERFACE
+#         $<BUILD_INTERFACE:${SIMPLEINI_INCLUDE_DIR}>
+#         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+#       )
+# 
+#       # 소비 코드에서 일관된 이름을 쓰도록 표준 별칭 제공
+#       add_library(simpleini::simpleini ALIAS j2_simpleini)
+# 
+#       # 시스템 헤더는 우리가 설치하지 않습니다(이미 시스템에 있음). export만 함께.
+#       install(TARGETS j2_simpleini
+#               EXPORT j2_libraryTargets)
+# 
+#     else()
+#       # 3) 최종 폴백: git submodule 등 로컬 코드 사용
+#       #    예) j2_library/third-party/simpleini/SimpleIni.h
+#       set(SIMPLEINI_LOCAL_INC "${J2_THIRD_PARTY_ROOT_PATH}/simpleini")
+#       if (NOT EXISTS "${SIMPLEINI_LOCAL_INC}/SimpleIni.h")
+#         message(FATAL_ERROR "SimpleIni.h not found. Expected at: ${SIMPLEINI_LOCAL_INC}/ #SimpleIni.h")
+#       endif()
+# 
+#       add_library(j2_simpleini INTERFACE)
+#       target_include_directories(j2_simpleini INTERFACE
+#         $<BUILD_INTERFACE:${SIMPLEINI_LOCAL_INC}>
+#         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+#       )
+#       add_library(simpleini::simpleini ALIAS j2_simpleini)
+# 
+#       # 로컬 헤더를 설치(설치 후 INSTALL_INTERFACE 경로가 유효해짐)
+#       install(FILES "${SIMPLEINI_LOCAL_INC}/SimpleIni.h"
+#               DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+# 
+#       # export 세트에 포함 (다른 타깃들과 동일 export로 묶음)
+#       install(TARGETS j2_simpleini
+#               EXPORT j2_libraryTargets)
+#     endif()
+#   endif()
+# 
+# endif() # if(FALSE) simpleini 임시 비활성화
 
-message(STATUS "simpleini_FOUND = ${simpleini_FOUND}")
-message(STATUS "simpleini_DIR = ${simpleini_DIR}")
-
-if (simpleini_FOUND)
-  message(STATUS "Found simpleini from package manager")
-  # 단일 공개 타깃(j2_simpleini)로 래핑해 일관된 링크 사용
-  add_library(j2_simpleini INTERFACE)
-  target_link_libraries(j2_simpleini INTERFACE simpleini::simpleini)
-
-else()
-  message(WARNING "simpleini not found; trying system include then third-party fallback")
-
-  # 2) 시스템 헤더(예: /usr/include, vcpkg include 등)로 설치돼 있는지 먼저 탐색
-  #    찾히면 그 경로로 인터페이스 타깃 구성
-  find_path(SIMPLEINI_INCLUDE_DIR
-    NAMES SimpleIni.h
-    PATH_SUFFIXES include
-  )
-
-  if (SIMPLEINI_INCLUDE_DIR)
-    message(STATUS "Found SimpleIni.h in system include: ${SIMPLEINI_INCLUDE_DIR}")
-
-    add_library(j2_simpleini INTERFACE)
-    target_include_directories(j2_simpleini INTERFACE
-      $<BUILD_INTERFACE:${SIMPLEINI_INCLUDE_DIR}>
-      $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
-    )
-
-    # 소비 코드에서 일관된 이름을 쓰도록 표준 별칭 제공
-    add_library(simpleini::simpleini ALIAS j2_simpleini)
-
-    # 시스템 헤더는 우리가 설치하지 않습니다(이미 시스템에 있음). export만 함께.
-    install(TARGETS j2_simpleini
-            EXPORT j2_libraryTargets)
-
-  else()
-    # 3) 최종 폴백: git submodule 등 로컬 코드 사용
-    #    예) j2_library/third-party/simpleini/SimpleIni.h
-    set(SIMPLEINI_LOCAL_INC "${J2_THIRD_PARTY_ROOT_PATH}/simpleini")
-    if (NOT EXISTS "${SIMPLEINI_LOCAL_INC}/SimpleIni.h")
-      message(FATAL_ERROR "SimpleIni.h not found. Expected at: ${SIMPLEINI_LOCAL_INC}/SimpleIni.h")
-    endif()
-
-    add_library(j2_simpleini INTERFACE)
-    target_include_directories(j2_simpleini INTERFACE
-      $<BUILD_INTERFACE:${SIMPLEINI_LOCAL_INC}>
-      $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
-    )
-    add_library(simpleini::simpleini ALIAS j2_simpleini)
-
-    # 로컬 헤더를 설치(설치 후 INSTALL_INTERFACE 경로가 유효해짐)
-    install(FILES "${SIMPLEINI_LOCAL_INC}/SimpleIni.h"
-            DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-
-    # export 세트에 포함 (다른 타깃들과 동일 export로 묶음)
-    install(TARGETS j2_simpleini
-            EXPORT j2_libraryTargets)
-  endif()
-endif()
 
 ###############################
 # ---- Boost.Asio 우선, 실패 시 standalone Asio 폴백 ----
@@ -453,7 +463,9 @@ target_link_libraries(j2_library PUBLIC spdlog::spdlog)
 target_link_libraries(j2_library PUBLIC j2_asio)
 
 # SimpleIni 라이브러리
-target_link_libraries(j2_library PUBLIC simpleini::simpleini)
+if (FALSE)  # simpleini 임시 비활성화
+ target_link_libraries(j2_library PUBLIC simpleini::simpleini)
+endif()
 
 # curl 라이브러리 링크
 if (CURL_FOUND)

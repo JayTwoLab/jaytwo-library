@@ -58,8 +58,8 @@ bool logger_manager::init(const std::string& defaultConfigPath,
             std::cout << "[logger_manager] Using default config path: " << iniPath_ << "\n";
         }
 
-        ini_.SetUnicode();
-        ini_.SetMultiKey(false);
+        // ini_.SetUnicode();
+        // ini_.SetMultiKey(false);
 
         if (!loadConfig(true)) {
             std::cerr << "[logger_manager] Failed to load config.\n";
@@ -369,60 +369,106 @@ void logger_manager::stopAutoReload() {
 }
 
 bool logger_manager::loadConfig(bool readAutoReload) {
-    if (ini_.LoadFile(iniPath_.c_str()) < 0) {
+    // j2::ini::Ini 사용: bool 반환
+    if (!ini_.load(iniPath_)) {
         return false;
     }
 
-    std::string time_mode = toLower(ini_.GetValue(logSection_.c_str(), "TIME_MODE", "local"));
+    // SimpleIni의 GetValue / GetLongValue / GetDoubleValue 를 흉내 내는 람다들
+    auto get_str = [&](std::string_view key, const std::string& def) -> std::string {
+        if (auto v = ini_.get_string(logSection_, std::string(key))) {
+            return *v;
+        }
+        return def;
+        };
+
+    auto get_ll = [&](std::string_view key, long long def) -> long long {
+        if (auto v = ini_.get_int(logSection_, std::string(key))) {
+            return *v;
+        }
+        if (auto v = ini_.get_double(logSection_, std::string(key))) {
+            return static_cast<long long>(*v);
+        }
+        return def;
+        };
+
+    auto get_d = [&](std::string_view key, double def) -> double {
+        if (auto v = ini_.get_double(logSection_, std::string(key))) {
+            return *v;
+        }
+        if (auto v = ini_.get_int(logSection_, std::string(key))) {
+            return static_cast<double>(*v);
+        }
+        return def;
+        };
+
+    // TIME_MODE
+    std::string time_mode = toLower(get_str("TIME_MODE", "local"));
     utcMode_ = (time_mode == "utc");
 
-    enableConsole_    = toBool(ini_.GetValue(logSection_.c_str(), "ENABLE_CONSOLE_LOG",    "true"), true);
-    enableFileAll_    = toBool(ini_.GetValue(logSection_.c_str(), "ENABLE_FILE_LOG_ALL",   "true"), true);
-    enableFileAlerts_ = toBool(ini_.GetValue(logSection_.c_str(), "ENABLE_FILE_LOG_ALERTS","true"), true);
+    // ENABLE_* 플래그
+    enableConsole_ = toBool(get_str("ENABLE_CONSOLE_LOG", "true"), true);
+    enableFileAll_ = toBool(get_str("ENABLE_FILE_LOG_ALL", "true"), true);
+    enableFileAlerts_ = toBool(get_str("ENABLE_FILE_LOG_ALERTS", "true"), true);
 
-    consoleMin_ = parseLevel(ini_.GetValue(logSection_.c_str(), "CONSOLE_LEVEL",     "trace"), spdlog::level::trace);
-    allFileMin_ = parseLevel(ini_.GetValue(logSection_.c_str(), "ALL_FILE_LEVEL",    "trace"), spdlog::level::trace);
-    alertsMin_  = parseLevel(ini_.GetValue(logSection_.c_str(), "ALERTS_FILE_LEVEL", "warn"),  spdlog::level::warn);
-    loggerMin_  = parseLevel(ini_.GetValue(logSection_.c_str(), "LOGGER_LEVEL",      "trace"), spdlog::level::trace);
-    flushOn_    = parseLevel(ini_.GetValue(logSection_.c_str(), "FLUSH_ON_LEVEL",    "warn"),  spdlog::level::warn);
+    // 레벨들
+    consoleMin_ = parseLevel(get_str("CONSOLE_LEVEL", "trace"), spdlog::level::trace);
+    allFileMin_ = parseLevel(get_str("ALL_FILE_LEVEL", "trace"), spdlog::level::trace);
+    alertsMin_ = parseLevel(get_str("ALERTS_FILE_LEVEL", "warn"), spdlog::level::warn);
+    loggerMin_ = parseLevel(get_str("LOGGER_LEVEL", "trace"), spdlog::level::trace);
+    flushOn_ = parseLevel(get_str("FLUSH_ON_LEVEL", "warn"), spdlog::level::warn);
 
+    // flush 주기
     flushEverySec_ = static_cast<std::size_t>(
-        ini_.GetLongValue(logSection_.c_str(), "FLUSH_EVERY_SEC", 1));
+        get_ll("FLUSH_EVERY_SEC", 1));
 
-    patternConsole_ = ini_.GetValue(logSection_.c_str(), "PATTERN_CONSOLE",
-                                    "[%Y-%m-%d %H:%M:%S.%e] [%^%l%$] [%t] %v");
-    patternFile_    = ini_.GetValue(logSection_.c_str(), "PATTERN_FILE",
-                                 "[%Y-%m-%d %H:%M:%S.%e] [%l] [%t] %v");
+    // 패턴
+    patternConsole_ = get_str("PATTERN_CONSOLE",
+        "[%Y-%m-%d %H:%M:%S.%e] [%^%l%$] [%t] %v");
+    patternFile_ = get_str("PATTERN_FILE",
+        "[%Y-%m-%d %H:%M:%S.%e] [%l] [%t] %v");
 
-    allPath_    = ini_.GetValue(logSection_.c_str(), "ALL_PATH",    "logs/all.log");
-    alertsPath_ = ini_.GetValue(logSection_.c_str(), "ALERTS_PATH", "logs/alerts.log");
+    // 파일 경로
+    allPath_ = get_str("ALL_PATH", "logs/all.log");
+    alertsPath_ = get_str("ALERTS_PATH", "logs/alerts.log");
 
-    allMaxSize_   = parseSizeBytes(ini_.GetValue(logSection_.c_str(), "ALL_MAX_SIZE",   "104857600"),
-                                 100ull * 1024ull * 1024ull);
-    allMaxFiles_  = static_cast<std::size_t>(ini_.GetLongValue(logSection_.c_str(), "ALL_MAX_FILES",  5));
-    alertMaxSize_ = parseSizeBytes(ini_.GetValue(logSection_.c_str(), "ALERT_MAX_SIZE", "104857600"),
-                                   100ull * 1024ull * 1024ull);
-    alertMaxFiles_= static_cast<std::size_t>(ini_.GetLongValue(logSection_.c_str(), "ALERT_MAX_FILES",10));
+    // 파일 롤링 파라미터
+    allMaxSize_ = parseSizeBytes(
+        get_str("ALL_MAX_SIZE", "104857600"),
+        100ull * 1024ull * 1024ull);
+    allMaxFiles_ = static_cast<std::size_t>(
+        get_ll("ALL_MAX_FILES", 5));
+
+    alertMaxSize_ = parseSizeBytes(
+        get_str("ALERT_MAX_SIZE", "104857600"),
+        100ull * 1024ull * 1024ull);
+    alertMaxFiles_ = static_cast<std::size_t>(
+        get_ll("ALERT_MAX_FILES", 10));
 
     // 디스크 감시 ON/OFF 및 파라미터
-    diskGuardEnable_ = toBool(ini_.GetValue(logSection_.c_str(), "DISK_GUARD_ENABLE", "true"), true);
-    diskRoot_         = ini_.GetValue(logSection_.c_str(), "DISK_ROOT", "");
-    diskMinFreeRatio_ = ini_.GetDoubleValue(logSection_.c_str(), "DISK_MIN_FREE_RATIO", 5.0);
+    diskGuardEnable_ = toBool(get_str("DISK_GUARD_ENABLE", "true"), true);
+    diskRoot_ = get_str("DISK_ROOT", "");
+    diskMinFreeRatio_ = get_d("DISK_MIN_FREE_RATIO", 5.0);
 
-    // UDP 알림(Boost.Asio)
-    udpIp_            = ini_.GetValue(logSection_.c_str(), "UDP_ALERT_IP", "");
-    udpPort_          = static_cast<std::uint16_t>(ini_.GetLongValue(logSection_.c_str(), "UDP_ALERT_PORT", 0));
-    udpIntervalSec_   = static_cast<unsigned>(ini_.GetLongValue(logSection_.c_str(), "UDP_ALERT_INTERVAL_SEC", 60));
-    udpMessageTmpl_   = ini_.GetValue(logSection_.c_str(), "UDP_ALERT_MESSAGE",
-                                    "DISK LOW: path={path} free={avail_bytes}B ({ratio}%)");
+    // UDP 알림
+    udpIp_ = get_str("UDP_ALERT_IP", "");
+    udpPort_ = static_cast<std::uint16_t>(
+        get_ll("UDP_ALERT_PORT", 0));
+    udpIntervalSec_ = static_cast<unsigned>(
+        get_ll("UDP_ALERT_INTERVAL_SEC", 60));
+    udpMessageTmpl_ = get_str("UDP_ALERT_MESSAGE",
+        "DISK LOW: path={path} free={avail_bytes}B ({ratio}%)");
 
+    // AUTO_RELOAD_SEC
     if (readAutoReload) {
         autoReloadIntervalSec_ = static_cast<unsigned>(
-            ini_.GetLongValue(logSection_.c_str(), "AUTO_RELOAD_SEC", 60));
+            get_ll("AUTO_RELOAD_SEC", 60));
     }
 
     return true;
 }
+
+
 
 void logger_manager::ensureParentDir(const std::string& path) {
     try {
