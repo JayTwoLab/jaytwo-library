@@ -7,7 +7,7 @@
 void test_get_no_except();
 void test_get_except();
 void print_response_body(const std::vector<std::string>& headers, const std::string& content_type, const std::string& body);
-
+  
 int main()
 {
     std::cout << "== test_get_no_except() ==\n";

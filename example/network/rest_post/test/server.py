@@ -1,12 +1,12 @@
 import requests
 import json
 from flask import Flask, request, jsonify
-
+ 
 app = Flask(__name__)
 
 @app.route('/post', methods=['POST'])
 def post_endpoint():
-    # Try to parse JSON body
+    # Try to parse JSON body 
     try:
         data = request.get_json(force=True)
     except Exception:

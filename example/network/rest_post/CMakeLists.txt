@@ -5,11 +5,11 @@ project(j2_rest_post_client_project LANGUAGES CXX) # 프로젝트 선언
 set(EXE_NAME "j2_rest_post_client") # 실행 파일 이름 설정
 
 ########################################################
-
+  
 set(CMAKE_CXX_STANDARD 17) # C++17
 set(CMAKE_CXX_STANDARD_REQUIRED ON) # 지정한 표준을 반드시 사용
 set(CMAKE_CXX_EXTENSIONS OFF) # OFF: 컴파일러 확장 기능을 쓰지 않고 순수한 표준 모드만 사용
-
+ 
 ########################################################
 # {{
 
