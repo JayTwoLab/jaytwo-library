@@ -57,7 +57,6 @@
 - `vcpkg` 로 종속성있는 패키지 설치
 	```
 	vcpkg install ^
-     boost-asio:x64-windows-static ^
 	 gtest:x64-windows-static ^
 	 nlohmann-json:x64-windows-static ^
 	 spdlog:x64-windows-static ^
@@ -81,11 +80,9 @@
 - `vcpkg` 로 종속성있는 패키지 설치
 	```
 	vcpkg install ^
-     boost-asio:x64-mingw-static ^
 	 gtest:x64-mingw-static ^
 	 nlohmann-json:x64-mingw-static ^
 	 spdlog:x64-mingw-static ^
-     immer:x64-mingw-static ^ 
 	 curl:x64-mingw-static ^
      openssl:x64-mingw-static
 	```
@@ -107,7 +104,7 @@
 
 - 설치 명령
 ```
-sudo dnf install boost-devel gtest-devel json-devel spdlog-devel curl-devel openssl-devel
+sudo dnf install gtest-devel json-devel spdlog-devel curl-devel openssl-devel
 ```
 
 
@@ -117,7 +114,7 @@ sudo dnf install boost-devel gtest-devel json-devel spdlog-devel curl-devel open
 
 - 설치 명령
 ```
-sudo apt install libboost-all-dev libgtest-dev nlohmann-json3-dev libspdlog-dev  libcurl4-openssl-dev libssl-dev libpsl-dev
+sudo apt install libgtest-dev nlohmann-json3-dev libspdlog-dev  libcurl4-openssl-dev libssl-dev libpsl-dev
 ```
 
 - NOTICE: 우분투에서 설치 점검 필요
