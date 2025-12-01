@@ -269,8 +269,7 @@ dist/
 *.kate-swp
 .kateproject.*
 
-
-# CMake 빌드 디렉토리 (out-of-source build 권장)
+# CMake build directory (out-of-source build recommended)
 build/
 [Cc]MakeCache.txt
 [Cc]MakeFiles/
@@ -278,23 +277,23 @@ cmake_install.cmake
 install_manifest.txt
 CTestTestfile.cmake
 
-# Visual Studio 전용
+# Visual Studio only
 CMakeSettings.json
 CMakeOutput.log
 CMakeError.log
 
-# Ninja/Make 빌드 산출물
+# Ninja/Make build artifacts
 *.ninja
 .ninja_deps
 .ninja_log
 
-# Visual Studio Code 관련
+# Visual Studio Code related
 .vscode/
 
-# Qt Creator 관련
+# Qt Creator related
 *.user
 
-# 임시 파일 / 백업 파일
+# Temporary files / backup files
 *.swp
 *.swo
 *~
@@ -302,5 +301,7 @@ CMakeError.log
 out/
 out/*
 
-
-
+########################################
+# Third-party libraries
+j2_library\third-party\
+j2_library\third-party\*
