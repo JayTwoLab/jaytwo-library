@@ -60,9 +60,7 @@
      boost-asio:x64-windows-static ^
 	 gtest:x64-windows-static ^
 	 nlohmann-json:x64-windows-static ^
-	 simpleini:x64-windows-static ^
 	 spdlog:x64-windows-static ^
-	 immer:x64-windows-static ^
      curl:x64-windows-static ^
 	 openssl:x64-windows-static
 	```
@@ -86,7 +84,6 @@
      boost-asio:x64-mingw-static ^
 	 gtest:x64-mingw-static ^
 	 nlohmann-json:x64-mingw-static ^
-	 simpleini:x64-mingw-static ^
 	 spdlog:x64-mingw-static ^
      immer:x64-mingw-static ^ 
 	 curl:x64-mingw-static ^
@@ -113,19 +110,6 @@
 sudo dnf install boost-devel gtest-devel json-devel spdlog-devel curl-devel openssl-devel
 ```
 
-- `simpleini` 패키지 없음 → `GitHub`에서 수동 설치 필요. https://github.com/brofield/simpleini
-```
-$ pwd
-    /home/j2/workspace/dev/github/jaytwo-library # 현재 경로는 프로젝트 루트 경로
-$ git submodule update --init --depth 1 ./j2_library/third-party/simpleini # simpleini 서브모듈 초기화
-```
-
-- `immer` 패키지 없음 → `GitHub`에서 수동 설치 필요. https://github.com/immer/immer
-```
-$ pwd
-/home/j2/workspace/dev/github/jaytwo-library # 현재 경로는 프로젝트 루트 경로
-$ git submodule update --init --depth 1 ./j2_library/third-party/immer # immer 서브모듈 초기화
-```
 
 <br />
 
@@ -133,7 +117,7 @@ $ git submodule update --init --depth 1 ./j2_library/third-party/immer # immer �
 
 - 설치 명령
 ```
-sudo apt install libboost-all-dev libgtest-dev nlohmann-json3-dev libspdlog-dev libimmer-dev libcurl4-openssl-dev libssl-dev libpsl-dev
+sudo apt install libboost-all-dev libgtest-dev nlohmann-json3-dev libspdlog-dev  libcurl4-openssl-dev libssl-dev libpsl-dev
 ```
 
 - NOTICE: 우분투에서 설치 점검 필요
