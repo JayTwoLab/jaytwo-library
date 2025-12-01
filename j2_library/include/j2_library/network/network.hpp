@@ -7,16 +7,16 @@
 #include "j2_library/network/ethernet.hpp"
 
 // Include boost/asio or standalone asio headers and define namespace/type aliases
-#if defined(ASIO_STANDALONE)
-    #include <asio.hpp>
-    namespace net = asio;
-    using asio_error_code_t = std::error_code;
-#else
-    #include <boost/asio.hpp>
-    #include <boost/system/error_code.hpp>
-    namespace net = boost::asio;
-    using asio_error_code_t = boost::system::error_code;
-#endif
+// #if defined(ASIO_STANDALONE)
+//     #include <asio.hpp>
+//     namespace net = asio;
+//     using asio_error_code_t = std::error_code;
+// #else
+//     #include <boost/asio.hpp>
+//     #include <boost/system/error_code.hpp>
+//     namespace net = boost::asio;
+//     using asio_error_code_t = boost::system::error_code;
+// #endif
 
 // TCP-related utilities and type definitions
 #include "j2_library/network/tcp/tcp_server.hpp"

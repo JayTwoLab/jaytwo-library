@@ -151,9 +151,9 @@ endif()
 
 ###################################
 # simpleini: 패키지 우선, 실패 시 시스템 헤더 또는 서브모듈(로컬 코드) 폴백 
-
+#
 # 1) vcpkg/Conan 등에서 CONFIG 패키지 시도 (있으면 simpleini::simpleini 타깃을 씁니다)
-
+#
 # if (FALSE) # simpleini 임시 비활성화
 # 
 #   find_package(simpleini CONFIG QUIET)
@@ -223,61 +223,64 @@ endif()
 
 ###############################
 # ---- Boost.Asio 우선, 실패 시 standalone Asio 폴백 ----
-
+#
 # vcpkg/MSVC 환경이면 통상 CONFIG 모드가 잘 동작합니다.
 # 필요 시 MODULE 모드도 병행하거나 최소 버전을 지정하세요.
-find_package(Boost 1.74 CONFIG QUIET COMPONENTS asio system)
-
-add_library(j2_asio INTERFACE)
-
-if (Boost_FOUND)
-  message(STATUS "Boost found. Using Boost headers (+ Boost.System if available).")
-
-  # 1) 헤더 타깃 우선(Boost::headers가 있으면 그것을, 없으면 Boost::boost 대안)
-  if (TARGET Boost::headers)
-    target_link_libraries(j2_asio INTERFACE Boost::headers)
-  elseif (TARGET Boost::boost)
-    target_link_libraries(j2_asio INTERFACE Boost::boost)
-  elseif (DEFINED Boost_INCLUDE_DIRS)
-    target_include_directories(j2_asio INTERFACE ${Boost_INCLUDE_DIRS})
-  endif()
-
-  # 2) system 라이브러리는 실제로 필요하므로 타깃이 있으면 연결
-  if (NOT TARGET Boost::system)
-    # 어떤 배포판은 CONFIG에 system 타깃이 없을 수 있어 보완
-    find_package(Boost 1.74 REQUIRED COMPONENTS system)
-  endif()
-  target_link_libraries(j2_asio INTERFACE Boost::system)
-
-else()
-  message(WARNING "Boost not found; falling back to standalone Asio (ASIO_STANDALONE)")
-
-  set(ASIO_STANDALONE_INC "${J2_THIRD_PARTY_ROOT_PATH}/asio/asio/include")
-  if (NOT EXISTS "${ASIO_STANDALONE_INC}")
-    message(FATAL_ERROR "Standalone Asio include path not found: ${ASIO_STANDALONE_INC}")
-  endif()
-
-  target_include_directories(j2_asio INTERFACE
-    $<BUILD_INTERFACE:${ASIO_STANDALONE_INC}>
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
-  )
-  target_compile_definitions(j2_asio INTERFACE ASIO_STANDALONE)
-  if (WIN32)
-    target_link_libraries(j2_asio INTERFACE ws2_32)
-  endif()
-
-  # (원하면) standalone 헤더 동반 설치
-  install(DIRECTORY "${ASIO_STANDALONE_INC}/"
-          DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-          FILES_MATCHING PATTERN "*.hpp" PATTERN "*.h")
-endif()
-
-target_link_libraries(j2_asio INTERFACE Threads::Threads)
-
-install(TARGETS j2_asio
-        EXPORT j2_libraryTargets)
-
-
+#
+# if (FALSE)
+# 
+#       find_package(Boost 1.74 CONFIG QUIET COMPONENTS asio system)
+# 
+#       add_library(j2_asio INTERFACE)
+# 
+#       if (Boost_FOUND)
+#         message(STATUS "Boost found. Using Boost headers (+ Boost.System if available).")
+# 
+#         # 1) 헤더 타깃 우선(Boost::headers가 있으면 그것을, 없으면 Boost::boost 대안)
+#         if (TARGET Boost::headers)
+#           target_link_libraries(j2_asio INTERFACE Boost::headers)
+#         elseif (TARGET Boost::boost)
+#           target_link_libraries(j2_asio INTERFACE Boost::boost)
+#         elseif (DEFINED Boost_INCLUDE_DIRS)
+#           target_include_directories(j2_asio INTERFACE ${Boost_INCLUDE_DIRS})
+#         endif()
+# 
+#         # 2) system 라이브러리는 실제로 필요하므로 타깃이 있으면 연결
+#         if (NOT TARGET Boost::system)
+#           # 어떤 배포판은 CONFIG에 system 타깃이 없을 수 있어 보완
+#           find_package(Boost 1.74 REQUIRED COMPONENTS system)
+#         endif()
+#         target_link_libraries(j2_asio INTERFACE Boost::system)
+# 
+#       else()
+#         message(WARNING "Boost not found; falling back to standalone Asio (ASIO_STANDALONE)")
+# 
+#         set(ASIO_STANDALONE_INC "${J2_THIRD_PARTY_ROOT_PATH}/asio/asio/include")
+#         if (NOT EXISTS "${ASIO_STANDALONE_INC}")
+#           message(FATAL_ERROR "Standalone Asio include path not found: ${ASIO_STANDALONE_INC}")
+#         endif()
+# 
+#         target_include_directories(j2_asio INTERFACE
+#           $<BUILD_INTERFACE:${ASIO_STANDALONE_INC}>
+#           $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+#         )
+#         target_compile_definitions(j2_asio INTERFACE ASIO_STANDALONE)
+#         if (WIN32)
+#           target_link_libraries(j2_asio INTERFACE ws2_32)
+#         endif()
+# 
+#         # (원하면) standalone 헤더 동반 설치
+#         install(DIRECTORY "${ASIO_STANDALONE_INC}/"
+#                 DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+#                 FILES_MATCHING PATTERN "*.hpp" PATTERN "*.h")
+#       endif()
+# 
+#       target_link_libraries(j2_asio INTERFACE Threads::Threads)
+# 
+#       install(TARGETS j2_asio
+#               EXPORT j2_libraryTargets)
+# 
+# endif()
   
 
 ################################
@@ -297,24 +300,24 @@ endif()
 
 ################################
 # googletest 라이브러리
-
+# 
 # GTest 임시 비활성화 (해당 프로그램에서 직접 정의하여 사용)
-if(FALSE) 
-
-    find_package(GTest CONFIG QUIET)
-    if (GTest_FOUND)
-      message(STATUS "Found GTest from package manager")
-      # add_subdirectory를 호출하지 않음!
-    else()
-      message(WARNING "GTest not found, using third-party vendor")
-      set(GTEST_THIRD_PARTY_PATH "${J2_THIRD_PARTY_ROOT_PATH}/googletest")
-      if (EXISTS "${GTEST_THIRD_PARTY_PATH}/CMakeLists.txt")
-        add_subdirectory(${GTEST_THIRD_PARTY_PATH} EXCLUDE_FROM_ALL)
-      else()
-        message(FATAL_ERROR "GTest not found: install via package manager or    add to third-party/googletest")
-      endif()
-    endif()
-endif()
+# if(FALSE) 
+# 
+#     find_package(GTest CONFIG QUIET)
+#     if (GTest_FOUND)
+#       message(STATUS "Found GTest from package manager")
+#       # add_subdirectory를 호출하지 않음!
+#     else()
+#       message(WARNING "GTest not found, using third-party vendor")
+#       set(GTEST_THIRD_PARTY_PATH "${J2_THIRD_PARTY_ROOT_PATH}/googletest")
+#       if (EXISTS "${GTEST_THIRD_PARTY_PATH}/CMakeLists.txt")
+#         add_subdirectory(${GTEST_THIRD_PARTY_PATH} EXCLUDE_FROM_ALL)
+#       else()
+#         message(FATAL_ERROR "GTest not found: install via package manager or    add to third-party/ #googletest")
+#       endif()
+#     endif()
+# endif()
 
 #######################################
 # --- immer: 패키지 우선, 실패 시 서브모듈/로컬 헤더 폴백 ---
@@ -460,12 +463,12 @@ target_link_libraries(j2_library PUBLIC nlohmann_json::nlohmann_json)
 target_link_libraries(j2_library PUBLIC spdlog::spdlog)
 
 # Asio 라이브러리 (Boost.Asio 또는 standalone Asio)
-target_link_libraries(j2_library PUBLIC j2_asio)
+# target_link_libraries(j2_library PUBLIC j2_asio)
 
 # SimpleIni 라이브러리
-if (FALSE)  # simpleini 임시 비활성화
- target_link_libraries(j2_library PUBLIC simpleini::simpleini)
-endif()
+# if (FALSE)  # simpleini 임시 비활성화
+#  target_link_libraries(j2_library PUBLIC simpleini::simpleini)
+# endif()
 
 # curl 라이브러리 링크
 if (CURL_FOUND)
@@ -481,12 +484,12 @@ elseif (TARGET gtest)
   target_link_libraries(j2_library PUBLIC gtest gtest_main)
 endif()
 
+# immer 라이브러리 링크 
+# if(FALSE)  # immer 임시 비활성화
+#     target_link_libraries(j2_library PUBLIC j2_immer) 
+# endif()
 
-# immer 라이브러리
-if(FALSE)  # immer 임시 비활성화
-    target_link_libraries(j2_library PUBLIC j2_immer) 
-endif()
-
+######################################################
 # GCC 버전에 따라 <filesystem> 라이브러리 링크 설정
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     # GCC 8.x 에서는 std::filesystem 이 별도 라이브러리(stdc++fs)에 들어 있는 경우가 많음
