@@ -8,15 +8,15 @@
 
 // For version information
 #if __has_include("j2_library/version.hpp")
-#include "j2_library/version.hpp"
+    #include "j2_library/version.hpp"
 #else
-// If not, take the alternative action
+    // If not, take the alternative action
 #endif
 
 #if __has_include("version.hpp")
-#include "version.hpp"
+    #include "version.hpp"
 #else
-// If not, take the alternative action
+    // If not, take the alternative action
 #endif
 
 // -- bit components --
@@ -66,6 +66,10 @@
 // -- overload components --
 
 #include "j2_library/overload/overload.hpp" 
+
+// -- queue components --
+
+#include "j2_library/queue/queue.hpp"
 
 // -- string components --
 
