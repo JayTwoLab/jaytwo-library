@@ -26,5 +26,5 @@
 #include "j2_library/network/udp/udp_receiver.hpp"
 #include "j2_library/network/udp/udp_sender.hpp"
 
-// Rest API
+// Rest API (using curl)
 #include "j2_library/network/rest/curl_get_client.hpp"
