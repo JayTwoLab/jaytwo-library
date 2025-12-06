@@ -427,7 +427,8 @@ TEST(GetByPathTest, TextAttributeIntBoolDouble)
 {
     const std::string xml = R"(
         <root>
-            <node a="10" flag="true" pi="3.14">20</node>
+            <node a="10" flag="true"  pi="3.14">20</node>
+            <node a="30" flag="false" pi="6.28">40</node>
         </root>
     )";
 
@@ -435,7 +436,7 @@ TEST(GetByPathTest, TextAttributeIntBoolDouble)
     auto doc = parser.parse(xml, j2::xml::text_policy::trim_and_discard_empty);
 
     auto text = j2::xml::get_text_by_path(doc.get(), "/root/node");
-    EXPECT_EQ(text, "20");
+    EXPECT_EQ(text, "20"); // first node value 
 
     auto attr_text = j2::xml::get_text_by_path(doc.get(), "/root/node/@a");
     EXPECT_EQ(attr_text, "10");
