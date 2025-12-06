@@ -13,9 +13,14 @@
 		- 권장: `Qt Creator`에서 `MingW`를 사용할 경우 [Qt 다운로드](https://www.qt.io/download) (오픈소스 버전)
 		- [MingW 다운로드](http://mingw-w64.org/doku.php/download) 직접 설치도 가능 
 	- `Linux gcc`
-		- Ubuntu/Debian : `sudo apt-get install build-essential`
-		- Rocky/CentOS : `sudo dnf groupinstall "Development Tools"`
-		- Arch : `sudo pacman -S base-devel`
+		- Ubuntu/Debian
+		   - `sudo apt-get install build-essential`
+		- Rocky/CentOS
+		   - `sudo dnf update`
+		   - `sudo dnf install epel-release`
+		   - `sudo dnf groupinstall "Development Tools"`
+		- Arch
+		   - `sudo pacman -S base-devel`
 	- ⚠️ NOTICE: `clang` 에 대한 테스트는 하지 않음
 - `CMake` 설치
 	- [CMake 다운로드](https://cmake.org/download/) 직접 설치
@@ -104,7 +109,7 @@
 
 - 설치 명령
 ```
-sudo dnf install gtest-devel json-devel spdlog-devel curl-devel openssl-devel
+sudo dnf -y install gtest gtest-devel gmock gmock-devel json json-devel spdlog spdlog-devel curl curl-devel
 ```
 
 

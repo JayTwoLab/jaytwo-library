@@ -10,11 +10,10 @@ using namespace j2::queue;
 // 패킷 구조체
 struct packet
 {
-    int id;
-    int type;        // 1: normal, 2: high
-    std::string msg;
+    int id = 0;
+    int type = 0; // 1: normal, 2: high
+    std::string msg = std::string();
 
-    // 이 생성자를 추가
     packet() = default;
 
     packet(int id_, int type_, std::string msg_)
