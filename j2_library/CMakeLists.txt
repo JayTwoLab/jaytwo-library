@@ -286,15 +286,12 @@ endif()
 ################################
 # curl 라이브러리 (필수: 반드시 find_package(CURL REQUIRED)로 탐색, 없으면 에러)
 
-find_package(CURL REQUIRED CONFIG)
-if(NOT CURL_FOUND)
-    find_package(CURL REQUIRED MODULE)
-endif()
+find_package(CURL REQUIRED)
 
 if (CURL_FOUND)
-  message(STATUS "Found CURL from package manager")
+  message(STATUS "Found CURL (system libcurl)")
 else()
-  message(FATAL_ERROR "CURL not found: install via package manager or add to third-party/curl")
+  message(FATAL_ERROR "CURL not found: install 'libcurl-devel' via package manager")
 endif()
 
 
@@ -471,10 +468,17 @@ target_link_libraries(j2_library PUBLIC spdlog::spdlog)
 # endif()
 
 # curl 라이브러리 링크
-if (CURL_FOUND)
-  target_link_libraries(j2_library PUBLIC CURL::libcurl)
-elseif (TARGET libcurl)
-  target_link_libraries(j2_library PUBLIC libcurl)
+if (TARGET CURL::libcurl)
+    # 최신 CMake / FindCURL: 임포트 타깃 사용
+    target_link_libraries(j2_library PUBLIC CURL::libcurl)
+else()
+    # 구 CMake 대비: 변수 방식 폴백
+    if (CURL_INCLUDE_DIRS)
+        target_include_directories(j2_library PUBLIC ${CURL_INCLUDE_DIRS})
+    endif()
+    if (CURL_LIBRARIES)
+        target_link_libraries(j2_library PUBLIC ${CURL_LIBRARIES})
+    endif()
 endif()
 
 # googletest 라이브러리 링크 추가
