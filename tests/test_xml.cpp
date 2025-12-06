@@ -526,3 +526,151 @@ TEST(XmlParserTest, ParseWithAutoEncoding)
     EXPECT_EQ(*v, 100);
 }
 
+// Bookstore sample parsing test
+TEST(XmlParserTest, ParseBookstoreSample)
+{
+    const std::string xml = R"(<?xml version="1.0" encoding="UTF-8"?>
+<bookstore>
+    <book category="fiction">
+        <title lang="en">The Lord of the Rings</title>
+        <author>J. R. R. Tolkien</author>
+        <year>1954</year>
+        <price currency="USD">29.99</price>
+    </book>
+
+    <book category="programming">
+        <title lang="en">The C++ Programming Language</title>
+        <author>Bjarne Stroustrup</author>
+        <year>2013</year>
+        <price currency="USD">49.99</price>
+    </book>
+</bookstore>)";
+
+    auto doc = j2::xml::parse_with_auto_encoding(xml, j2::xml::text_policy::trim_and_discard_empty);
+
+    auto books = j2::xml::xpath_select(doc.get(), "bookstore/book");
+    ASSERT_EQ(books.size(), 2u);
+
+    // First book
+    {
+        auto b = books[0];
+        auto cat = b->find_attribute("category");
+        ASSERT_NE(cat, nullptr);
+        EXPECT_EQ(cat->value, "fiction");
+
+        auto title = b->find_child("title");
+        ASSERT_NE(title, nullptr);
+        EXPECT_EQ(title->text, "The Lord of the Rings");
+        auto lang = title->find_attribute("lang");
+        ASSERT_NE(lang, nullptr);
+        EXPECT_EQ(lang->value, "en");
+
+        auto author = b->find_child("author");
+        ASSERT_NE(author, nullptr);
+        EXPECT_EQ(author->text, "J. R. R. Tolkien");
+
+        auto year = b->find_child("year");
+        ASSERT_NE(year, nullptr);
+        EXPECT_EQ(std::stoi(year->text), 1954);
+
+        auto price = b->find_child("price");
+        ASSERT_NE(price, nullptr);
+        EXPECT_DOUBLE_EQ(std::stod(price->text), 29.99);
+        auto currency = price->find_attribute("currency");
+        ASSERT_NE(currency, nullptr);
+        EXPECT_EQ(currency->value, "USD");
+    }
+
+    // Second book
+    {
+        auto b = books[1];
+        auto cat = b->find_attribute("category");
+        ASSERT_NE(cat, nullptr);
+        EXPECT_EQ(cat->value, "programming");
+
+        auto title = b->find_child("title");
+        ASSERT_NE(title, nullptr);
+        EXPECT_EQ(title->text, "The C++ Programming Language");
+        auto lang = title->find_attribute("lang");
+        ASSERT_NE(lang, nullptr);
+        EXPECT_EQ(lang->value, "en");
+
+        auto author = b->find_child("author");
+        ASSERT_NE(author, nullptr);
+        EXPECT_EQ(author->text, "Bjarne Stroustrup");
+
+        auto year = b->find_child("year");
+        ASSERT_NE(year, nullptr);
+        EXPECT_EQ(std::stoi(year->text), 2013);
+
+        auto price = b->find_child("price");
+        ASSERT_NE(price, nullptr);
+        EXPECT_DOUBLE_EQ(std::stod(price->text), 49.99);
+        auto currency = price->find_attribute("currency");
+        ASSERT_NE(currency, nullptr);
+        EXPECT_EQ(currency->value, "USD");
+    }
+
+    //-------------------------------------------
+    // Expected data for each book
+    struct expected_book {
+        std::string category;
+        std::string title;
+        std::string lang;
+        std::string author;
+        int year;
+        double price;
+        std::string currency;
+    };
+
+    std::vector<expected_book> expect = {
+        {"fiction",
+         "The Lord of the Rings",
+         "en",
+         "J. R. R. Tolkien",
+         1954,
+         29.99,
+         "USD"},
+        {"programming",
+         "The C++ Programming Language",
+         "en",
+         "Bjarne Stroustrup",
+         2013,
+         49.99,
+         "USD"}
+    };
+
+    ASSERT_EQ(books.size(), expect.size());
+
+    for (std::size_t i = 0; i < books.size(); ++i)
+    {
+        const auto& b = books[i];
+        const auto& e = expect[i];
+
+        auto cat = b->find_attribute("category");
+        ASSERT_NE(cat, nullptr);
+        EXPECT_EQ(cat->value, e.category);
+
+        auto title = b->find_child("title");
+        ASSERT_NE(title, nullptr);
+        EXPECT_EQ(title->text, e.title);
+        auto lang = title->find_attribute("lang");
+        ASSERT_NE(lang, nullptr);
+        EXPECT_EQ(lang->value, e.lang);
+
+        auto author = b->find_child("author");
+        ASSERT_NE(author, nullptr);
+        EXPECT_EQ(author->text, e.author);
+
+        auto year = b->find_child("year");
+        ASSERT_NE(year, nullptr);
+        EXPECT_EQ(std::stoi(year->text), e.year);
+
+        auto price = b->find_child("price");
+        ASSERT_NE(price, nullptr);
+        EXPECT_DOUBLE_EQ(std::stod(price->text), e.price);
+        auto currency = price->find_attribute("currency");
+        ASSERT_NE(currency, nullptr);
+        EXPECT_EQ(currency->value, e.currency);
+    }
+}
