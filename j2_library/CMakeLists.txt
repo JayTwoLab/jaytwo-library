@@ -482,11 +482,11 @@ else()
 endif()
 
 # googletest 라이브러리 링크 추가
-if (GTest_FOUND)
-  target_link_libraries(j2_library PUBLIC GTest::gtest GTest::gtest_main)
-elseif (TARGET gtest)
-  target_link_libraries(j2_library PUBLIC gtest gtest_main)
-endif()
+# if (GTest_FOUND)
+#   target_link_libraries(j2_library PUBLIC GTest::gtest GTest::gtest_main)
+# elseif (TARGET gtest)
+#   target_link_libraries(j2_library PUBLIC gtest gtest_main)
+# endif()
 
 # immer 라이브러리 링크 
 # if(FALSE)  # immer 임시 비활성화
