@@ -12,5 +12,8 @@ add_subdirectory(udp_sender)
 add_subdirectory(rest_get)
 add_subdirectory(rest_post)
 
+# ftp
+add_subdirectory(ftp_client)
+
 
 
