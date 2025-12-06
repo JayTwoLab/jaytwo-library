@@ -23,7 +23,18 @@
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/sinks/rotating_file_sink.h>
 #include <spdlog/sinks/dist_sink.h>
+
+// #include <spdlog/pattern_formatter.h>
+#if __has_include(<spdlog/pattern_formatter.h>)
+    // 최신 spdlog (공개 헤더)
 #include <spdlog/pattern_formatter.h>
+#elif __has_include(<spdlog/details/pattern_formatter.h>)
+    // 구버전 spdlog (details 아래에만 존재)
+#include <spdlog/details/pattern_formatter.h>
+#else
+#error "spdlog pattern_formatter header not found. Check your spdlog installation."
+#endif
+
 
 // #include <SimpleIni.h>
 #include "j2_library/ini/ini.hpp"
