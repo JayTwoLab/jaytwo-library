@@ -1,7 +1,7 @@
-#include <gtest/gtest.h>
 #include <string>
 #include <vector>
 
+#include "gtest_compat.hpp"                        // ← 변경: 호환 레이어 헤더
 #include "j2_library/encoding/encoding.hpp"
 #include "j2_library/string/to_console_encoding.hpp" // 콘솔 메시지 변환 (Windows 한글 깨짐 방지)
 
@@ -153,19 +153,19 @@ TEST(EncodingUtils, Utf8_Utf16_Utf32_Roundtrip_KoreanAndEmoji)
 TEST(EncodingUtils, Utf8_Cp949_Roundtrip_BasicHangulOnly)
 {
 #if defined(_WIN32)
-    if (!CodePageExists(949)) { SkipMsg("Windows: CP949(949) 미탑재 - 스킵"); return; }
+    if (!CodePageExists(949)) { SkipMsg(u8"Windows: CP949(949) 미탑재 - 스킵"); return; }
 #else
     if (!IconvEnabled()) { SkipMsg("비-Windows: iconv 미사용 - 스킵"); return; }
 #endif
-    if (!Probe_CP949()) { SkipMsg("CP949 라운드트립 프루빙 실패 - 환경 스킵"); return; }
+    if (!Probe_CP949()) { SkipMsg(u8"CP949 라운드트립 프루빙 실패 - 환경 스킵"); return; }
 
     const std::string utf8 = u8"안녕하세요 세상";
     std::string cp949;
-    if (!utf8_to_cp949(utf8, cp949)) { SkipMsg("환경에서 CP949 변환 실패 - 스킵"); return; }
+    if (!utf8_to_cp949(utf8, cp949)) { SkipMsg(u8"환경에서 CP949 변환 실패 - 스킵"); return; }
     ASSERT_FALSE(cp949.empty());
 
     std::string utf8_back;
-    if (!cp949_to_utf8(cp949, utf8_back)) { SkipMsg("환경에서 CP949 역변환 실패 - 스킵"); return; }
+    if (!cp949_to_utf8(cp949, utf8_back)) { SkipMsg(u8"환경에서 CP949 역변환 실패 - 스킵"); return; }
     EXPECT_EQ(utf8_back, utf8);
 }
 
@@ -173,19 +173,19 @@ TEST(EncodingUtils, Utf8_Cp949_Roundtrip_BasicHangulOnly)
 TEST(EncodingUtils, Utf16_Cp949_Roundtrip_BasicHangulOnly)
 {
 #if defined(_WIN32)
-    if (!CodePageExists(949)) { SkipMsg("Windows: CP949(949) 미탑재 - 스킵"); return; }
+    if (!CodePageExists(949)) { SkipMsg(u8"Windows: CP949(949) 미탑재 - 스킵"); return; }
 #else
     if (!IconvEnabled()) { SkipMsg("비-Windows: iconv 미사용 - 스킵"); return; }
 #endif
-    if (!Probe_CP949()) { SkipMsg("CP949 라운드트립 프루빙 실패 - 환경 스킵"); return; }
+    if (!Probe_CP949()) { SkipMsg(u8"CP949 라운드트립 프루빙 실패 - 환경 스킵"); return; }
 
     const std::u16string u16 = u"테스트 문자열 한글만";
     std::string cp949;
-    if (!utf16_to_cp949(u16, cp949)) { SkipMsg("환경에서 CP949 변환 실패 - 스킵"); return; }
+    if (!utf16_to_cp949(u16, cp949)) { SkipMsg(u8"환경에서 CP949 변환 실패 - 스킵"); return; }
     ASSERT_FALSE(cp949.empty());
 
     std::u16string u16_back;
-    if (!cp949_to_utf16(cp949, u16_back)) { SkipMsg("환경에서 CP949 역변환 실패 - 스킵"); return; }
+    if (!cp949_to_utf16(cp949, u16_back)) { SkipMsg(u8"환경에서 CP949 역변환 실패 - 스킵"); return; }
     EXPECT_EQ(u16_back, u16);
 }
 
@@ -193,19 +193,19 @@ TEST(EncodingUtils, Utf16_Cp949_Roundtrip_BasicHangulOnly)
 TEST(EncodingUtils, ISO2022KR_Utf8_Roundtrip_BasicHangulOnly)
 {
 #if defined(_WIN32)
-    if (!CodePageExists(50225)) { SkipMsg("Windows: ISO-2022-KR(50225) 미탑재 - 스킵"); return; }
+    if (!CodePageExists(50225)) { SkipMsg(u8"Windows: ISO-2022-KR(50225) 미탑재 - 스킵"); return; }
 #else
     if (!IconvEnabled()) { SkipMsg("비-Windows: iconv 미사용 - 스킵"); return; }
 #endif
-    if (!Probe_ISO2022KR()) { SkipMsg("ISO-2022-KR 라운드트립 프루빙 실패 - 환경 스킵"); return; }
+    if (!Probe_ISO2022KR()) { SkipMsg(u8"ISO-2022-KR 라운드트립 프루빙 실패 - 환경 스킵"); return; }
 
     const std::string utf8 = u8"한글 이메일 테스트";
     std::string iso2022;
-    if (!utf8_to_iso2022kr(utf8, iso2022)) { SkipMsg("환경에서 ISO-2022-KR 변환 실패 - 스킵"); return; }
+    if (!utf8_to_iso2022kr(utf8, iso2022)) { SkipMsg(u8"환경에서 ISO-2022-KR 변환 실패 - 스킵"); return; }
     ASSERT_FALSE(iso2022.empty());
 
     std::string utf8_back;
-    if (!iso2022kr_to_utf8(iso2022, utf8_back)) { SkipMsg("환경에서 ISO-2022-KR 역변환 실패 - 스킵"); return; }
+    if (!iso2022kr_to_utf8(iso2022, utf8_back)) { SkipMsg(u8"환경에서 ISO-2022-KR 역변환 실패 - 스킵"); return; }
     EXPECT_EQ(utf8_back, utf8);
 }
 
@@ -213,7 +213,7 @@ TEST(EncodingUtils, ISO2022KR_Utf8_Roundtrip_BasicHangulOnly)
 TEST(EncodingUtils, Johab_Utf8_Roundtrip_BasicHangulOnly)
 {
 #if defined(_WIN32)
-    if (!CodePageExists(1361)) { SkipMsg("Windows: JOHAB(1361) 미탑재 - 스킵"); return; }
+    if (!CodePageExists(1361)) { SkipMsg(u8"Windows: JOHAB(1361) 미탑재 - 스킵"); return; }
 #else
     if (!IconvEnabled()) { SkipMsg("비-Windows: iconv 미사용 - 스킵"); return; }
 #endif
@@ -221,11 +221,11 @@ TEST(EncodingUtils, Johab_Utf8_Roundtrip_BasicHangulOnly)
 
     const std::string utf8 = u8"조합형 한글 테스트";
     std::string johab;
-    if (!utf8_to_johab(utf8, johab)) { SkipMsg("환경에서 JOHAB 변환 실패 - 스킵"); return; }
+    if (!utf8_to_johab(utf8, johab)) { SkipMsg(u8"환경에서 JOHAB 변환 실패 - 스킵"); return; }
     ASSERT_FALSE(johab.empty());
 
     std::string utf8_back;
-    if (!johab_to_utf8(johab, utf8_back)) { SkipMsg("환경에서 JOHAB 역변환 실패 - 스킵"); return; }
+    if (!johab_to_utf8(johab, utf8_back)) { SkipMsg(u8"환경에서 JOHAB 역변환 실패 - 스킵"); return; }
     EXPECT_EQ(utf8_back, utf8);
 }
 
@@ -233,7 +233,7 @@ TEST(EncodingUtils, Johab_Utf8_Roundtrip_BasicHangulOnly)
 TEST(EncodingUtils, MacKorean_Utf8_Roundtrip_BasicHangulOnly)
 {
 #if defined(_WIN32)
-    if (!CodePageExists(10003)) { SkipMsg("Windows: MacKorean(10003) 미탑재 - 스킵"); return; }
+    if (!CodePageExists(10003)) { SkipMsg(u8"Windows: MacKorean(10003) 미탑재 - 스킵"); return; }
 #else
     if (!IconvEnabled()) { SkipMsg("비-Windows: iconv 미사용 - 스킵"); return; }
 #endif
@@ -241,11 +241,11 @@ TEST(EncodingUtils, MacKorean_Utf8_Roundtrip_BasicHangulOnly)
 
     const std::string utf8 = u8"맥코리안 인코딩 테스트";
     std::string mackor;
-    if (!utf8_to_mackorean(utf8, mackor)) { SkipMsg("환경에서 MacKorean 변환 실패 - 스킵"); return; }
+    if (!utf8_to_mackorean(utf8, mackor)) { SkipMsg(u8"환경에서 MacKorean 변환 실패 - 스킵"); return; }
     ASSERT_FALSE(mackor.empty());
 
     std::string utf8_back;
-    if (!mackorean_to_utf8(mackor, utf8_back)) { SkipMsg("환경에서 MacKorean 역변환 실패 - 스킵"); return; }
+    if (!mackorean_to_utf8(mackor, utf8_back)) { SkipMsg(u8"환경에서 MacKorean 역변환 실패 - 스킵"); return; }
     EXPECT_EQ(utf8_back, utf8);
 }
 
@@ -256,19 +256,19 @@ TEST(EncodingUtils, MacKorean_Utf8_Roundtrip_BasicHangulOnly)
 TEST(EncodingUtils, UnsupportedCharacter_To_CP949_ShouldFailOrSkip)
 {
 #if defined(_WIN32)
-    if (!CodePageExists(949)) { SkipMsg("Windows: CP949(949) 미탑재 - 스킵"); return; }
+    if (!CodePageExists(949)) { SkipMsg(u8"Windows: CP949(949) 미탑재 - 스킵"); return; }
 #else
     if (!IconvEnabled()) { SkipMsg("비-Windows: iconv 미사용 - 스킵"); return; }
 #endif
-    if (!Probe_CP949()) { SkipMsg("CP949 라운드트립 프루빙 실패 - 환경 스킵"); return; }
+    if (!Probe_CP949()) { SkipMsg(u8"CP949 라운드트립 프루빙 실패 - 환경 스킵"); return; }
 
     const std::string utf8 = u8"한글 + 😊"; // 이모지는 CP949에서 표현 불가
     std::string cp949;
     bool ok = utf8_to_cp949(utf8, cp949);
     if (!ok) {
-        GTEST_SUCCEED() << j2::string::to_console_encoding("표현 불가 문자로 변환 실패(기대한 동작)").c_str();
+        GTEST_SUCCEED() << j2::string::to_console_encoding(u8"표현 불가 문자로 변환 실패(기대한 동작)").c_str();
     }
     else {
-        SkipMsg("환경이 대체문자를 사용해 성공 처리함(정책 차이)");
+        SkipMsg(u8"환경이 대체문자를 사용해 성공 처리함(정책 차이)");
     }
 }

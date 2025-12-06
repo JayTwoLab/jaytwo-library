@@ -5,8 +5,9 @@
 #include <fstream>
 #include <string>
 #include <filesystem>
-#include <gtest/gtest.h>
-#include "j2_library/j2_library.hpp"
+
+#include "gtest_compat.hpp"          // ← 추가/변경: 호환 레이어 헤더
+#include "j2_library/j2_library.hpp" // 기존 유지
 
 // Google Test로 변환한 directory_maker 테스트
 // 빌드 시: directory.cpp 와 함께 링크 필요 (console_kor는 불필요)
