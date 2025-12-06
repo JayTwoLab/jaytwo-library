@@ -28,3 +28,7 @@
 
 // Rest API (using curl)
 #include "j2_library/network/rest/curl_get_client.hpp"
+
+// FTP/SFTP client utilities and type definitions (using curl)
+#include "j2_library/network/ftp/ftp_client.hpp"
+
