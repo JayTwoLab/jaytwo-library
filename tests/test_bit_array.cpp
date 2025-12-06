@@ -97,14 +97,14 @@ TEST(BitArray, GetSubArray_MSBIndexing) {
     bit_array src({ 0b11000011, 0b10100110 }, 16);
 
     // 앞의 4비트 [0..3]: 1 1 0 0
-    auto sub0 = src.get(0, 4).toArray();
+    auto sub0 = src.get(0, 4).to_array();
     std::vector<bool> expect0 = { 1,1,0,0 };
     EXPECT_TRUE(VecBoolEq(sub0, expect0)) << "got=" << BitsToString(sub0);
 
     // 중간 8비트 [4..11]: 0 0 1 1 1 0 1 0  (= 0011 1010)
     // - 구간 해석:
     //   [4]=0, [5]=0, [6]=1, [7]=1, [8]=1, [9]=0, [10]=1, [11]=0
-    auto sub1 = src.get(4, 8).toArray();
+    auto sub1 = src.get(4, 8).to_array();
     std::vector<bool> expect1 = { 0,0,1,1, 1,0,1,0 };
     EXPECT_TRUE(VecBoolEq(sub1, expect1))
         << "src(bytes)=" << BytesAsBitsMSBFirst(src.data())
@@ -125,8 +125,8 @@ TEST(BitArray, MergeByOffset_MSBIndexing) {
     ASSERT_TRUE(dst.merge(ins, 4));
 
     // 검증: dst[4..11] 구간을 추출하여 ins 비트열과 동일해야 함
-    auto merged_slice = dst.get(4, 8).toArray();
-    auto ins_bits = ins.toArray();
+    auto merged_slice = dst.get(4, 8).to_array();
+    auto ins_bits = ins.to_array();
     EXPECT_TRUE(VecBoolEq(merged_slice, ins_bits))
         << "dst(bytes)=" << BytesAsBitsMSBFirst(dst.data())
         << ", merged_slice=" << BitsToString(merged_slice)
@@ -147,19 +147,19 @@ TEST(BitArray, ConcatOperatorPlus_MSBIndexing) {
     bit_array c = a + b;
 
     EXPECT_EQ(c.size(), 8u);
-    EXPECT_TRUE(VecBoolEq(c.get(0, 4).toArray(), a.toArray())); // c[0..3] == a
-    EXPECT_TRUE(VecBoolEq(c.get(4, 4).toArray(), b.toArray())); // c[4..7] == b
+    EXPECT_TRUE(VecBoolEq(c.get(0, 4).to_array(), a.to_array())); // c[0..3] == a
+    EXPECT_TRUE(VecBoolEq(c.get(4, 4).to_array(), b.to_array())); // c[4..7] == b
 }
 
 TEST(BitArray, DataAndSetBytes_AllocationAndZeroing) {
-    // setBytes(N): 내부 저장 바이트 수를 N으로 재할당하고 모두 0으로 채운다고 가정
+    // set_bytes(N): 내부 저장 바이트 수를 N으로 재할당하고 모두 0으로 채운다고 가정
     bit_array a;
-    a.setBytes(4); // 4바이트 = 32비트 (모두 0)
+    a.set_bytes(4); // 4바이트 = 32비트 (모두 0)
     EXPECT_EQ(a.size(), 32u);
     for (auto v : a.data()) EXPECT_EQ(v, 0);
 
     // 다시 1바이트 = 8비트로 축소
-    a.setBytes(1);
+    a.set_bytes(1);
     EXPECT_EQ(a.size(), 8u);
     ASSERT_EQ(a.data().size(), 1u);
     EXPECT_EQ(a.data()[0], 0);
@@ -177,10 +177,10 @@ TEST(BitArray, FromBytesAndToArray_BitZeroFill) {
     EXPECT_EQ(bytes[0], 0x12);
     EXPECT_EQ(bytes[1], 0x34);
 
-    // setBits(10): 10비트를 확보하며 기본값은 0으로 채워진다고 가정
+    // set_bits(10): 10비트를 확보하며 기본값은 0으로 채워진다고 가정
     bit_array b;
-    b.setBits(10);
-    auto bits = b.toArray();
+    b.set_bits(10);
+    auto bits = b.to_array();
     EXPECT_EQ(bits.size(), 10u);
     for (bool v : bits) EXPECT_FALSE(v);
 }
@@ -193,13 +193,13 @@ TEST(BitArray, ShiftLeftAndRight_MSBIndexing) {
 
     // << 4 (왼쪽 쉬프트 4): 각 비트를 더 작은 인덱스로 이동시키고, 하위(오른쪽) 비트는 0으로 채움
     // 결과 기대: 1111 0000  (= index 0..3 = 1, index 4..7 = 0)
-    auto L = (a << 4).toArray();
+    auto L = (a << 4).to_array();
     std::vector<bool> expectL = { 1,1,1,1,0,0,0,0 };
     EXPECT_TRUE(VecBoolEq(L, expectL)) << "L=" << BitsToString(L);
 
     // >> 2 (오른쪽 쉬프트 2): 각 비트를 더 큰 인덱스로 이동시키고, 상위(왼쪽) 비트는 0으로 채움
     // 원본 a 기준 기대: 0000 0011  (= index 6..7 = 1, 나머지 0)
-    auto R = (a >> 2).toArray();
+    auto R = (a >> 2).to_array();
     std::vector<bool> expectR = { 0,0,0,0,0,0,1,1 };
     EXPECT_TRUE(VecBoolEq(R, expectR)) << "R=" << BitsToString(R);
 }
@@ -209,10 +209,10 @@ TEST(BitArray, ReverserRoundtrip_MSBIndexing) {
     // 예) [b0 b1 b2 ... bN-1] → [bN-1 ... b2 b1 b0]
     // 라운드트립(두 번 적용)하면 원상 복구되어야 함.
     bit_array a({ 0x34, 0x12 }, 10);
-    auto before = a.toArray();
+    auto before = a.to_array();
     a.reverser();  // 1차 반전
     a.reverser();  // 2차 반전 → 원복
-    auto after = a.toArray();
+    auto after = a.to_array();
     EXPECT_TRUE(VecBoolEq(before, after))
         << "before=" << BitsToString(before) << ", after=" << BitsToString(after);
 }

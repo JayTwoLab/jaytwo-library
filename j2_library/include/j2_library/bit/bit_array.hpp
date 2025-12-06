@@ -54,13 +54,13 @@ public:
     void from(const std::vector<uint8_t>& bytes, size_t bits); 
 
     // 지정된 바이트 크기로 0으로 채운 배열을 설정
-    void setBytes(size_t byteSize); 
+    void set_bytes(size_t byteSize); 
 
     // 지정된 비트 크기로 0으로 채운 배열을 설정
-    void setBits(size_t bitSize); 
+    void set_bits(size_t bitSize); 
 
     // 비트 배열을 boolean 배열(std::vector<bool>)로 반환 (0:false, 1:true)
-    std::vector<bool> toArray() const; 
+    std::vector<bool> to_array() const; 
 
     // 비트 이동 <<
     bit_array operator<<(size_t shift) const; 
@@ -83,8 +83,8 @@ protected:
     std::vector<uint8_t> _data;
 
     // 비트 크기
-    size_t _bitSize;
+    size_t _bit_size;
 
-};
+}; // class bit_array
 
-} // namespace j2::core
+} // namespace j2::bit 
