@@ -83,6 +83,10 @@
 
 #include "j2_library/uuid/uuid.hpp" 
 
+// -- xml components --
+
+#include "j2_library/xml/xml.hpp"
+
 // TODO: Add more core components as needed
 
 //----------------------------------------------------------------
