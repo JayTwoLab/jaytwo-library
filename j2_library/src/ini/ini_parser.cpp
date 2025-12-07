@@ -16,7 +16,7 @@ namespace j2::ini {
     {
         auto is_space = [](char c) {
             return c == ' ' || c == '\t' || c == '\r' || c == '\n';
-            };
+        };
         std::size_t start = 0;
         while (start < s.size() && is_space(s[start])) { ++start; }
         if (start == s.size()) { return std::string(); }
@@ -34,25 +34,32 @@ namespace j2::ini {
         int last_non_space = -1;
         for (std::size_t i = 0; i < s.size(); ++i) {
             char c = s[i];
+
             if (c == '\'' && !in_double) {
                 in_single = !in_single;
-            }
-            else if (c == '"' && !in_single) {
+            } else if (c == '"' && !in_single) {
                 in_double = !in_double;
             }
+
             if (!in_single && !in_double) {
-                if (!std::isspace(static_cast<unsigned char>(c))) {
-                    last_non_space = static_cast<int>(i);
-                }
-                if ((c == ';' || c == '#') && last_non_space >= 0) {
-                    // 주석 시작 이전의 공백을 제거
-                    std::size_t cut = static_cast<std::size_t>(last_non_space) + 1;
+                // check comment char first (so we don't treat the comment char itself as "last non-space")
+                if (c == ';' || c == '#') {
+                    std::size_t cut = 0;
+                    if (last_non_space >= 0) {
+                        cut = static_cast<std::size_t>(last_non_space) + 1;
+                    } else {
+                        cut = 0;
+                    }
                     // trim trailing spaces before comment
                     while (cut > 0 && std::isspace(static_cast<unsigned char>(s[cut - 1]))) {
                         --cut;
                     }
                     s.resize(cut);
                     return;
+                }
+
+                if (!std::isspace(static_cast<unsigned char>(c))) {
+                    last_non_space = static_cast<int>(i);
                 }
             }
         }
@@ -80,8 +87,7 @@ namespace j2::ini {
                     out.push_back(nx);
                     break;
                 }
-            }
-            else {
+            } else {
                 out.push_back(c);
             }
         }
@@ -112,8 +118,7 @@ namespace j2::ini {
             if (quote_ch == '\'') {
                 // Raw: 이스케이프 시퀀스 해석
                 return decode_escapes_for_string(inner);
-            }
-            else {
+            } else {
                 // Literal: 큰따옴표 내부에서는 \" 만 해제
                 std::string out;
                 out.reserve(inner.size());
@@ -121,8 +126,7 @@ namespace j2::ini {
                     if (inner[i] == '\\' && i + 1 < inner.size() && inner[i + 1] == '"') {
                         out.push_back('"');
                         ++i;
-                    }
-                    else {
+                    } else {
                         out.push_back(inner[i]);
                     }
                 }
@@ -145,8 +149,7 @@ namespace j2::ini {
         for (char c : v) {
             if (c == '"') {
                 out += "\\\"";
-            }
-            else {
+            } else {
                 out.push_back(c);
             }
         }
@@ -233,8 +236,7 @@ namespace j2::ini {
             e.value = value;
             e.kind = value_kind::String;
             e.string_literal = literal_mode;
-        }
-        else {
+        } else {
             entry e;
             e.key = key;
             e.value = value;
@@ -257,8 +259,7 @@ namespace j2::ini {
             e.value = value;
             e.kind = kind;
             e.string_literal = false;
-        }
-        else {
+        } else {
             entry e;
             e.key = key;
             e.value = value;
@@ -311,33 +312,30 @@ namespace j2::ini {
             value = trim(value);
 
             if (value.size() >= 2 && value.front() == '\'' && value.back() == '\'') {
-                // Raw string
+                // Raw string (single-quoted): 이스케이프 시퀀스 해석
                 std::string v = unquote_and_unescape(value, '\'');
                 upsert_string(current_section, key, v, false);
-            }
-            else if (value.size() >= 2 && value.front() == '"' && value.back() == '"') {
+            } else if (value.size() >= 2 && value.front() == '"' && value.back() == '"') {
+                // Literal string (double-quoted): \" 만 해제
                 std::string v = unquote_and_unescape(value, '"');
                 upsert_string(current_section, key, v, true);
-            }
-            else {
+            } else {
                 // 숫자/불리언 우선 파싱
                 bool bval = false;
                 if (parse_bool(value, bval)) {
                     upsert_numeric(current_section, key, bval ? "true" : "false", value_kind::Bool);
-                }
-                else {
+                } else {
                     int64_t ival = 0;
                     if (parse_int(value, ival)) {
                         upsert_numeric(current_section, key, std::to_string(ival), value_kind::Int);
-                    }
-                    else {
+                    } else {
                         double dval = 0.0;
                         if (parse_double(value, dval)) {
                             upsert_numeric(current_section, key, format_double(dval), value_kind::Double);
-                        }
-                        else {
-                            // Unquoted plain string: 저장은 그대로, Raw 모드(false)
-                            upsert_string(current_section, key, value, false);
+                        } else {
+                            // Unquoted plain string: decode common escapes (t/n/r/\\/'/") and store as raw
+                            std::string decoded = decode_escapes_for_string(value);
+                            upsert_string(current_section, key, decoded, false);
                         }
                     }
                 }
@@ -366,18 +364,14 @@ namespace j2::ini {
                 if (e.kind == value_kind::String) {
                     if (e.string_literal) {
                         ofs << quote_double_and_escape_literal(e.value);
-                    }
-                    else {
+                    } else {
                         ofs << quote_single_and_escape_raw(e.value);
                     }
-                }
-                else if (e.kind == value_kind::Bool) {
+                } else if (e.kind == value_kind::Bool) {
                     ofs << (e.value == "true" ? "true" : "false");
-                }
-                else if (e.kind == value_kind::Int) {
+                } else if (e.kind == value_kind::Int) {
                     ofs << e.value;
-                }
-                else if (e.kind == value_kind::Double) {
+                } else if (e.kind == value_kind::Double) {
                     ofs << e.value;
                 }
 
@@ -425,7 +419,6 @@ namespace j2::ini {
         if (e.kind == value_kind::Bool) {
             return e.value == "true";
         }
-        // bool parsed = false;
         bool out = false;
         if (parse_bool(e.value, out)) { return out; }
         return std::nullopt;
