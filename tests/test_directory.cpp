@@ -6,8 +6,8 @@
 #include <string>
 #include <filesystem>
 
-#include "gtest_compat.hpp"          // ← 추가/변경: 호환 레이어 헤더
-#include "j2_library/j2_library.hpp" // 기존 유지
+#include "gtest_compat.hpp"
+#include "j2_library/j2_library.hpp"
 
 // Google Test로 변환한 directory_maker 테스트
 // 빌드 시: directory.cpp 와 함께 링크 필요 (console_kor는 불필요)
@@ -28,13 +28,13 @@ namespace {
     // 한국어 메시지를 기본으로 하는 directory_maker 준비
     j2::directory::directory_maker make_default_ko() {
         j2::directory::directory_maker mk;
-        j2::directory::CreateDirOptions opt;
+        j2::directory::create_dir_options opt;
         opt.make_parents = true;   // 부모 자동 생성
         opt.succeed_if_exists = true;   // 이미 존재해도 성공
         opt.follow_symlinks = false;  // 심볼릭 링크 미추적
         opt.set_permissions = false;  // 권한 설정 안 함
         mk.set_options(opt);
-        mk.set_language(j2::directory::Language::Korean);
+        mk.set_language(j2::directory::language::Korean);
         return mk;
     }
 
@@ -52,12 +52,12 @@ TEST(directory, CreateBasicRelative) {
     {
         auto r = maker.create_directory_tree("logs/app/2025/10");
         EXPECT_TRUE(r) << r.message;
-        EXPECT_EQ(r.code, j2::directory::CreatePathCode::Created);
+        EXPECT_EQ(r.code, j2::directory::create_path_code::Created);
     }
     {
         auto r = maker.create_directory_tree("logs/app/2025/10");
         EXPECT_TRUE(r) << r.message;
-        EXPECT_EQ(r.code, j2::directory::CreatePathCode::AlreadyExists);
+        EXPECT_EQ(r.code, j2::directory::create_path_code::AlreadyExists);
     }
 
     std::filesystem::current_path(old);
@@ -73,7 +73,7 @@ TEST(directory, NotDirectoryWhenIntermediateIsFile) {
     { std::ofstream("logs_file").put('\n'); }
     auto r = maker.create_directory_tree("logs_file/subdir");
     EXPECT_FALSE(r);
-    EXPECT_EQ(r.code, j2::directory::CreatePathCode::NotDirectory);
+    EXPECT_EQ(r.code, j2::directory::create_path_code::NotDirectory);
 
     std::filesystem::current_path(old);
 }
@@ -91,7 +91,7 @@ TEST(directory, NoSuchParentWhenMakeParentsFalse) {
 
     auto r = maker.create_directory_tree("a/b/c");
     EXPECT_FALSE(r);
-    EXPECT_EQ(r.code, j2::directory::CreatePathCode::NoSuchParent);
+    EXPECT_EQ(r.code, j2::directory::create_path_code::NoSuchParent);
 
     std::filesystem::current_path(old);
 }
@@ -101,7 +101,7 @@ TEST(directory, EmptyPathInvalid) {
     auto maker = make_default_ko();
     auto r = maker.create_directory_tree(std::filesystem::path{});
     EXPECT_FALSE(r);
-    EXPECT_EQ(r.code, j2::directory::CreatePathCode::InvalidPath);
+    EXPECT_EQ(r.code, j2::directory::create_path_code::InvalidPath);
 }
 
 // Case 5: 절대 경로 (환경 따라 성공/실패)
@@ -116,8 +116,8 @@ TEST(directory, AbsolutePathCreate) {
 
     auto r = maker.create_directory_tree(abs_target);
     if (r) {
-        EXPECT_TRUE(r.code == j2::directory::CreatePathCode::Created ||
-            r.code == j2::directory::CreatePathCode::AlreadyExists);
+        EXPECT_TRUE(r.code == j2::directory::create_path_code::Created ||
+            r.code == j2::directory::create_path_code::AlreadyExists);
     }
     else {
         SUCCEED() << "Absolute path creation failed in this environment: " << r.message;
@@ -171,7 +171,7 @@ TEST(directory, DISABLED_SymlinkBlockedAndFollow) {
         auto opt = maker.options(); opt.follow_symlinks = false; maker.set_options(opt);
         auto r = maker.create_directory_tree(link_name / "x");
         EXPECT_FALSE(r);
-        EXPECT_EQ(r.code, j2::directory::CreatePathCode::SymlinkBlocked);
+        EXPECT_EQ(r.code, j2::directory::create_path_code::SymlinkBlocked);
     }
 
     {

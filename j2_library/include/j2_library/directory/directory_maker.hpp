@@ -1,33 +1,15 @@
 #pragma once
 // ---------------------------------------------------------------------------
-// C++17 디렉터리 생성 유틸리티 헤더
+// C++17 디렉터리 생성 유틸리티 헤더 (snake_case 타입 명명 규칙 적용)
 // ---------------------------------------------------------------------------
 // - 네임스페이스: j2::directory
 // - std::filesystem 기반으로 디렉터리 생성 및 상태 확인을 수행합니다.
 // - 내부적으로 std::error_code 기반 예외 처리를 수행합니다.
-// - 한글/영문 메시지를 Language 열거형으로 선택할 수 있습니다.
-// - CreateDirOptions 구조체를 통해 부모 경로 생성 여부, 권한 설정 등을
+// - 한글/영문 메시지를 language 열거형으로 선택할 수 있습니다.
+// - create_dir_options 구조체를 통해 부모 경로 생성 여부, 권한 설정 등을
 //   제어할 수 있습니다.
 // - directory_maker 클래스는 create_directory_tree()를 호출해 실제 경로를
-//   생성하고, 결과는 CreateDirResult 구조체로 반환됩니다.
-//
-// ---------------------------------------------------------------------------
-// 간단 예시
-// ---------------------------------------------------------------------------
-// #include "j2_library/directory/directory.hpp"
-// using namespace j2::directory;
-//
-// int main() {
-//     CreateDirOptions opt;
-//     opt.make_parents = true;
-//     directory_maker maker(Language::Korean, opt);
-//     CreateDirResult res = maker.create_directory_tree("logs/2025/10");
-//     if (res) {
-//         std::cout << "성공: " << res.message << std::endl;
-//     } else {
-//         std::cerr << "실패: " << res.message << std::endl;
-//     }
-// }
+//   생성하고, 결과는 create_dir_result 구조체로 반환됩니다.
 // ---------------------------------------------------------------------------
 
 #include <filesystem>
@@ -42,7 +24,7 @@ namespace j2::directory {
     // -----------------------------------------------------------------------
     // 메시지 언어 설정
     // -----------------------------------------------------------------------
-    enum class Language {
+    enum class language {
         English,  // 영어 메시지
         Korean    // 한국어 메시지
     };
@@ -50,7 +32,7 @@ namespace j2::directory {
     // -----------------------------------------------------------------------
     // 디렉터리 생성 결과 코드
     // -----------------------------------------------------------------------
-    enum class CreatePathCode {
+    enum class create_path_code {
         Created,            // 새 디렉터리가 생성됨
         AlreadyExists,      // 이미 디렉터리가 존재함
         InvalidPath,        // 잘못된 경로 (빈 문자열 등)
@@ -68,7 +50,7 @@ namespace j2::directory {
     // -----------------------------------------------------------------------
     // 권한 설정 모드
     // -----------------------------------------------------------------------
-    enum class PermMode {
+    enum class perm_mode {
         Add,    // 기존 권한에 추가
         Remove, // 기존 권한에서 제거
         Exact   // 정확히 지정한 권한으로 설정
@@ -77,7 +59,7 @@ namespace j2::directory {
     // -----------------------------------------------------------------------
     // 디렉터리 생성 옵션 구조체
     // -----------------------------------------------------------------------
-    struct J2LIB_API CreateDirOptions {
+    struct J2LIB_API create_dir_options {
         bool make_parents = true;  // 상위 디렉터리 자동 생성 여부
         bool succeed_if_exists = true;  // 디렉터리 이미 존재 시 성공으로 간주 여부
         bool follow_symlinks = false; // 심볼릭 링크 따라갈지 여부
@@ -91,14 +73,14 @@ namespace j2::directory {
             std::filesystem::perms::others_read |
             std::filesystem::perms::others_exec;
 
-        PermMode perm_mode = PermMode::Exact; // 권한 설정 모드
+        perm_mode perm_mode = perm_mode::Exact; // 권한 설정 모드
     };
 
     // -----------------------------------------------------------------------
     // 디렉터리 생성 결과 구조체
     // -----------------------------------------------------------------------
-    struct J2LIB_API CreateDirResult {
-        CreatePathCode code = CreatePathCode::UnknownError; // 결과 코드
+    struct J2LIB_API create_dir_result {
+        create_path_code code = create_path_code::UnknownError; // 결과 코드
         std::error_code ec;                                // 에러 코드
         std::string message;                               // 결과 메시지
         std::filesystem::path requested;                   // 요청한 경로
@@ -115,51 +97,51 @@ namespace j2::directory {
     class J2LIB_API directory_maker {
     public:
         // 생성자
-        // - 언어(Language)와 옵션(CreateDirOptions)을 설정합니다.
-        // - 기본값: Language::Korean, 부모 자동 생성 옵션 활성화
+        // - 언어(language)와 옵션(create_dir_options)을 설정합니다.
+        // - 기본값: language::English, 부모 자동 생성 옵션 활성화
         //
         explicit directory_maker(
-            Language lang = Language::English,
-            CreateDirOptions opt = {}) noexcept;
+            language lang = language::English,
+            create_dir_options opt = {}) noexcept;
 
         // 현재 언어 설정을 반환합니다.
         // 예시:
-        // Language lang = maker.language(); // 영어(권장) 또는 한국어
-        Language language() const noexcept { return lang_; }
+        // language lang = maker.get_language();
+        language get_language() const noexcept { return lang_; }
 
         // 언어를 변경합니다.
         // 예시:
-        // maker.set_language(Language::English);
-        void set_language(Language lang) noexcept { lang_ = lang; }
+        // maker.set_language(language::English);
+        void set_language(language lang) noexcept { lang_ = lang; }
 
         // 현재 옵션을 반환합니다.
         // 예시:
-        // const CreateDirOptions& opt = maker.options();
-        const CreateDirOptions& options() const noexcept { return opt_; }
+        // const create_dir_options& opt = maker.options();
+        const create_dir_options& options() const noexcept { return opt_; }
 
         // 옵션을 변경합니다.
         // 예시:
-        // CreateDirOptions opt; opt.make_parents = false;
+        // create_dir_options opt; opt.make_parents = false;
         // maker.set_options(opt);
-        void set_options(const CreateDirOptions& opt) noexcept { opt_ = opt; }
+        void set_options(const create_dir_options& opt) noexcept { opt_ = opt; }
 
         //  NOTICE: 디렉터리 생성 함수
         // 지정한 경로의 디렉터리를 생성합니다.
         // 옵션에 따라 부모 경로 생성, 권한 설정 등이 적용됩니다.
         //
         // 예시:
-        // CreateDirResult res = maker.create_directory_tree("data/output");
+        // create_dir_result res = maker.create_directory_tree("data/output");
         // if (res) std::cout << "성공" << std::endl;
-        CreateDirResult create_directory_tree(const std::filesystem::path& target) const noexcept;
+        create_dir_result create_directory_tree(const std::filesystem::path& target) const noexcept;
 
-        // CreatePathCode를 문자열로 변환합니다.
+        // create_path_code를 문자열로 변환합니다.
         // 예시:
-        // const char* s = directory_maker::to_string(CreatePathCode::Created);
-        static const char* to_string(CreatePathCode c) noexcept;
+        // const char* s = directory_maker::to_string(create_path_code::Created);
+        static const char* to_string(create_path_code c) noexcept;
 
     private:
-        // std::error_code를 CreatePathCode로 매핑
-        static CreatePathCode map_errc_(const std::error_code& ec) noexcept;
+        // std::error_code를 create_path_code로 매핑
+        static create_path_code map_errc_(const std::error_code& ec) noexcept;
 
         // 안전하게 파일 상태를 조회
         std::filesystem::file_status safe_status_(
@@ -189,8 +171,8 @@ namespace j2::directory {
         std::string msg_unknown_exception_() const;
 
     private:
-        Language lang_;        // 현재 언어 설정
-        CreateDirOptions opt_; // 현재 옵션 설정
+        language lang_;               // 현재 언어 설정
+        create_dir_options opt_;      // 현재 옵션 설정
     };
 
 } // namespace j2::directory
