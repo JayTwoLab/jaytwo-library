@@ -2,10 +2,12 @@
 // - 다양한 조합을 최대한 커버하도록 케이스 구성
 // - 파일 I/O 포함: demo_gtest.ini 생성/추가/재로드 테스트
 
-#include "j2_library/ini/ini.hpp"
-#include <gtest/gtest.h>
 #include <fstream>
 #include <string>
+
+#include <gtest/gtest.h> // GoogleTest 
+
+#include "j2_library/j2_library.hpp" // j2 library
 
 // 테스트용 경로(상대 경로 사용)
 static const char* kIniPath = "demo_gtest.ini";

@@ -92,7 +92,7 @@ TEST(XmlParserTest, ParseWithConstructorAndParseMethod)
     auto doc = parser.parse();
 
     auto v = j2::xml::get_int_by_path(doc.get(), "/root/hello/world");
-    ASSERT_TRUE(v.has_value());
+    ASSERT_TRUE(v.has_value()); // 값이 존재하는지 확인
     EXPECT_EQ(*v, 123);
 
     auto a = j2::xml::get_int_by_path(doc.get(), "/root/hello/world/@a");
@@ -299,14 +299,15 @@ TEST(XmlFileTest, ParseFromFilesystemPath)
 
     fs::path xml_path = fs::path("test_sample.xml");
 
-    if (fs::exists(xml_path))
+    // 이전 테스트 잔여물 제거 
+    if (fs::exists(xml_path)) 
     {
         fs::remove(xml_path);
     }
 
     {
-        std::ofstream ofs(xml_path);
-        ASSERT_TRUE(ofs.good());
+        std::ofstream ofs(xml_path); // 파일 생성
+        ASSERT_TRUE(ofs.good()); // 파일 열기 성공 확인
 
         ofs << R"(<?xml version="1.0" encoding="UTF-8"?>
 <root>
@@ -318,14 +319,14 @@ TEST(XmlFileTest, ParseFromFilesystemPath)
 )";
     }
 
-    ASSERT_TRUE(fs::exists(xml_path));
-    ASSERT_TRUE(fs::is_regular_file(xml_path));
+    ASSERT_TRUE(fs::exists(xml_path)); // 파일 존재 확인
+    ASSERT_TRUE(fs::is_regular_file(xml_path)); // 일반 파일인지 확인
 
     j2::xml::xml_parser parser;
     auto doc = parser.parse_file(xml_path, j2::xml::text_policy::trim_and_discard_empty);
 
     auto port = j2::xml::get_int_by_path(doc.get(), "/root/config/server/@port");
-    ASSERT_TRUE(port.has_value());
+    ASSERT_TRUE(port.has_value()); // 값 존재 확인
     EXPECT_EQ(*port, 9090);
 
     auto enabled = j2::xml::get_bool_by_path(doc.get(), "/root/config/server/@enabled");
