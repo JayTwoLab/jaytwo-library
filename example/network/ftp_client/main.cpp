@@ -84,14 +84,14 @@ public:
 
         // Download progress
         if (dltotal > 0 && elapsed >= 100) { // Update every 100ms
-            double percentage = (static_cast<double>(dlnow) / dltotal) * 100.0;
+            double percentage = (static_cast<double>(dlnow) / static_cast<double>(dltotal)) * 100.0;
 
             // Speed calculation         (KB/s)
             curl_off_t byte_diff = dlnow - last_bytes;
-            double speed = (byte_diff / 1024.0) / (elapsed / 1000.0);
+            double speed = (static_cast<double>(byte_diff) / 1024.0) / (static_cast<double>(elapsed) / 1000.0);
 
             // Remaining time estimation        
-            double remaining_bytes = dltotal - dlnow;
+            double remaining_bytes = static_cast<double>(dltotal) - static_cast<double>(dlnow);
             double eta = (speed > 0) ? (remaining_bytes / 1024.0) / speed : 0;
 
             int bar_width = 40;
@@ -118,12 +118,12 @@ public:
 
         // Upload progress
         if (ultotal > 0 && elapsed >= 100) {
-            double percentage = (static_cast<double>(ulnow) / ultotal) * 100.0;
+            double percentage = (static_cast<double>(ulnow) / static_cast<double>(ultotal)) * 100.0;
 
             curl_off_t byte_diff = ulnow - last_bytes;
-            double speed = (byte_diff / 1024.0) / (elapsed / 1000.0);
+            double speed = (static_cast<double>(byte_diff) / 1024.0) / (static_cast<double>(elapsed) / 1000.0);
 
-            double remaining_bytes = ultotal - ulnow;
+            double remaining_bytes = static_cast<double>(ultotal) - static_cast<double>(ulnow);
             double eta = (speed > 0) ? (remaining_bytes / 1024.0) / speed : 0;
 
             int bar_width = 40;

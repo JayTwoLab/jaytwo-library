@@ -6,6 +6,11 @@ using namespace j2::network::ftp::client;
 void default_progress_listener::on_progress(curl_off_t dlnow, curl_off_t dltotal,
     curl_off_t ulnow, curl_off_t ultotal) {
     // Simple console output (extend if needed)
+    if (dlnow < 0 || dltotal < 0 || ulnow < 0 || ultotal < 0) {
+        std::cout << "[Default] Progress: [Invalid data]\n";
+        return;
+    }
+
     if (dltotal > 0) {
         double pct = (static_cast<double>(dlnow) / dltotal) * 100.0;
         std::cout << "[Default] Download: " << std::fixed << std::setprecision(2) << pct
@@ -221,31 +226,34 @@ bool sftp_client::connect(const std::string& host, int p, const std::string& use
 }
 
 bool sftp_client::upload(const std::string& local_file, const std::string& remote_file) {
-    last_error = "sftp_client::upload() not implemented in this stub.";
+    last_error = std::string("sftp_client::upload() not implemented in this stub. remote_file: ")
+        + remote_file + ", local_file: " + local_file;
     return false;
 }
 
 bool sftp_client::download(const std::string& remote_file, const std::string& local_file) {
-    last_error = "sftp_client::download() not implemented in this stub.";
+    last_error = std::string("sftp_client::download() not implemented in this stub. remote_file: ")
+        + remote_file + ", local_file: " + local_file;
     return false;
 }
 
 bool sftp_client::delete_file(const std::string& remote_file) {
-    last_error = "sftp_client::delete_file() not implemented in this stub.";
+    last_error = std::string("sftp_client::delete_file() not implemented in this stub. remote_file: ")
+        + remote_file;
     return false;
 }
 
 std::vector<file_info> sftp_client::list_directory(const std::string& path) {
-    last_error = "sftp_client::list_directory() not implemented in this stub.";
+    last_error = std::string("sftp_client::list_directory() not implemented in this stub. path: ") + path;
     return {};
 }
 
 bool sftp_client::create_directory(const std::string& path) {
-    last_error = "sftp_client::create_directory() not implemented in this stub.";
+    last_error = std::string("sftp_client::create_directory() not implemented in this stub. path: ") + path;
     return false;
 }
 
 bool sftp_client::remove_directory(const std::string& path) {
-    last_error = "sftp_client::remove_directory() not implemented in this stub.";
+    last_error = std::string("sftp_client::remove_directory() not implemented in this stub. path: ") + path;
     return false;
 }

@@ -19,71 +19,71 @@
 
 namespace j2::ini {
 
-    enum class ValueKind { String, Bool, Int, Double };
+    enum class value_kind { String, Bool, Int, Double };
 
-    struct J2LIB_API Entry {
+    struct J2LIB_API entry {
         std::string key;
         std::string value;
-        ValueKind   kind{ ValueKind::String };
+        value_kind  kind{ value_kind::String };
         bool        string_literal{ false }; // true: Literal("..."), false: Raw('...')
     };
 
-    struct J2LIB_API Section {
-        std::vector<Entry> entries;               // 삽입 순서 보존
+    struct J2LIB_API section {
+        std::vector<entry> entries;               // 삽입 순서 보존
         std::map<std::string, std::size_t> index; // 키 -> 인덱스
     };
 
-    class J2LIB_API Ini {
+    class J2LIB_API ini_parser {
     public:
         // 파일 로드/저장
         bool load(const std::string& path);
         bool save(const std::string& path) const;
 
         // 존재 여부
-        bool has_section(const std::string& section) const;
-        bool has(const std::string& section, const std::string& key) const;
+        bool has_section(const std::string& section_name) const;
+        bool has(const std::string& section_name, const std::string& key) const;
 
         // 조회
-        std::optional<std::string> get_string(const std::string& section,
+        std::optional<std::string> get_string(const std::string& section_name,
             const std::string& key) const;
-        std::optional<bool>        get_bool(const std::string& section,
+        std::optional<bool>        get_bool(const std::string& section_name,
             const std::string& key) const;
-        std::optional<int64_t>     get_int(const std::string& section,
+        std::optional<int64_t>     get_int(const std::string& section_name,
             const std::string& key) const;
-        std::optional<double>      get_double(const std::string& section,
+        std::optional<double>      get_double(const std::string& section_name,
             const std::string& key) const;
 
         // 설정 (섹션/키 없으면 추가)
         // 문자열(Raw): \t \n \r \\ ' 저장 시 이스케이프, 로드 시 복원
-        void set_string(const std::string& section,
+        void set_string(const std::string& section_name,
             const std::string& key,
             const std::string& value);
         // 문자열(Literal): 특수문자 해석 없이 그대로(큰따옴표만 \" 보호)
-        void set_string_literal(const std::string& section,
+        void set_string_literal(const std::string& section_name,
             const std::string& key,
             const std::string& value);
 
         // 불리언/정수/실수 (명시적 세터: 모호성 제거)
-        void set_bool(const std::string& section,
+        void set_bool(const std::string& section_name,
             const std::string& key,
             bool value);
-        void set_int(const std::string& section,
+        void set_int(const std::string& section_name,
             const std::string& key,
             int64_t value);
-        void set_double(const std::string& section,
+        void set_double(const std::string& section_name,
             const std::string& key,
             double value);
 
         // 삭제
-        bool remove(const std::string& section, const std::string& key);
-        bool remove_section(const std::string& section);
+        bool remove(const std::string& section_name, const std::string& key);
+        bool remove_section(const std::string& section_name);
 
         // 섹션 나열(삽입 순서)
         std::vector<std::string> section_names() const;
 
     private:
         // 섹션 컨테이너 (삽입 순서 보존)
-        std::vector<std::pair<std::string, Section>> sections_;
+        std::vector<std::pair<std::string, section>> sections_;
         std::map<std::string, std::size_t> sec_index_;
 
         // 유틸
@@ -105,18 +105,18 @@ namespace j2::ini {
         static bool parse_double(const std::string& v, double& out);
         static std::string format_double(double d);
 
-        Section* ensure_section(const std::string& section);
-        const Section* find_section(const std::string& section) const;
-        Section* find_section(const std::string& section);
+        section* ensure_section(const std::string& section_name);
+        const section* find_section(const std::string& section_name) const;
+        section* find_section(const std::string& section_name);
 
-        void upsert_string(const std::string& section,
+        void upsert_string(const std::string& section_name,
             const std::string& key,
             const std::string& value,
             bool literal_mode);
-        void upsert_numeric(const std::string& section,
+        void upsert_numeric(const std::string& section_name,
             const std::string& key,
             const std::string& value,
-            ValueKind kind);
+            value_kind kind);
     };
 
 } // namespace j2::ini
