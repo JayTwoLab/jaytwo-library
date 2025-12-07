@@ -3,7 +3,13 @@
 namespace j2::json {
 
     bool exists(const nj& j, const std::string& path) noexcept {
-        return j.contains(njj(path));
+        try {
+            njj ptr(path);
+            return get_node(j, ptr) != nullptr;
+        }
+        catch (...) {
+            return false;
+        }
     }
 
     std::string get_string(const nj& j,

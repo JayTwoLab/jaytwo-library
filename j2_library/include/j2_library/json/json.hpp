@@ -16,16 +16,26 @@ namespace j2::json { // jj 로 축약하여 사용 가능
     // 내부 헬퍼: 읽기 포인터 (예외 없음)
     //--------------------------------------------------------------
     inline const nj* get_node(const nj& j, const njj& ptr) noexcept {
-        if (j.contains(ptr)) return &j.at(ptr);
-        return nullptr;
+        try {
+            const nj& n = j.at(ptr);
+            return &n;
+        }
+        catch (...) {
+            return nullptr;
+        }
     }
 
     //--------------------------------------------------------------
     // 내부 헬퍼: 쓰기 포인터 (경로 생성 X, 예외 없음)
     //--------------------------------------------------------------
     inline nj* get_node_mutable(nj& j, const njj& ptr) noexcept {
-        if (j.contains(ptr)) return &j.at(ptr);
-        return nullptr;
+        try {
+            nj& n = j.at(ptr);
+            return &n;
+        }
+        catch (...) {
+            return nullptr;
+        }
     }
 
     //--------------------------------------------------------------
@@ -89,17 +99,35 @@ namespace j2::json { // jj 로 축약하여 사용 가능
         return defval;
     }
 
-    // 경로 문자열 버전
+    // 경로 문자열 버전 - 안전하게 json_pointer 생성 실패(잘못된 포인터 형식 등)를 처리
     inline std::string value_or_path(const nj& j, const std::string& path, const std::string& defval) noexcept {
-        return value_or(j, njj(path), defval);
+        try {
+            njj ptr(path);
+            return value_or(j, ptr, defval);
+        }
+        catch (...) {
+            return defval;
+        }
     }
     inline bool value_or_path(const nj& j, const std::string& path, bool defval) noexcept {
-        return value_or(j, njj(path), defval);
+        try {
+            njj ptr(path);
+            return value_or(j, ptr, defval);
+        }
+        catch (...) {
+            return defval;
+        }
     }
     template <class T,
         std::enable_if_t<std::is_arithmetic_v<T>, int> = 0>
     inline T value_or_path(const nj& j, const std::string& path, T defval) noexcept {
-        return value_or(j, njj(path), defval);
+        try {
+            njj ptr(path);
+            return value_or(j, ptr, defval);
+        }
+        catch (...) {
+            return defval;
+        }
     }
 
     //--------------------------------------------------------------
