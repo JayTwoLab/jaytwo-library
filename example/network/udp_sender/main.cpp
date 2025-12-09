@@ -1,10 +1,15 @@
 
-#include "j2_library/j2_library.hpp"
+#include <iostream>
+#include <chrono>
+#include <ctime>
+#include <iomanip>
+#include <sstream>
 
+#include "j2_library/j2_library.hpp"
 
 void udp_sender_thread(j2::network::udp::udp_sender& sender, std::atomic<bool>& running_flag) {
     int counter = 0;
-    while (running_flag.load()) {
+    while (running_flag.load()) { // Loop until the running_flag is set to false
         sender.send_data_to("Hello, UDP Server! Message " + std::to_string(counter), "127.0.0.1", 12345);
         std::cout << " send data..." << std::endl;
         ++counter;
@@ -12,6 +17,7 @@ void udp_sender_thread(j2::network::udp::udp_sender& sender, std::atomic<bool>& 
     }
 }
 
+std::string get_current_time_string();
 
 int main() {
 #ifdef _WIN32
@@ -41,7 +47,7 @@ int main() {
 
     // Main thread loop with 1-second sleep
     while (true) {
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+        std::this_thread::sleep_for(std::chrono::seconds(1)); // Wait a bit
         std::cout << "Main thread is running..." << std::endl;
 
         // It can be set to stop sending when certain conditions are met.
@@ -56,10 +62,31 @@ int main() {
 
     sender.stop();
 
-
 #ifdef _WIN32
     WSACleanup();
 #endif
     return 0;
 }
 
+std::string get_current_time_string()
+{
+    // 현재 시간 포인트 획득
+    auto now = std::chrono::system_clock::now();
+
+    // time_t 로 변환
+    std::time_t now_time_t = std::chrono::system_clock::to_time_t(now);
+
+    // struct tm 로 변환 (로컬 시간)
+    std::tm local_tm{};
+#ifdef _WIN32
+    localtime_s(&local_tm, &now_time_t);  // Windows
+#else
+    localtime_r(&now_time_t, &local_tm);  // Linux
+#endif
+
+    // 문자열로 포맷팅
+    std::ostringstream oss;
+    oss << std::put_time(&local_tm, "%Y-%m-%d %H:%M:%S");  // 원하는 형식 지정
+
+    return oss.str();
+}

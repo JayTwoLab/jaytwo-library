@@ -303,6 +303,99 @@ namespace j2::datetime {
         return r.timepoint;
     }
 
+    std::string current_time_string(time_zone_mode tzmode, const std::string& format)
+    {
+        using namespace std::chrono;
 
+        const auto now = system_clock::now();
+        const auto ms = duration_cast<milliseconds>(now.time_since_epoch()) % 1000;
+        const std::time_t tt = system_clock::to_time_t(now);
+
+        std::tm tm{};
+#if defined(_MSC_VER)
+        if (tzmode == time_zone_mode::utc) {
+            ::gmtime_s(&tm, &tt);
+        }
+        else {
+            ::localtime_s(&tm, &tt);
+        }
+#else
+        if (tzmode == time_zone_mode::utc) {
+            ::gmtime_r(&tt, &tm);
+        }
+        else {
+            ::localtime_r(&tt, &tm);
+        }
+#endif
+
+        auto pad2 = [](int v) -> std::string {
+            char buf[3];
+            std::snprintf(buf, sizeof(buf), "%02d", v);
+            return std::string(buf);
+            };
+        auto pad3 = [](int v) -> std::string {
+            char buf[4];
+            std::snprintf(buf, sizeof(buf), "%03d", v);
+            return std::string(buf);
+            };
+        auto pad4 = [](int v) -> std::string {
+            char buf[5];
+            std::snprintf(buf, sizeof(buf), "%04d", v);
+            return std::string(buf);
+            };
+
+        std::string out;
+        out.reserve(format.size() + 8);
+
+        for (std::size_t i = 0; i < format.size();) {
+            // Long tokens
+            if (i + 4 <= format.size() && format.compare(i, 4, "YYYY") == 0) {
+                out += pad4(tm.tm_year + 1900);
+                i += 4;
+                continue;
+            }
+            if (i + 3 <= format.size() && format.compare(i, 3, "SSS") == 0) {
+                out += pad3(static_cast<int>(ms.count()));
+                i += 3;
+                continue;
+            }
+
+            // 2-char tokens
+            if (i + 2 <= format.size()) {
+                const std::string token = format.substr(i, 2);
+                if (token == "MM") {
+                    out += pad2(tm.tm_mon + 1);
+                    i += 2;
+                    continue;
+                }
+                if (token == "DD") {
+                    out += pad2(tm.tm_mday);
+                    i += 2;
+                    continue;
+                }
+                if (token == "hh") {
+                    out += pad2(tm.tm_hour);
+                    i += 2;
+                    continue;
+                }
+                if (token == "mm") {
+                    out += pad2(tm.tm_min);
+                    i += 2;
+                    continue;
+                }
+                if (token == "ss") {
+                    out += pad2(tm.tm_sec);
+                    i += 2;
+                    continue;
+                }
+            }
+
+            // Copy literal
+            out.push_back(format[i]);
+            ++i;
+        }
+
+        return out;
+    }
 
 } // namespace j2::datetime

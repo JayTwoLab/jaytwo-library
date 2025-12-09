@@ -169,7 +169,13 @@ namespace j2::datetime {
         const std::string& format_or_literal,
         time_zone_mode tzmode = time_zone_mode::local_time);
 
-
-
+    // ---------------------------------------------------------------------
+    // 현재 시간 문자열 생성 유틸리티 (선언)
+    //
+    // 기본 형식: "YYYY-MM-DD hh:mm:ss"
+    // 지원 토큰: YYYY, MM, DD, hh, mm, ss, SSS
+    J2LIB_API std::string current_time_string(
+        time_zone_mode tzmode = time_zone_mode::local_time,
+        const std::string& format = "YYYY-MM-DD hh:mm:ss");
 
 } // namespace j2::datetime
