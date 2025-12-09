@@ -131,6 +131,16 @@ namespace j2::queue
             return policy_;
         }
 
+        // 멀티쓰레드에서 안전하게 큐의 모든 항목을 제거.
+        // 반환값: 제거된 항목의 개수
+        std::size_t clear()
+        {
+            std::unique_lock<std::mutex> lock(mutex_);
+            const std::size_t removed = queue_.size(); 
+            queue_.clear();
+            return removed;
+        }
+
     private:
         // 내부 공통 enqueue 구현
         template <typename U>
