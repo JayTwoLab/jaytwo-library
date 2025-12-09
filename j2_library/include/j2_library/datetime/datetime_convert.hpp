@@ -41,8 +41,8 @@
 // std::tm tm_utc{};
 // std::tm tm_loc{};
 //
-// to_tm(now, TimeZoneMode::UTC, tm_utc);            // time_point → tm(UTC)
-// to_tm(now, TimeZoneMode::Local, tm_loc);          // time_point → tm(Local)
+// to_tm(now, time_zone_mode::UTC, tm_utc);            // time_point → tm(UTC)
+// to_tm(now, time_zone_mode::Local, tm_loc);          // time_point → tm(Local)
 //
 // std::tm tmv{};
 // tmv.tm_year = 2025 - 1900;
@@ -52,7 +52,7 @@
 // tmv.tm_min  = 30;
 // tmv.tm_sec  = 0;
 //
-// auto tp2 = to_timepoint(tmv, TimeZoneMode::Local); // tm(Local) → time_point
+// auto tp2 = to_timepoint(tmv, time_zone_mode::Local); // tm(Local) → time_point
 //
 // std::tm utm{};
 // utm.tm_year = 2025 - 1900;
@@ -62,7 +62,7 @@
 // utm.tm_min  = 30;
 // utm.tm_sec  = 0;
 //
-// auto tp3 = to_timepoint(utm, TimeZoneMode::UTC);   // tm(UTC) → time_point
+// auto tp3 = to_timepoint(utm, time_zone_mode::UTC);   // tm(UTC) → time_point
 //
 // -------------------------------------------------------------
 // 3) std::tm (Localtime) ↔ std::time_t
@@ -190,7 +190,7 @@ namespace j2::datetime {
         std::tm& out);
 
     // ---------------- 변환 API ----------------
-    // (4) std::tm + TimeZoneMode → time_point
+    // (4) std::tm + time_zone_mode → time_point
     // 인자:
     //  tmv: 변환할 std::tm 구조체
     //  tzmode: tmv가 UTC/Localtime 중 어느 타임존인지
@@ -198,9 +198,9 @@ namespace j2::datetime {
     // 
     J2LIB_API std::chrono::system_clock::time_point to_timepoint(
         const std::tm& tmv,
-        TimeZoneMode tzmode);
+        time_zone_mode tzmode);
 
-    // (5) time_point + TimeZoneMode → std::tm
+    // (5) time_point + time_zone_mode → std::tm
     // 인자:
     //  tp: 변환할 time_point 값
     //  tzmode: 변환할 타임존 모드(UTC/Localtime)
@@ -208,7 +208,7 @@ namespace j2::datetime {
     // 반환: 성공 시 true, 실패 시 false
     J2LIB_API bool to_tm(
         const std::chrono::system_clock::time_point& tp,
-        TimeZoneMode tzmode,
+        time_zone_mode tzmode,
         std::tm& out);
 
 

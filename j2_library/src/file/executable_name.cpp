@@ -5,12 +5,12 @@ namespace j2::file {
     // std::string 버전 (에러코드)
     std::string executable_name(
         std::error_code& ec,
-        NameType type,
-        const ExecPathOptions& opt) {
+        name_type type,
+        const exec_path_options& opt) {
 
         auto p = executable_path(ec, opt);
         if (ec) return {};
-        if (type == NameType::Stem) {
+        if (type == name_type::stem) {
 #if defined(_WIN32)
             return p.stem().u8string();
 #else
@@ -26,8 +26,8 @@ namespace j2::file {
 
     // std::string 버전 (무-예외)
     std::string executable_name(
-        NameType type,
-        const ExecPathOptions& opt) {
+        name_type type,
+        const exec_path_options& opt) {
 
         std::error_code ec;
         auto s = executable_name(ec, type, opt);
@@ -38,12 +38,12 @@ namespace j2::file {
     // std::wstring 버전 (에러코드)
     std::wstring executable_name_w(
         std::error_code& ec,
-        NameType type,
-        const ExecPathOptions& opt) {
+        name_type type,
+        const exec_path_options& opt) {
 
         auto p = executable_path(ec, opt);
         if (ec) return {};
-        if (type == NameType::Stem) {
+        if (type == name_type::stem) {
             return p.stem().wstring();
         }
         return p.filename().wstring();
@@ -51,8 +51,8 @@ namespace j2::file {
 
     // std::wstring 버전 (무-예외)
     std::wstring executable_name_w(
-        NameType type,
-        const ExecPathOptions& opt) {
+        name_type type,
+        const exec_path_options& opt) {
 
         std::error_code ec;
         auto s = executable_name_w(ec, type, opt);

@@ -10,9 +10,9 @@ TEST(ExecutablePathTest, PathAndDirNotEmpty) {
     auto dir = j2::file::executable_dir(); // 경로만 (표준 path 객체 반환)
     // NOTE: path 객체는 문자열로 변환 가능 : path.string() 또는 path.u8string()
 
-    EXPECT_FALSE(path.empty()); // 예> "C:\Program Files\Hello.exe"
-    EXPECT_FALSE(dir.empty()); // 예> "C:\Program Files"
-    EXPECT_EQ(dir, path.parent_path());
+    EXPECT_FALSE(path.empty()); // 예> "C:\Program Files\Hello.exe", "/home/user/Hello"
+    EXPECT_FALSE(dir.empty()); // 예> "C:\Program Files", "/home/user"
+    EXPECT_EQ(dir, path.parent_path()); // 디렉터리 경로는 전체 경로의 부모 경로와 동일해야 함
 }
 
 TEST(ExecutablePathTest, PathStringVersions) {
@@ -28,11 +28,11 @@ TEST(ExecutablePathTest, PathStringVersions) {
 }
 
 TEST(ExecutableNameTest, FilenameAndStem) {
-    auto name_with_ext = j2::file::executable_name(j2::file::NameType::Filename); // 확장자 포함된 파일명. 예> Hello.exe
-    auto name_stem = j2::file::executable_name(j2::file::NameType::Stem); // 확장자 없는 파일명. 예> Hello
+    auto name_with_ext = j2::file::executable_name(j2::file::name_type::filename); // 확장자 포함된 파일명. 예> Hello.exe
+    auto name_stem = j2::file::executable_name(j2::file::name_type::stem); // 확장자 없는 파일명. 예> Hello
 
-    EXPECT_FALSE(name_with_ext.empty());
-    EXPECT_FALSE(name_stem.empty());
+    EXPECT_FALSE(name_with_ext.empty()); // 빈 문자열 아님
+    EXPECT_FALSE(name_stem.empty()); // 빈 문자열 아님
 
     // 플랫폼에 관계없이 filesystem 의미론으로 검증
     std::filesystem::path p{ name_with_ext };
@@ -45,17 +45,17 @@ TEST(ExecutableNameTest, FilenameAndStem) {
 }
 
 TEST(ExecutableNameTest, WstringVersions) {
-    auto name_with_ext_w = j2::file::executable_name_w(j2::file::NameType::Filename); // 확장자 포함된 유니코드 파일명. 예> Hello.exe
-    auto name_stem_w = j2::file::executable_name_w(j2::file::NameType::Stem); // 확장자 없는 유니코드 파일명. 예> Hello
+    auto name_with_ext_w = j2::file::executable_name_w(j2::file::name_type::filename); // 확장자 포함된 유니코드 파일명. 예> Hello.exe
+    auto name_stem_w = j2::file::executable_name_w(j2::file::name_type::stem); // 확장자 없는 유니코드 파일명. 예> Hello
 
-    EXPECT_FALSE(name_with_ext_w.empty());
-    EXPECT_FALSE(name_stem_w.empty());
+    EXPECT_FALSE(name_with_ext_w.empty()); // 빈 문자열 아님
+    EXPECT_FALSE(name_stem_w.empty()); // 빈 문자열 아님
 }
 
 TEST(FileReadTest, ReadFileInSubdir) {
     // 1. 경로 객체 얻기
     auto base_dir = j2::file::executable_dir(); // std::filesystem::path
-    auto file_path = base_dir / "test1" / "t1.txt"; // 하위 경로 결합. base_dir 경로 밑의 test1/t1.txt 
+    auto file_path = base_dir / "test1" / "t1.txt"; // 하위 경로 결합. base_dir 경로 밑의 test1 밑의 t1.txt 
 
     // 2. 문자열 경로 얻기
     std::string file_path_str = file_path.string();

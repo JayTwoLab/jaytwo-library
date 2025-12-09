@@ -23,8 +23,8 @@ namespace j2::datetime {
     //       · 날짜가 없고 시간만 → 현재 날짜 보정
     //       · 분수초는 1~9자리 허용, 밀리초는 앞 3자리 사용(부족 시 0 패딩)
     // - 타임존 처리:
-    //   · (A) 형식 파서: 인자의 TimeZoneMode(UTC/Localtime) 기준의 현재를 사용
-    //   · (B) ISO 파서: 문자열의 Z/±오프셋이 우선, 없으면 TimeZoneMode 기준
+    //   · (A) 형식 파서: 인자의 time_zone_mode(UTC/local_time) 기준의 현재를 사용
+    //   · (B) ISO 파서: 문자열의 Z/±오프셋이 우선, 없으면 time_zone_mode 기준
     // - 결과: time_t(초), epoch_ms(밀리초), time_point(system_clock) 제공
     //
     // 주의:
@@ -32,12 +32,18 @@ namespace j2::datetime {
 
     // 형식 파서에서 실제 등장한 토큰 표기
     // YYYY : 년, MM : 월, DD : 일, hh : 시, mm : 분, ss : 초, SSS : 밀리초
-    struct J2LIB_API PresentFlags {
-        bool Y = false, M = false, D = false, h = false, m = false, s = false, SSS = false;
+    struct J2LIB_API present_flags {
+        bool has_year = false;
+        bool has_month = false;
+        bool has_day = false;
+        bool has_hour = false;
+        bool has_minute = false;
+        bool has_second = false;
+        bool has_millisecond = false;
     };
 
     // 시간 문자열 파싱 결과 구조체
-    struct J2LIB_API DateTimeParseResult {
+    struct J2LIB_API date_time_parse_result {
         bool ok = false; // 시간 정보 파싱 성공 여부.
         std::string error; // 시간 정보 파싱 실패 사유. 실패(ok==false) 시에만 설정됨.
 
@@ -63,7 +69,7 @@ namespace j2::datetime {
         std::optional<std::tm> broken{};          
 
         // 형식 파서 전용: 등장 토큰 
-        PresentFlags present{};                    
+        present_flags present{};                    
     };
 
     // 시간 문자열을 지정된 시간 형식으로 파싱
@@ -72,26 +78,26 @@ namespace j2::datetime {
     //  format: 형식 문자열. 예: "YYYY-MM-DD hh:mm:ss.SSS", "YYYY/MM/DD",
     //          "YYYYMMDDhhmmss" 등
     //  tzmode: 형식에 없는 토큰을 보정할 때 사용할 기준 시각의 타임존 모드.
-    //          UTC 또는 Localtime
-    // 반환: DateTimeParseResult 구조체
-    J2LIB_API DateTimeParseResult parse_strict_datetime(
+    //          UTC 또는 local_time
+    // 반환: date_time_parse_result 구조체
+    J2LIB_API date_time_parse_result parse_strict_datetime(
         const std::string& datetime,
         const std::string& format,
-        TimeZoneMode tzmode); 
+        time_zone_mode tzmode); 
 
     // 시간 문자열을 지정된 시간 형식으로 파싱하고, 형식에 없는 토큰은 base_tm의
     // 값으로 보정
     // 인자:
     //  datetime: 파싱할 문자열. 형식과 정확히 일치해야 함.
     //  format: 형식 문자열. 예: "hh:mm", "mm:ss" 등.
-    //  tzmode: base_tm이 UTC인지 Localtime인지 지정
+    //  tzmode: base_tm이 UTC인지 local_time인지 지정
     //  base_tm: format에 없는 토큰을 보정할 때 사용할 기준. format에 날자가
     //           없는 경우 연/월/일이 이 값으로 채워짐.
-    // 반환: DateTimeParseResult 구조체
-    J2LIB_API DateTimeParseResult parse_strict_datetime_with_base(
+    // 반환: date_time_parse_result 구조체
+    J2LIB_API date_time_parse_result parse_strict_datetime_with_base(
             const std::string& datetime,
             const std::string& format,
-            TimeZoneMode tzmode,
+            time_zone_mode tzmode,
             const std::tm& base_tm);
 
     // 선택적 base 버전: base_or_null이 nullptr이면 누락 토큰을 금지(오류),
@@ -99,13 +105,13 @@ namespace j2::datetime {
     // 인자:
     //  datetime: 파싱할 문자열. 형식과 정확히 일치해야 함
     //  format: 형식 문자열. 예: "hh:mm", "mm:ss" 등.
-    //  tzmode: base_tm이 UTC인지 Localtime인지 지정
+    //  tzmode: base_tm이 UTC인지 local_time인지 지정
     //  base_or_null: nullptr이면 누락 토큰 금지, 포인터면 해당 tm으로 누락 토큰 보정
-    // 반환: DateTimeParseResult 구조체
-    J2LIB_API DateTimeParseResult parse_strict_datetime_optbase(
+    // 반환: date_time_parse_result 구조체
+    J2LIB_API date_time_parse_result parse_strict_datetime_optbase(
             const std::string& datetime,
             const std::string& format,
-            TimeZoneMode tzmode,
+            time_zone_mode tzmode,
             const std::tm* base_or_null);
 
     // 시간 문자열을 지정된 시간 형식으로 파싱하고, epoch ms(밀리초) 반환
@@ -113,12 +119,12 @@ namespace j2::datetime {
     //  datetime: 파싱할 문자열. 형식과 정확히 일치해야 함
     //  format: 형식 문자열. 예: "YYYY-MM-DD hh:mm:ss.SSS", "YYYY/MM/DD", 등
     //  tzmode: 형식에 없는 토큰을 보정할 때 사용할 기준
-    //          시각의 타임존 모드. UTC 또는 Localtime
+    //          시각의 타임존 모드. UTC 또는 local_time
     // 반환: 성공 시 epoch_ms, 실패 시 std::nullopt
     J2LIB_API std::optional<std::int64_t> parse_strict_datetime_epoch_ms(
         const std::string& datetime,
         const std::string& format,
-        TimeZoneMode tzmode);
+        time_zone_mode tzmode);
 
     // ISO-8601 시간 문자열 파싱
     //
@@ -131,11 +137,11 @@ namespace j2::datetime {
     //  iso8601: 파싱할 ISO-8601 형식 문자열
     //  fallback_tzmode: 문자열에 타임존 정보(Z/오프셋)가
     //                   없을 때 사용할 기준 시각의 타임존 모드.
-    //                   UTC 또는 Localtime
-    // 반환: DateTimeParseResult 구조체
-    J2LIB_API DateTimeParseResult parse_iso8601_datetime(
+    //                   UTC 또는 local_time
+    // 반환: date_time_parse_result 구조체
+    J2LIB_API date_time_parse_result parse_iso8601_datetime(
         const std::string& iso8601,
-        TimeZoneMode fallback_tzmode = TimeZoneMode::Localtime);
+        time_zone_mode fallback_tzmode = time_zone_mode::local_time);
 
     // 시간 문자열 자동 판별 파싱
     // 인자:
@@ -143,12 +149,12 @@ namespace j2::datetime {
     //  format_or_literal: "ISO8601" 이면 ISO-8601 파싱 시도,
     //                     아니면 형식 파서로 처리
     //  tzmode: 형식에 없는 토큰을 보정할 때 사용할 기준 시각의 타임존 모드.
-    //          UTC 또는 Localtime
-    // 반환: DateTimeParseResult 구조체
-    J2LIB_API DateTimeParseResult parse_datetime_auto(
+    //          UTC 또는 local_time
+    // 반환: date_time_parse_result 구조체
+    J2LIB_API date_time_parse_result parse_datetime_auto(
         const std::string& text,
         const std::string& format_or_literal,
-        TimeZoneMode tzmode = TimeZoneMode::Localtime);
+        time_zone_mode tzmode = time_zone_mode::local_time);
 
     // 시간 문자열을 지정된 형식으로 파싱하여 time_point 반환
     // 인자:
@@ -156,12 +162,12 @@ namespace j2::datetime {
     //  format_or_literal: "ISO8601" 이면 ISO-8601 파
     //                     싱 시도, 아니면 형식 파서로 처리
     //  tzmode: 형식에 없는 토큰을 보정할 때 사용할 기준
-    //          시각의 타임존 모드. UTC 또는 Localtime
+    //          시각의 타임존 모드. UTC 또는 local_time
     // 반환: 성공 시 time_point, 실패 시 std::nullopt
     J2LIB_API std::optional<std::chrono::system_clock::time_point> parse_datetime_timepoint(
         const std::string& text,
         const std::string& format_or_literal,
-        TimeZoneMode tzmode = TimeZoneMode::Localtime);
+        time_zone_mode tzmode = time_zone_mode::local_time);
 
 
 

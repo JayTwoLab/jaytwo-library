@@ -56,7 +56,7 @@ namespace j2::datetime {
     // 인자:
     //  tz: 타임존 모드
     // 반환: 현재 시각의 std::tm 구조체
-    J2LIB_API std::tm now_in_zone(TimeZoneMode tz);
+    J2LIB_API std::tm now_in_zone(time_zone_mode tz);
 
     // 오늘 날짜(00:00:00)를 지정된 타임존 오프셋(초)으로 얻기
     // 인자:
@@ -107,7 +107,7 @@ namespace j2::datetime {
     // 반환: 포맷된 문자열
     J2LIB_API std::string format_datetime(
         std::time_t t,
-        TimeZoneMode tzmode,
+        time_zone_mode tzmode,
         const std::string& format);
 
     // (3) time_point + tzmode + format
@@ -118,7 +118,7 @@ namespace j2::datetime {
     // 반환: 포맷된 문자열    
     J2LIB_API std::string format_datetime(
         const std::chrono::system_clock::time_point& tp,
-        TimeZoneMode tzmode,
+        time_zone_mode tzmode,
         const std::string& format);
 
 } // namespace j2::datetime

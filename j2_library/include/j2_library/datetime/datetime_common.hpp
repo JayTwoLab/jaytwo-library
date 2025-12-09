@@ -13,7 +13,7 @@
 namespace j2::datetime {
 
     // 타임존 모드
-    enum class TimeZoneMode { UTC, Localtime };
+    enum class time_zone_mode { utc, local_time };
 
 
 } // namespace j2::datetime

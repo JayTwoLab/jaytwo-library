@@ -37,7 +37,7 @@ namespace j2::file {
     // 경로 정규화(심볼릭/정션 해제 요청 시)
     static std::filesystem::path normalize_path(
         const std::filesystem::path& p,
-        const ExecPathOptions& opt,
+        const exec_path_options& opt,
         std::error_code& ec) {
 
         if (!opt.resolve_symlink) return p;
@@ -62,7 +62,7 @@ namespace j2::file {
 #if defined(_WIN32)
     static std::filesystem::path win_executable_path(
         std::error_code& ec,
-        const ExecPathOptions& opt) {
+        const exec_path_options& opt) {
 
         std::wstring result;
         DWORD size = 32768;
@@ -91,7 +91,7 @@ namespace j2::file {
 #elif defined(__APPLE__)
     static std::filesystem::path mac_executable_path(
         std::error_code& ec,
-        const ExecPathOptions&) {
+        const exec_path_options&) {
 
         uint32_t size = 0;
         if (_NSGetExecutablePath(nullptr, &size) == 0) {
@@ -109,7 +109,7 @@ namespace j2::file {
 #else
     static std::filesystem::path linux_executable_path(
         std::error_code& ec,
-        const ExecPathOptions& opt) {
+        const exec_path_options& opt) {
 
         std::vector<char> buf(PATH_MAX, '\0');
         for (;;) {
@@ -148,7 +148,7 @@ namespace j2::file {
     // -------- 에러코드 버전(기존과 동일, 무-예외) --------
     std::filesystem::path executable_path(
         std::error_code& ec,
-        const ExecPathOptions& opt) {
+        const exec_path_options& opt) {
 
 #if defined(_WIN32)
         auto raw = win_executable_path(ec, opt);
@@ -166,7 +166,7 @@ namespace j2::file {
     }
 
     // -------- 예외 버전 -> 무-예외로 변경(빈 값 반환) --------
-    std::filesystem::path executable_path(const ExecPathOptions& opt) {
+    std::filesystem::path executable_path(const exec_path_options& opt) {
         std::error_code ec;
         auto p = executable_path(ec, opt);
         // 더 이상 throw 하지 않음. 실패 시 빈 path 반환.
@@ -175,7 +175,7 @@ namespace j2::file {
 
     std::filesystem::path executable_dir(
         std::error_code& ec,
-        const ExecPathOptions& opt) {
+        const exec_path_options& opt) {
 
         auto p = executable_path(ec, opt);
         if (ec) return {};
@@ -183,7 +183,7 @@ namespace j2::file {
     }
 
     // 예외 버전 -> 무-예외로 변경(빈 값 반환)
-    std::filesystem::path executable_dir(const ExecPathOptions& opt) {
+    std::filesystem::path executable_dir(const exec_path_options& opt) {
         std::error_code ec;
         auto d = executable_dir(ec, opt);
         // 더 이상 throw 하지 않음. 실패 시 빈 path 반환.
@@ -193,7 +193,7 @@ namespace j2::file {
     // -------- 문자열 래퍼: 예외 버전도 무-예외로 변경 --------
     std::string executable_path_string(
         std::error_code& ec,
-        const ExecPathOptions& opt) {
+        const exec_path_options& opt) {
 
         auto p = executable_path(ec, opt);
         if (ec) return {};
@@ -205,7 +205,7 @@ namespace j2::file {
     }
 
     // 예외 버전 -> 무-예외로 변경(빈 문자열 반환)
-    std::string executable_path_string(const ExecPathOptions& opt) {
+    std::string executable_path_string(const exec_path_options& opt) {
         std::error_code ec;
         auto s = executable_path_string(ec, opt);
         return ec ? std::string{} : s;
@@ -213,7 +213,7 @@ namespace j2::file {
 
     std::wstring executable_path_wstring(
         std::error_code& ec,
-        const ExecPathOptions& opt) {
+        const exec_path_options& opt) {
 
         auto p = executable_path(ec, opt);
         if (ec) return {};
@@ -221,7 +221,7 @@ namespace j2::file {
     }
 
     // 예외 버전 -> 무-예외로 변경(빈 문자열 반환)
-    std::wstring executable_path_wstring(const ExecPathOptions& opt) {
+    std::wstring executable_path_wstring(const exec_path_options& opt) {
         std::error_code ec;
         auto s = executable_path_wstring(ec, opt);
         return ec ? std::wstring{} : s;
@@ -229,7 +229,7 @@ namespace j2::file {
 
     std::string executable_dir_string(
         std::error_code& ec,
-        const ExecPathOptions& opt) {
+        const exec_path_options& opt) {
 
         auto p = executable_dir(ec, opt);
         if (ec) return {};
@@ -241,7 +241,7 @@ namespace j2::file {
     }
 
     // 예외 버전 -> 무-예외로 변경(빈 문자열 반환)
-    std::string executable_dir_string(const ExecPathOptions& opt) {
+    std::string executable_dir_string(const exec_path_options& opt) {
         std::error_code ec;
         auto s = executable_dir_string(ec, opt);
         return ec ? std::string{} : s;
@@ -249,7 +249,7 @@ namespace j2::file {
 
     std::wstring executable_dir_wstring(
         std::error_code& ec,
-        const ExecPathOptions& opt) {
+        const exec_path_options& opt) {
 
         auto p = executable_dir(ec, opt);
         if (ec) return {};
@@ -257,7 +257,7 @@ namespace j2::file {
     }
 
     // 예외 버전 -> 무-예외로 변경(빈 문자열 반환)
-    std::wstring executable_dir_wstring(const ExecPathOptions& opt) {
+    std::wstring executable_dir_wstring(const exec_path_options& opt) {
         std::error_code ec;
         auto s = executable_dir_wstring(ec, opt);
         return ec ? std::wstring{} : s;

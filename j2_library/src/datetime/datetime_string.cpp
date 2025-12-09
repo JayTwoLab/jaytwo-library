@@ -5,13 +5,13 @@ namespace j2::datetime {
     // ---------------- (A) 형식 파서 ----------------
 
     // 변경: base_tm을 선택적으로 사용하기 위해 포인터 인자로 변경
-    static DateTimeParseResult
+    static date_time_parse_result
         parse_strict_datetime_ex_impl(const std::string& datetime,
             const std::string& format,
-            TimeZoneMode tzmode,
+            time_zone_mode tzmode,
             const std::tm* base_tm_opt)
     {
-        DateTimeParseResult r;
+        date_time_parse_result r;
         r.present = {};
 
         // 초기값 설정:
@@ -32,13 +32,13 @@ namespace j2::datetime {
 
         size_t ip = 0;
         for (size_t fp = 0; fp < format.size();) {
-            if (match_token(format, fp, "YYYY")) { if (!read_ndigits(datetime, ip, 4, Y)) { r.error = u8"YYYY Error"; return r; } r.present.Y = true; fp += 4; }
-            else if (match_token(format, fp, "MM")) { if (!read_ndigits(datetime, ip, 2, M)) { r.error = u8"MM Error"; return r; } r.present.M = true; fp += 2; }
-            else if (match_token(format, fp, "DD")) { if (!read_ndigits(datetime, ip, 2, D)) { r.error = u8"DD Error"; return r; } r.present.D = true; fp += 2; }
-            else if (match_token(format, fp, "hh")) { if (!read_ndigits(datetime, ip, 2, h)) { r.error = u8"hh Error"; return r; } r.present.h = true; fp += 2; }
-            else if (match_token(format, fp, "mm")) { if (!read_ndigits(datetime, ip, 2, m)) { r.error = u8"mm Error"; return r; } r.present.m = true; fp += 2; }
-            else if (match_token(format, fp, "ss")) { if (!read_ndigits(datetime, ip, 2, s)) { r.error = u8"ss Error"; return r; } r.present.s = true; fp += 2; }
-            else if (match_token(format, fp, "SSS")) { if (!read_ndigits(datetime, ip, 3, ms)) { r.error = u8"SSS Error"; return r; } r.present.SSS = true; fp += 3; }
+            if (match_token(format, fp, "YYYY")) { if (!read_ndigits(datetime, ip, 4, Y)) { r.error = u8"YYYY Error"; return r; } r.present.has_year = true; fp += 4; }
+            else if (match_token(format, fp, "MM")) { if (!read_ndigits(datetime, ip, 2, M)) { r.error = u8"MM Error"; return r; } r.present.has_month = true; fp += 2; }
+            else if (match_token(format, fp, "DD")) { if (!read_ndigits(datetime, ip, 2, D)) { r.error = u8"DD Error"; return r; } r.present.has_day = true; fp += 2; }
+            else if (match_token(format, fp, "hh")) { if (!read_ndigits(datetime, ip, 2, h)) { r.error = u8"hh Error"; return r; } r.present.has_hour = true; fp += 2; }
+            else if (match_token(format, fp, "mm")) { if (!read_ndigits(datetime, ip, 2, m)) { r.error = u8"mm Error"; return r; } r.present.has_minute = true; fp += 2; }
+            else if (match_token(format, fp, "ss")) { if (!read_ndigits(datetime, ip, 2, s)) { r.error = u8"ss Error"; return r; } r.present.has_second = true; fp += 2; }
+            else if (match_token(format, fp, "SSS")) { if (!read_ndigits(datetime, ip, 3, ms)) { r.error = u8"SSS Error"; return r; } r.present.has_millisecond = true; fp += 3; }
             else {
                 if (ip >= datetime.size()) { r.error = u8"Literally inconsistent"; return r; }
                 if (format[fp] != datetime[ip]) { r.error = u8"Literally inconsistent"; return r; }
@@ -49,8 +49,8 @@ namespace j2::datetime {
 
         // base가 없는 경우: 핵심 토큰 누락 금지
         if (!base_tm_opt) {
-            const bool date_ok = r.present.Y && r.present.M && r.present.D;
-            const bool time_ok = r.present.h && r.present.m && r.present.s;
+            const bool date_ok = r.present.has_year && r.present.has_month && r.present.has_day;
+            const bool time_ok = r.present.has_hour && r.present.has_minute && r.present.has_second;
             if (!date_ok || !time_ok) {
                 r.error = u8"Missing tokens without base (require YYYY,MM,DD,hh,mm,ss)";
                 return r;
@@ -58,18 +58,18 @@ namespace j2::datetime {
         }
 
         // === 범위 검증 ===
-        if (r.present.h && (h < 0 || h > 23)) {
+        if (r.present.has_hour && (h < 0 || h > 23)) {
             r.error = u8"Hour range error"; return r;
         }
-        if (r.present.m && (m < 0 || m > 59)) {
+        if (r.present.has_minute && (m < 0 || m > 59)) {
             r.error = u8"Minute range error"; return r;
         }
-        if (r.present.s && (s < 0 || s > 59)) {
+        if (r.present.has_second && (s < 0 || s > 59)) {
             r.error = u8"Second range error"; return r;
         }
 
-        if (r.present.Y || r.present.M || r.present.D) {
-            if (r.present.M && (M < 1 || M > 12)) {
+        if (r.present.has_year || r.present.has_month || r.present.has_day) {
+            if (r.present.has_month && (M < 1 || M > 12)) {
                 r.error = u8"Month range error"; return r;
             }
             if (!valid_ymd(Y, M, D)) {
@@ -86,7 +86,7 @@ namespace j2::datetime {
         tmv.tm_sec = s;
         tmv.tm_isdst = -1;
 
-        auto t = (tzmode == TimeZoneMode::UTC) ? tm_to_time_utc(tmv) : tm_to_time_local(tmv);
+        auto t = (tzmode == time_zone_mode::utc) ? tm_to_time_utc(tmv) : tm_to_time_local(tmv);
         if (!t.has_value()) { r.error = u8"Time conversion failure"; return r; }
 
         // 성공 결과 설정
@@ -99,7 +99,7 @@ namespace j2::datetime {
             r.broken = std::nullopt; // base가 없으면 없음 처리
         }
 
-        r.millisecond = (r.present.SSS ? ms : 0); // 밀리초 (0~999)
+        r.millisecond = (r.present.has_millisecond ? ms : 0); // 밀리초 (0~999)
 
         r.epoch = *t;               // UNIX epoch (초)
 
@@ -111,22 +111,22 @@ namespace j2::datetime {
         return r;
     }
 
-    DateTimeParseResult parse_strict_datetime(const std::string& datetime,
+    date_time_parse_result parse_strict_datetime(const std::string& datetime,
             const std::string& format,
-            TimeZoneMode tzmode) {
+            time_zone_mode tzmode) {
         return parse_strict_datetime_ex_impl(datetime, format, tzmode, nullptr);
     }
 
-    DateTimeParseResult parse_strict_datetime_with_base(const std::string& datetime,
+    date_time_parse_result parse_strict_datetime_with_base(const std::string& datetime,
             const std::string& format,
-            TimeZoneMode tzmode,
+            time_zone_mode tzmode,
             const std::tm& base_tm) {
         return parse_strict_datetime_ex_impl(datetime, format, tzmode, &base_tm);
     }
 
-    DateTimeParseResult parse_strict_datetime_optbase(const std::string& datetime,
+    date_time_parse_result parse_strict_datetime_optbase(const std::string& datetime,
             const std::string& format,
-            TimeZoneMode tzmode,
+            time_zone_mode tzmode,
             const std::tm* base_or_null) {
         // base_or_null == nullptr → 누락 토큰 금지
         return parse_strict_datetime_ex_impl(datetime, format, tzmode, base_or_null);
@@ -134,7 +134,7 @@ namespace j2::datetime {
 
     std::optional<std::int64_t> parse_strict_datetime_epoch_ms(const std::string& datetime,
             const std::string& format,
-            TimeZoneMode tzmode) {
+            time_zone_mode tzmode) {
         auto r = parse_strict_datetime(datetime, format, tzmode);
         if (!r.ok) return std::nullopt;
         return r.epoch_ms;
@@ -188,10 +188,10 @@ namespace j2::datetime {
         return true;
     }
 
-    static DateTimeParseResult
-        parse_iso8601_strict(const std::string& str, TimeZoneMode fallback_tzmode)
+    static date_time_parse_result
+        parse_iso8601_strict(const std::string& str, time_zone_mode fallback_tzmode)
     {
-        DateTimeParseResult r;
+        date_time_parse_result r;
         size_t p = 0;
         int Y = -1, M = -1, D = -1, hh = -1, mm = -1, ss = -1, ms = 0;
         bool has_date = false, has_time = false, has_tz = false;
@@ -262,7 +262,7 @@ namespace j2::datetime {
             t = t_as_utc.value() - tz_offset_sec; // 오프셋 적용
         }
         else {
-            t = (fallback_tzmode == TimeZoneMode::UTC) ? tm_to_time_utc(tmv)
+            t = (fallback_tzmode == time_zone_mode::utc) ? tm_to_time_utc(tmv)
                 : tm_to_time_local(tmv);
         }
         if (!t) { r.error = u8"Time conversion failure"; return r; }
@@ -279,14 +279,14 @@ namespace j2::datetime {
 
     // -------- 공개 API --------
 
-    DateTimeParseResult parse_iso8601_datetime(const std::string& iso8601,
-            TimeZoneMode fallback_tzmode) {
+    date_time_parse_result parse_iso8601_datetime(const std::string& iso8601,
+            time_zone_mode fallback_tzmode) {
         return parse_iso8601_strict(iso8601, fallback_tzmode);
     }
 
-    DateTimeParseResult parse_datetime_auto(const std::string& text,
+    date_time_parse_result parse_datetime_auto(const std::string& text,
             const std::string& format_or_literal,
-            TimeZoneMode tzmode) {
+            time_zone_mode tzmode) {
         if (format_or_literal == "ISO8601") {
             return parse_iso8601_datetime(text, tzmode);
         }
@@ -296,7 +296,7 @@ namespace j2::datetime {
 
     std::optional<std::chrono::system_clock::time_point> parse_datetime_timepoint(const std::string& text,
             const std::string& format_or_literal,
-            TimeZoneMode tzmode)
+            time_zone_mode tzmode)
     {
         auto r = parse_datetime_auto(text, format_or_literal, tzmode);
         if (!r.ok) return std::nullopt;

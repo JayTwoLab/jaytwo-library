@@ -13,7 +13,7 @@
 #include "j2_library/json/json.hpp"
 
 // 별칭은 헤더(json.hpp)에서 이미 다음과 같이 정의되어 있음:
-// using nj  = nlohmann::json;
+// using nj     = nlohmann::json;
 // namespace jj = j2::json;
 
 TEST(JsonExists, BasicTrueFalse) {

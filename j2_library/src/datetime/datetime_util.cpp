@@ -45,14 +45,14 @@ namespace j2::datetime {
 
 
     // tzmode 기준 "현재" 시각/날짜
-    std::tm now_in_zone(TimeZoneMode tz) {
+    std::tm now_in_zone(time_zone_mode tz) {
         std::tm out{};
         auto now = std::time(nullptr);
 #if defined(_WIN32)
-        if (tz == TimeZoneMode::UTC) { gmtime_s(&out, &now); }
+        if (tz == time_zone_mode::utc) { gmtime_s(&out, &now); }
         else { localtime_s(&out, &now); }
 #else
-        if (tz == TimeZoneMode::UTC) { out = *std::gmtime(&now); }
+        if (tz == time_zone_mode::utc) { out = *std::gmtime(&now); }
         else { out = *std::localtime(&now); }
 #endif
         return out;
@@ -144,10 +144,10 @@ namespace j2::datetime {
     // (2) time_t + tzmode + format
     std::string format_datetime(
         std::time_t t,
-        j2::datetime::TimeZoneMode tzmode,
+        j2::datetime::time_zone_mode tzmode,
         const std::string& format) {
         std::tm tmv{};
-        bool ok = (tzmode == TimeZoneMode::UTC)
+        bool ok = (tzmode == time_zone_mode::utc)
             ? j2::datetime::time_t_to_utc_tm(t, tmv)
             : j2::datetime::time_t_to_local_tm(t, tmv);
         if (!ok) return std::string{};
@@ -157,11 +157,11 @@ namespace j2::datetime {
     // (3) time_point + tzmode + format
     std::string format_datetime(
             const std::chrono::system_clock::time_point& tp,
-            j2::datetime::TimeZoneMode tzmode,
+            j2::datetime::time_zone_mode tzmode,
             const std::string& format) {
         std::time_t t = std::chrono::system_clock::to_time_t(tp);
         std::tm tmv{};
-        bool ok = (tzmode == TimeZoneMode::UTC)
+        bool ok = (tzmode == time_zone_mode::utc)
             ? j2::datetime::time_t_to_utc_tm(t, tmv)
             : j2::datetime::time_t_to_local_tm(t, tmv);
         if (!ok) return std::string{};

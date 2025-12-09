@@ -71,10 +71,10 @@ namespace j2::datetime {
         return time_t_to_local_tm(t, out);
     }
 
-    // (4) std::tm + TimeZoneMode → time_point
-    std::chrono::system_clock::time_point to_timepoint(const std::tm& tmv, TimeZoneMode tzmode) {
+    // (4) std::tm + time_zone_mode → time_point
+    std::chrono::system_clock::time_point to_timepoint(const std::tm& tmv, time_zone_mode tzmode) {
         std::optional<std::time_t> t;
-        if (tzmode == TimeZoneMode::UTC)
+        if (tzmode == time_zone_mode::utc)
             t = j2::datetime::tm_to_time_utc(tmv);
         else
             t = j2::datetime::tm_to_time_local(tmv);
@@ -85,10 +85,10 @@ namespace j2::datetime {
         return std::chrono::system_clock::from_time_t(*t);
     }
 
-    // (5) time_point + TimeZoneMode → std::tm
-    bool to_tm(const std::chrono::system_clock::time_point& tp, TimeZoneMode tzmode, std::tm& out) {
+    // (5) time_point + time_zone_mode → std::tm
+    bool to_tm(const std::chrono::system_clock::time_point& tp, time_zone_mode tzmode, std::tm& out) {
         std::time_t t = std::chrono::system_clock::to_time_t(tp);
-        if (tzmode == TimeZoneMode::UTC)
+        if (tzmode == time_zone_mode::utc)
             return j2::datetime::time_t_to_utc_tm(t, out);
         else
             return j2::datetime::time_t_to_local_tm(t, out);

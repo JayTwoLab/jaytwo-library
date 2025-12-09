@@ -28,7 +28,7 @@ TEST(DateTime_Strict, FullMatch_Localtime) {
     // 시간 문자열을 시간 형식에 맞춰 파싱
     auto r = parse_strict_datetime("2025-10-17 12:34:56.123",
         "YYYY-MM-DD hh:mm:ss.SSS",
-        TimeZoneMode::Localtime);
+        time_zone_mode::local_time);
 
     EXPECT_TRUE(r.ok) << r.error; // 파싱 결과  
     EXPECT_EQ(r.millisecond, 123); // 밀리초
@@ -50,7 +50,7 @@ TEST(DateTime_Strict, MissingTimeFieldsUseBase) {
 
     // 형식에 분:초만 제공 → 누락된 연/월/일/시를 base로 보정
     auto r = parse_strict_datetime_with_base("01:02", "mm:ss",
-        TimeZoneMode::UTC, base);
+        time_zone_mode::utc, base);
 
     // 파싱 성공 및 broken 존재 여부 확인
     ASSERT_TRUE(r.ok) << r.error;
@@ -66,18 +66,18 @@ TEST(DateTime_Strict, MissingTimeFieldsUseBase) {
     EXPECT_EQ(br.tm_sec, 2);           // 초:   입력값
 
     // present 플래그 확인: mm, ss만 true, 나머지는 false 여야 함
-    EXPECT_FALSE(r.present.Y);
-    EXPECT_FALSE(r.present.M);
-    EXPECT_FALSE(r.present.D);
-    EXPECT_FALSE(r.present.h);
-    EXPECT_TRUE(r.present.m);
-    EXPECT_TRUE(r.present.s);
-    EXPECT_FALSE(r.present.SSS);
+    EXPECT_FALSE(r.present.has_year);
+    EXPECT_FALSE(r.present.has_month);
+    EXPECT_FALSE(r.present.has_day);
+    EXPECT_FALSE(r.present.has_hour);
+    EXPECT_TRUE(r.present.has_minute);
+    EXPECT_TRUE(r.present.has_second);
+    EXPECT_FALSE(r.present.has_millisecond);
 }
 TEST(DateTime_Strict, LiteralMismatchFails) {
 
     // 형식과 맞지 않는 문자열 파싱 시도
-    auto r = parse_strict_datetime("2025/10-17", "YYYY-MM-DD", TimeZoneMode::UTC);
+    auto r = parse_strict_datetime("2025/10-17", "YYYY-MM-DD", time_zone_mode::utc);
 
     EXPECT_FALSE(r.ok);
     EXPECT_FALSE(r.error.empty());
@@ -86,7 +86,7 @@ TEST(DateTime_Strict, LiteralMismatchFails) {
 TEST(DateTime_ISO, ZuluMilliseconds) {
 
     // ISO 8601 형식 문자열 파싱 (Z: UTC) 
-    auto r = parse_iso8601_datetime("2025-10-17T00:30:05.987Z", TimeZoneMode::Localtime);
+    auto r = parse_iso8601_datetime("2025-10-17T00:30:05.987Z", time_zone_mode::local_time);
 
     EXPECT_TRUE(r.ok) << r.error;
     EXPECT_EQ(r.millisecond, 987);
@@ -101,7 +101,7 @@ TEST(DateTime_ISO, ZuluMilliseconds) {
 TEST(DateTime_ISO, OffsetPlus0900) {
 
     // ISO 8601 형식 문자열 파싱 (로컬 타임)
-    auto r = parse_iso8601_datetime("2025-10-17 09:30:05+09:00", TimeZoneMode::Localtime); // KST는 +09:00
+    auto r = parse_iso8601_datetime("2025-10-17 09:30:05+09:00", time_zone_mode::local_time); // KST는 +09:00
     EXPECT_TRUE(r.ok) << r.error;
 
     auto exp = make_utc_time_t(2025, 10, 17, 0, 30, 5); // 오프셋 적용된 UTC 시간
@@ -121,7 +121,7 @@ TEST(DateTime_ISO, TimeOnlyZ_TodayApplied) {
 TEST(DateTime_ISO, TimeOnlyNoOffset_UsesFallbackLocalDate) {
 
     // 날짜 없음 + 오프셋 없음 → fallback(Localtime) 오늘 날짜 보정
-    auto r = parse_iso8601_datetime("23:15", TimeZoneMode::Localtime);
+    auto r = parse_iso8601_datetime("23:15", time_zone_mode::local_time);
     EXPECT_TRUE(r.ok) << r.error;
 
 }
@@ -129,11 +129,11 @@ TEST(DateTime_ISO, TimeOnlyNoOffset_UsesFallbackLocalDate) {
 TEST(DateTime_Auto, SwitchByLiteral) {
 
     // ISO 8601 형식으로 파싱
-    auto r1 = parse_datetime_auto("2025-10-17T00:00:00Z", "ISO8601", TimeZoneMode::UTC);
+    auto r1 = parse_datetime_auto("2025-10-17T00:00:00Z", "ISO8601", time_zone_mode::utc);
     EXPECT_TRUE(r1.ok) << r1.error;
 
     // 지정된 시간 형식으로 파싱
-    auto r2 = parse_datetime_auto("2025-10-17 00:00:00", "YYYY-MM-DD hh:mm:ss", TimeZoneMode::UTC);
+    auto r2 = parse_datetime_auto("2025-10-17 00:00:00", "YYYY-MM-DD hh:mm:ss", time_zone_mode::utc);
     EXPECT_TRUE(r2.ok) << r2.error;
 }
 
@@ -157,7 +157,7 @@ TEST(DateTime_Helpers, GetUtcLocalTm) {
 TEST(DateTime_Helpers, TimepointOnlyWrapper) {
 
     // ISO 8601 형식 문자열 파싱
-    auto tp_opt = parse_datetime_timepoint("2025-10-17T00:00:00Z", "ISO8601", TimeZoneMode::Localtime);
+    auto tp_opt = parse_datetime_timepoint("2025-10-17T00:00:00Z", "ISO8601", time_zone_mode::local_time);
     EXPECT_TRUE(tp_opt.has_value()); // 값이 있는지 확인
 
     std::tm utc{};
@@ -168,12 +168,12 @@ TEST(DateTime_Helpers, TimepointOnlyWrapper) {
 TEST(DateTime_Strict, MillisecondsOptional) {
 
     // 밀리초 포함/미포함 모두 파싱 가능
-    auto r1 = parse_strict_datetime("2025-01-02 12:34:56.250", "YYYY-MM-DD hh:mm:ss.SSS", TimeZoneMode::UTC);
+    auto r1 = parse_strict_datetime("2025-01-02 12:34:56.250", "YYYY-MM-DD hh:mm:ss.SSS", time_zone_mode::utc);
     EXPECT_TRUE(r1.ok) << r1.error;
     EXPECT_EQ(r1.millisecond, 250);
 
     // 밀리초 미포함
-    auto r2 = parse_strict_datetime("2025-01-02 12:34:56", "YYYY-MM-DD hh:mm:ss", TimeZoneMode::UTC);
+    auto r2 = parse_strict_datetime("2025-01-02 12:34:56", "YYYY-MM-DD hh:mm:ss", time_zone_mode::utc);
     EXPECT_TRUE(r2.ok) << r2.error;
     EXPECT_EQ(r2.millisecond, 0);
 }
@@ -186,10 +186,10 @@ TEST(DateTime_Errors, RangeChecks) {
     // (예: 2025-10-17T24:00:00 = 2025-10-18T00:00:00).
     //  날짜 없이 "hh:mm:ss"만 있는 시간 단독 문자열에서는 24:00:00 을 다음 날로 넘길 수 없으므로,
     // 엄격 모드(strict) 라면 거부하는 편이 일관됩니다.
-    EXPECT_FALSE(parse_strict_datetime("24:00:00", "hh:mm:ss", TimeZoneMode::UTC).ok); // 시 범위
-    EXPECT_FALSE(parse_strict_datetime("25:00:00", "hh:mm:ss", TimeZoneMode::UTC).ok); // 시 범위
+    EXPECT_FALSE(parse_strict_datetime("24:00:00", "hh:mm:ss", time_zone_mode::utc).ok); // 시 범위
+    EXPECT_FALSE(parse_strict_datetime("25:00:00", "hh:mm:ss", time_zone_mode::utc).ok); // 시 범위
 
-    EXPECT_FALSE(parse_strict_datetime("12:60:00", "hh:mm:ss", TimeZoneMode::UTC).ok); // 분 범위
+    EXPECT_FALSE(parse_strict_datetime("12:60:00", "hh:mm:ss", time_zone_mode::utc).ok); // 분 범위
 
     // 윤초(leap second)는 지구 자전 속도의 불규칙성을 보정하기 위해
     // 국제원자시(TAI)와 협정세계시(UTC)의 차이를 맞추기 위해 추가하거나 빼는 1초
@@ -197,8 +197,8 @@ TEST(DateTime_Errors, RangeChecks) {
     // 가장 최근 윤초는 2016년 12월 31일에 삽입되었습니다.
     // 2025년 현재, 더 이상 윤초를 추가하지 않기로 결정되었으며(국제전기통신연합, 2022년 결정),
     // 2035년까지 윤초는 폐지될 예정입니다.
-    EXPECT_FALSE(parse_strict_datetime("12:00:60", "hh:mm:ss", TimeZoneMode::UTC).ok); // 초 범위(윤초 60 처리 주의)
-    EXPECT_FALSE(parse_strict_datetime("12:00:61", "hh:mm:ss", TimeZoneMode::UTC).ok); // 초 범위
+    EXPECT_FALSE(parse_strict_datetime("12:00:60", "hh:mm:ss", time_zone_mode::utc).ok); // 초 범위(윤초 60 처리 주의)
+    EXPECT_FALSE(parse_strict_datetime("12:00:61", "hh:mm:ss", time_zone_mode::utc).ok); // 초 범위
 }
 
 // ============================= 새로 추가된 테스트들 =============================
@@ -240,7 +240,7 @@ TEST(DateTime_Format, FromTimeT_UTC) {
     ASSERT_NE(t, (std::time_t)-1);
 
     // UTC 기준 포맷
-    std::string s = format_datetime(t, TimeZoneMode::UTC, "YYYY-MM-DD hh:mm:ss");
+    std::string s = format_datetime(t, time_zone_mode::utc, "YYYY-MM-DD hh:mm:ss");
     EXPECT_EQ(s, "2025-10-17 00:30:05");
 }
 
@@ -250,7 +250,7 @@ TEST(DateTime_Format, FromTimePoint_UTC) {
     ASSERT_NE(t, (std::time_t)-1);
     auto tp = std::chrono::system_clock::from_time_t(t);
 
-    std::string s = format_datetime(tp, TimeZoneMode::UTC, "YYYY/MM/DD hh:mm:ss");
+    std::string s = format_datetime(tp, time_zone_mode::utc, "YYYY/MM/DD hh:mm:ss");
     EXPECT_EQ(s, "2025/10/17 00:30:05");
 }
 
@@ -265,7 +265,7 @@ TEST(DateTime_Convert, TmToTimePoint_UTC) {
     tmv.tm_sec = 5;
     tmv.tm_isdst = -1;
 
-    auto tp = to_timepoint(tmv, TimeZoneMode::UTC);
+    auto tp = to_timepoint(tmv, time_zone_mode::utc);
     auto got = std::chrono::system_clock::to_time_t(tp);
     auto exp = make_utc_time_t(2025, 10, 17, 0, 30, 5);
     ASSERT_NE(exp, (std::time_t)-1);
@@ -284,10 +284,10 @@ TEST(DateTime_Convert, TmLocal_RoundTrip_LocalConsistency) {
     base.tm_sec = 6;
     base.tm_isdst = -1;
 
-    auto tp = to_timepoint(base, TimeZoneMode::Localtime);
+    auto tp = to_timepoint(base, time_zone_mode::local_time);
 
     std::tm back{};
-    ASSERT_TRUE(to_tm(tp, TimeZoneMode::Localtime, back));
+    ASSERT_TRUE(to_tm(tp, time_zone_mode::local_time, back));
 
     EXPECT_EQ(back.tm_year, base.tm_year);
     EXPECT_EQ(back.tm_mon, base.tm_mon);
@@ -304,7 +304,7 @@ TEST(DateTime_Convert, TimePointToTm_UTC_ThenBack) {
     auto tp = std::chrono::system_clock::from_time_t(exp);
 
     std::tm utc{};
-    ASSERT_TRUE(to_tm(tp, TimeZoneMode::UTC, utc));
+    ASSERT_TRUE(to_tm(tp, time_zone_mode::utc, utc));
     EXPECT_EQ(utc.tm_year, 2028 - 1900);
     EXPECT_EQ(utc.tm_mon, 1 - 1);
     EXPECT_EQ(utc.tm_mday, 2);
@@ -312,7 +312,7 @@ TEST(DateTime_Convert, TimePointToTm_UTC_ThenBack) {
     EXPECT_EQ(utc.tm_min, 4);
     EXPECT_EQ(utc.tm_sec, 5);
 
-    auto round = to_timepoint(utc, TimeZoneMode::UTC);
+    auto round = to_timepoint(utc, time_zone_mode::utc);
     EXPECT_EQ(std::chrono::system_clock::to_time_t(round), exp);
 }
 
@@ -327,7 +327,7 @@ TEST(DateTime_Integration, FormatAfterConversions) {
     tmv.tm_sec = 58;
     tmv.tm_isdst = -1;
 
-    auto tp = to_timepoint(tmv, TimeZoneMode::UTC);
-    auto s = format_datetime(tp, TimeZoneMode::UTC, "YYYY-MM-DD hh:mm:ss");
+    auto tp = to_timepoint(tmv, time_zone_mode::utc);
+    auto s = format_datetime(tp, time_zone_mode::utc, "YYYY-MM-DD hh:mm:ss");
     EXPECT_EQ(s, "2040-12-31 23:59:58");
 }
