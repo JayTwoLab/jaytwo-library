@@ -54,6 +54,7 @@ int main() {
 
         // send serialized JSON string over UDP
         sender.send_data(json_data.dump());
+        // NOTE: json의 크기가 65KB를 넘지 않도록 주의해야 합니다. UDP 패킷의 최대 크기는 일반적으로 65,507 바이트입니다.
 
         std::cout << get_current_time_string() << " sent data " << std::endl;
     }

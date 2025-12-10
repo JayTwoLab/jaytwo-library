@@ -12,7 +12,6 @@ struct Person { // example struct
 };
 
 std::string get_current_time_string();
- 
 
 // Callable class used instead of lambda for receiver callback
 class ReceiveCallback {

@@ -453,10 +453,10 @@ target_compile_features(j2_library PUBLIC cxx_std_${J2_LIBRARY_CXX_STANDARD})
 # 스레드 라이브러리
 target_link_libraries(j2_library PRIVATE Threads::Threads)  
 
-# nlohmann_json 라이브러리
+# nlohmann_json 라이브러리 (header-only library)
 target_link_libraries(j2_library PUBLIC nlohmann_json::nlohmann_json)  
 
-# spdlog 라이브러리
+# spdlog 라이브러리 (header-only library)
 target_link_libraries(j2_library PUBLIC spdlog::spdlog)
 
 # Asio 라이브러리 (Boost.Asio 또는 standalone Asio)
@@ -469,7 +469,7 @@ target_link_libraries(j2_library PUBLIC spdlog::spdlog)
 
 # curl 라이브러리 링크
 if (TARGET CURL::libcurl)
-    # 최신 CMake / FindCURL: 임포트 타깃 사용
+    # 최신 CMake / FindCURL: import target 사용
     target_link_libraries(j2_library PUBLIC CURL::libcurl)
 else()
     # 구 CMake 대비: 변수 방식 폴백
