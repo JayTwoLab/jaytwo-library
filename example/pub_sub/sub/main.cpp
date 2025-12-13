@@ -1,4 +1,4 @@
- // Subscriber example 
+// Subscriber example 
 
 #include "j2_library/j2_library.hpp"
 
@@ -7,9 +7,10 @@ struct Person { // example struct
     std::string name;
     int age;
     std::vector<std::string> tags;
-
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(Person, name, age, tags) // for nlohmann::json serialization
 };
+
+// Generate to_json/from_json at namespace/global scope
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(Person, name, age, tags)
 
 std::string get_current_time_string();
 

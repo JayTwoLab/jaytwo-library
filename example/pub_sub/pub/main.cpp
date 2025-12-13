@@ -13,9 +13,11 @@ struct Person { // example struct
     std::string name;
     int age;
     std::vector<std::string> tags;
-
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(Person, name, age, tags) // for nlohmann::json serialization
 };
+
+// Use non-intrusive macro at namespace/global scope so the to_json/from_json
+// overloads are generated outside the class (avoids expansion issues inside the struct).
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(Person, name, age, tags)
 
 std::string get_current_time_string();
 
