@@ -11,9 +11,9 @@
 
 #include <nlohmann/json.hpp>
 
-#ifndef NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE
-#error "NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE is NOT defined"
-#endif
+// #ifndef NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE
+// #error "NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE is NOT defined"
+// #endif
 
 struct Person { // example struct
 
