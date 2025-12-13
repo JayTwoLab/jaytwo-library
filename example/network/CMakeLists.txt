@@ -15,5 +15,7 @@ add_subdirectory(rest_post)
 # ftp
 add_subdirectory(ftp_client)
 
+# downloader
+add_subdirectory(downloader)
 
 

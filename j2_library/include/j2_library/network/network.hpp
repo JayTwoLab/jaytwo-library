@@ -32,3 +32,10 @@
 // FTP/SFTP client utilities and type definitions (using curl)
 #include "j2_library/network/ftp/ftp_client.hpp"
 
+// File downloader utilities and type definitions
+#include "j2_library/network/downloader/downloader.hpp"
+
+
+
+
+
