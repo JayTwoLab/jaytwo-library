@@ -27,8 +27,8 @@ int main()
     j2::network::downloader::multipart_downloader downloader;
 
     console_progress progress;
-    downloader.set_progress_callback(&progress);
-    downloader.set_delete_partial_file_on_fail(true);
+    downloader.set_progress_callback(&progress); // 진행 상태 콜백 설정
+    downloader.set_delete_partial_file_on_fail(true); // 다운로드 실패 시 임시 파일 삭제
 
     std::vector<std::string> files;
     std::string error;
@@ -36,6 +36,7 @@ int main()
     std::string url = "http://127.0.0.1:18080";
     std::string output_dir = ".";
 
+    // 멀티파트 다운로드 시도
     if (!downloader.download_multipart(url, output_dir, files, &error))
     {
         std::cout << "\n Failed: " << error << std::endl;
