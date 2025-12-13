@@ -28,6 +28,7 @@ int main()
 
     console_progress progress;
     downloader.set_progress_callback(&progress); // 진행 상태 콜백 설정
+
     downloader.set_delete_partial_file_on_fail(true); // 다운로드 실패 시 임시 파일 삭제
 
     std::vector<std::string> files;

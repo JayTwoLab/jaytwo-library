@@ -24,6 +24,8 @@ add_executable(${EXE_NAME} ${SRC_FILES})
 target_link_libraries(${EXE_NAME} PRIVATE j2_library)
 target_include_directories(${EXE_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
 
+target_include_directories(${EXE_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}/..")
+
 # Platform-specific network linking
 include(j2_network_platform_post_module)
 j2_target_network_platform_link(${EXE_NAME})
