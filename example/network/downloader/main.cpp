@@ -33,7 +33,7 @@ int main()
     std::vector<std::string> files;
     std::string error;
 
-    std::string url = "https://example.com/multipart";
+    std::string url = "http://127.0.0.1:18080";
     std::string output_dir = ".";
 
     if (!downloader.download_multipart(url, output_dir, files, &error))
