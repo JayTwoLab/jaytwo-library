@@ -18,7 +18,7 @@ public:
             std::cout << "\r" << now << " bytes";
         }
         return true;
-    }
+    }   
 };
 
 int main()

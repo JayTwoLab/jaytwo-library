@@ -169,7 +169,7 @@ namespace j2::network::downloader
         CURL* curl = curl_easy_init();
         if (!curl)
         {
-            if (error_message) *error_message = "curl 초기화 실패";
+            if (error_message) *error_message = "curl initialization failed";
             return false;
         }
 
@@ -196,7 +196,7 @@ namespace j2::network::downloader
             {
                 *error_message =
                     (res == CURLE_ABORTED_BY_CALLBACK)
-                    ? "사용자에 의해 다운로드가 중단되었습니다."
+                    ? "Download aborted by user."
                     : curl_easy_strerror(res);
             }
             curl_easy_cleanup(curl);
@@ -206,7 +206,7 @@ namespace j2::network::downloader
         std::string boundary;
         if (!extract_boundary_from_headers(headers, boundary))
         {
-            if (error_message) *error_message = "boundary 추출 실패";
+            if (error_message) *error_message = "Failed to extract boundary";
             curl_easy_cleanup(curl);
             return false;
         }
@@ -236,7 +236,7 @@ namespace j2::network::downloader
             size_t header_end = body.find("\r\n\r\n", cur);
             if (header_end == std::string::npos)
             {
-                if (error_message) *error_message = "multipart 헤더 파싱 실패";
+                if (error_message) *error_message = "Failed to parse multipart headers";
                 curl_easy_cleanup(curl);
                 return false;
             }
@@ -261,7 +261,7 @@ namespace j2::network::downloader
                 if (!ofs)
                 {
                     if (error_message)
-                        *error_message = "임시 파일 생성 실패: " + temp_path.string();
+                        *error_message = "Failed to create temp file: " + temp_path.string();
                     if (delete_partial_on_fail_)
                         try_delete_file(temp_path);
                     curl_easy_cleanup(curl);
@@ -274,7 +274,7 @@ namespace j2::network::downloader
                 if (!ofs)
                 {
                     if (error_message)
-                        *error_message = "임시 파일 쓰기 실패: " + temp_path.string();
+                        *error_message = "Failed to write temp file: " + temp_path.string();
                     ofs.close();
                     if (delete_partial_on_fail_)
                         try_delete_file(temp_path);
@@ -288,7 +288,7 @@ namespace j2::network::downloader
             if (ec)
             {
                 if (error_message)
-                    *error_message = "파일 rename 실패: " + final_path.string();
+                    *error_message = "Failed to rename file: " + final_path.string();
                 if (delete_partial_on_fail_)
                     try_delete_file(temp_path);
                 curl_easy_cleanup(curl);
@@ -306,7 +306,7 @@ namespace j2::network::downloader
 
         if (!found_any)
         {
-            if (error_message) *error_message = "multipart 데이터가 없습니다.";
+            if (error_message) *error_message = "No multipart data found.";
             return false;
         }
 
