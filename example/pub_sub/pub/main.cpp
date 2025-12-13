@@ -20,12 +20,16 @@ struct Person { // example struct
 // This avoids macro expansion/include-order issues and makes the
 // conversions visible to the compiler regardless of macro visibility.
 inline void to_json(nlohmann::json& j, const Person& p) {
-    j = nlohmann::json{{"name", p.name}, {"age", p.age}, {"tags", p.tags}};
+    j = nlohmann::json{
+        {"name" , p.name  },
+        {"age"  , p.age   },
+        {"tags" , p.tags  }
+    };
 }
 inline void from_json(const nlohmann::json& j, Person& p) {
-    j.at("name").get_to(p.name);
-    j.at("age").get_to(p.age);
-    j.at("tags").get_to(p.tags);
+    j.at("name" ).get_to(p.name );
+    j.at("age"  ).get_to(p.age  );
+    j.at("tags" ).get_to(p.tags );
 }
 
 std::string get_current_time_string();
