@@ -73,7 +73,8 @@ namespace j2::directory {
             std::filesystem::perms::others_read |
             std::filesystem::perms::others_exec;
 
-        perm_mode perm_mode = perm_mode::Exact; // 권한 설정 모드
+        // 권한 설정 모드
+        perm_mode mode = perm_mode::Exact; // renamed member to avoid collision with the type `perm_mode`
     };
 
     // -----------------------------------------------------------------------

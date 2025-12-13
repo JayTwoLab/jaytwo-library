@@ -1,4 +1,3 @@
-
 #include "j2_library/directory/directory_maker.hpp"
 #include "j2_library/string/to_console_encoding.hpp"
 
@@ -35,7 +34,7 @@ namespace j2::directory {
     void directory_maker::try_set_perms_(const std::filesystem::path& p) const noexcept {
         if (!opt_.set_permissions) return;
         std::error_code ign;
-        switch (opt_.perm_mode) {
+        switch (opt_.mode) {
         case perm_mode::Exact:
             std::filesystem::permissions(p, opt_.perms_mask, ign);
             break;
