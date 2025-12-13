@@ -9,6 +9,8 @@
 
 #include "j2_library/j2_library.hpp"
 
+#include <nlohmann/json.hpp>
+
 struct Person { // example struct
 
     std::string name;
@@ -19,6 +21,7 @@ struct Person { // example struct
 // Provide explicit to_json/from_json instead of using the macro.
 // This avoids macro expansion/include-order issues and makes the
 // conversions visible to the compiler regardless of macro visibility.
+/*
 inline void to_json(nlohmann::json& j, const Person& p) {
     j = nlohmann::json{{"name", p.name}, {"age", p.age}, {"tags", p.tags}};
 }
@@ -27,6 +30,9 @@ inline void from_json(const nlohmann::json& j, Person& p) {
     j.at("age").get_to(p.age);
     j.at("tags").get_to(p.tags);
 }
+*/
+
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(Person, name, age, tags)
 
 std::string get_current_time_string();
 
