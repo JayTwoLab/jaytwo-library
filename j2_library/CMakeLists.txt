@@ -82,10 +82,19 @@ find_package(Threads REQUIRED)
 # nlohmann_json 라이브러리 (include/j2_library/json/INSTALL.ko.md 참고)
 # nlohmann_json: 패키지 우선, 실패 시 로컬 vendor 인터페이스 타깃 구성 + 같은 export set 포함
 
-find_package(nlohmann_json CONFIG QUIET)
+# prefer package >= 3.10.0; if not available fall back to bundled vendor
+find_package(nlohmann_json 3.10.0 CONFIG QUIET)
 
 if (nlohmann_json_FOUND)
   message(STATUS "Found nlohmann_json from package manager")
+  if(DEFINED nlohmann_json_VERSION)
+    message(STATUS "nlohmann_json VERSION = ${nlohmann_json_VERSION}")
+  endif()
+  if (TARGET nlohmann_json::nlohmann_json)
+    get_target_property(_incs nlohmann_json::nlohmann_json INTERFACE_INCLUDE_DIRECTORIES)
+    message(STATUS "nlohmann_json include dirs: ${_incs}")
+  endif()
+
 else()
   message(WARNING "nlohmann_json not found, using third-party vendor (header-only)")
   
