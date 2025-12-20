@@ -25,6 +25,9 @@
    - `CMake` 설치
    - `ninja` 설치
 - [사전 준비 사항](Pre-Installation.md)
+   - `vcpkg` + `Visual Studio`
+   - `MingW` + `vcpkg`
+   - `Linux` (`non-vcpkg`)
 
 <br />
 
