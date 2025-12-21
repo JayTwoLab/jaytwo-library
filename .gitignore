@@ -303,5 +303,7 @@ out/*
 
 ########################################
 # Third-party libraries
-j2_library\third-party\
-j2_library\third-party\*
+j2_library/third-party/
+j2_library/third-party/*
+
+
