@@ -27,7 +27,7 @@
 
 - `vcpkg` 로 종속성있는 패키지 설치
 	```
-	vcpkg install gtest nlohmann-json spdlog curl openssl --triplet x64-windows-static
+	vcpkg install gtest nlohmann-json spdlog curl openssl tinyxml2 --triplet x64-windows-static
 	```
 
 <br />
@@ -49,7 +49,7 @@
 
 - `vcpkg` 로 종속성있는 패키지 설치
 	```
-	vcpkg install gtest nlohmann-json spdlog curl openssl --triplet x64-mingw-static
+	vcpkg install gtest nlohmann-json spdlog curl openssl tinyxml2 --triplet x64-mingw-static
 	```
 		
 <br />
