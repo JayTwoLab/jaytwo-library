@@ -27,12 +27,7 @@
 
 - `vcpkg` 로 종속성있는 패키지 설치
 	```
-	vcpkg install ^
-	 gtest:x64-windows-static ^
-	 nlohmann-json:x64-windows-static ^
-	 spdlog:x64-windows-static ^
-     curl:x64-windows-static ^
-	 openssl:x64-windows-static
+	vcpkg install gtest nlohmann-json spdlog curl openssl --triplet x64-windows-static
 	```
 
 <br />
@@ -54,12 +49,7 @@
 
 - `vcpkg` 로 종속성있는 패키지 설치
 	```
-	vcpkg install ^
-	 gtest:x64-mingw-static ^
-	 nlohmann-json:x64-mingw-static ^
-	 spdlog:x64-mingw-static ^
-	 curl:x64-mingw-static ^
-     openssl:x64-mingw-static
+	vcpkg install gtest nlohmann-json spdlog curl openssl --triplet x64-mingw-static
 	```
 		
 <br />
