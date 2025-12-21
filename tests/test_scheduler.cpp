@@ -33,10 +33,10 @@ TEST(SchedulerCases, Tue23_To_Wed10_Wed09_ActiveAndJsonXml) {
     EXPECT_TRUE(s.is_active_now()); // 현재 시간이 스케쥴 범위 내인지 확인   
 
     // JSON 출력 검사
-    auto j = to_json(s.ranges());
+    auto j = to_json(s.ranges()); // 스케쥴 범위들을 JSON으로 변환
 
     nlohmann::ordered_json oj = j;
-    std::cout << oj.dump(4) << std::endl;
+    std::cout << oj.dump(4) << std::endl; // 보기 좋게 출력
 
     ASSERT_TRUE(j.is_array());
     ASSERT_EQ(j.size(), 1u);
@@ -72,10 +72,10 @@ TEST(SchedulerCases, Sat23_To_Mon08_Mon07_ActiveAndJsonXml) {
 
     EXPECT_TRUE(s.is_active_now()); // 현재 시간이 스케쥴 범위 내인지 확인
 
-    auto j = to_json(s.ranges());
+    auto j = to_json(s.ranges()); // 스케쥴 범위들을 JSON으로 변환
 
     nlohmann::ordered_json oj = j;
-    std::cout << oj.dump(4) << std::endl;
+    std::cout << oj.dump(4) << std::endl; // 보기 좋게 출력
 
     ASSERT_TRUE(j.is_array());
     ASSERT_EQ(j.size(), 1u);
@@ -186,5 +186,46 @@ TEST(SchedulerCases, AddRange_MergedThenSetNowSequence) {
 
     // then set_now to a time inside merged interval -> should be active
     s.set_now(weekday::mon, 11, 30);
+    EXPECT_TRUE(s.is_active_now());
+}
+
+// New test: load_from_json should parse JSON and populate schedule (and merge)
+TEST(SchedulerCases, LoadFromJson_PopulatesAndMerges) {
+    // Build JSON array with two overlapping ranges (string day form)
+    nlohmann::json j = nlohmann::json::array();
+    j.push_back({
+        {"start_day", "Mon"},
+        {"start_h", 10},
+        {"start_m", 0},
+        {"end_day", "Mon"},
+        {"end_h", 13},
+        {"end_m", 0}
+        });
+    j.push_back({
+        {"start_day", "Mon"},
+        {"start_h", 11},
+        {"start_m", 0},
+        {"end_day", "Mon"},
+        {"end_h", 12},
+        {"end_m", 0}
+        });
+
+    scheduler s(time_base::localtime);
+
+    // load JSON into scheduler (should add ranges and merge)
+    s.load_from_json(j);
+
+    const auto& rs = s.ranges();
+    ASSERT_EQ(rs.size(), 1u); // merged
+
+    // merged interval should cover 10:00..13:00
+    EXPECT_EQ(rs[0].start_time.hour, 10);
+    EXPECT_EQ(rs[0].end_time.hour, 13);
+
+    // verify is_active_now respects the merged interval
+    s.set_now(weekday::mon, 9, 30);
+    EXPECT_FALSE(s.is_active_now());
+
+    s.set_now(weekday::mon, 11, 0);
     EXPECT_TRUE(s.is_active_now());
 }
