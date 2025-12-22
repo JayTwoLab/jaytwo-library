@@ -43,7 +43,7 @@
 
 - [설치된 라이브러리 사용하기](Use-Installed-Lib.md)
 	- `Visual Studio` 
-	-  `MinGW`(`g++`) 
+	- `MinGW` (`g++`) 
 	- `Linux` (`g++`) 
  
 
