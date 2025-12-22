@@ -1,4 +1,6 @@
-## `j2_library` 라이브러리
+## `j2_library` Library
+
+> :kr: This project only supports Korean.
 
 <br />
 
@@ -6,48 +8,57 @@
 
 ### 0. `j2_library` 소개
 
-- `j2_library`는 스위스 나이프처럼 활용되는 라이브러리입니다.
+- C++ 기반 다기능 라이브러리
 	- `C++` 표준과 써드 파티 일부 사용
 	- `Windows`, `Linux` 지원 (`MacOS` 지원 예정)
 	- `cmake`, `ninja` 빌드 시스템 사용
 
-- 홈페이지 : https://github.com/JayTwoLab/jaytwo-library
-
-- 개인적인 용도로 제작되었으며, 오픈 소스로 공개되어 있습니다.
-	- [MIT 라이선스](LICENSE)
-
 - 라이브러리 구성 개요
 	- `bit`
-		- 비트 연산 및 마스크 유틸리티 (flags, bit-manipulation)
+		- 비트 연산  
 	- `core`
-		- 핵심 유틸리티 (error handling, result/optional, small helpers)
+		- 일반 유틸리티 
 	- `datetime`
-		- 날짜/시간 처리 및 포맷팅 유틸리티
-	- `filesystem`
-		- 파일 및 경로 조작, 디렉터리 유틸리티
-	- `io`
-		- 스트림, 파일 입출력 래퍼 및 헬퍼
+		- 날짜/시간 처리 및 변환
+    - `directory`
+		- 디렉토리 생성 유틸
+	- `encoding`
+	    - 문자열 인코딩 변환 
+	- `file`
+		- 파일 찾기
+	- `ini`
+		- INI 파일 읽기/쓰기
+	- `json`
+		- 놀먼 json 활용 유틸
+	- `log`
+		- 무정지 로거 관리자
+	- `macro`
+		- setter/getter 매크로
+		- try-opt 매크로
+	- `network`
+		- HTTP/HTTPS 파일 다운로드
+		- FTP/SFTP 클라이언트
+		- REST API
+		- TCP 클라이언트/서버
+		- UDP 수신자/송신자
+	- `overload`
+		- 람다 상속 유틸리티
+	- `queue`
+		- SPSC 스레드 안전 큐
+	- `schedule`
+		- 주단위 스케쥴러
 	- `string`
-		- 문자열 조작, 포맷팅, 인코딩 유틸리티
-	- `math`
-		- 수학 연산, 보조 함수, 고정소수점/수치 유틸리티
-	- `container`
-		- 확장 컨테이너 및 편의 알고리즘
-	- `concurrency`
-		- 스레드, 동기화 primitives, 작업 큐 유틸리티
-	- `net`
-		- 네트워크 유틸리티(소켓 래퍼 등) — 플랫폼별 추상화 포함
-	- `serialization`
-		- JSON 등 직렬화/역직렬화 도우미
-	- `logging`
-		- 로깅 래퍼 및 설정 유틸리티
-	- `platform`
-		- 플랫폼별 차이를 숨기는 추상화 레이어 (Windows/Linux)
-	- `crypto`
-		- 해시, 암호화/복호화 유틸리티(필요 시 외부 라이브러리 사용)
-	- `test`
-		- 테스트 유틸리티 및 GTest 헬퍼
-
+		- 뮤텍스 문자열
+		- 크로스 플랫폼 콘솔 인코딩
+		- float/double 문자열 변환 및 비교
+		- UTF8 문자열
+	- `thread`
+		- 동적 쓰레드
+	- `uuid`
+		- UUID 생성
+	- `xml`
+		- 소형 XML 파서
+		 
 <br />
 
 ---
@@ -79,5 +90,24 @@
 	- `Visual Studio` 
 	- `MinGW` (`g++`) 
 	- `Linux` (`g++`) 
+
+<br />
+
+---
+
+### 프로젝트 정보
+- 홈페이지 : https://github.com/JayTwoLab/jaytwo-library
+	- 문의사항은 이슈를 남겨주세요
+		- https://github.com/JayTwoLab/jaytwo-library/issues
+	- mail: jaytwo@jaytwo.kr
+
+<br />
+
+---
+
+### 라이선스 
+- 듀얼 라이선스
+  - 제작자 'Jay Two' 허가가 있는 경우 무료로 사용, 수정, 배포.
+  - 허가가 없는 경우 LGPL-3.0-or-later 라이선스 적용.
 
 
