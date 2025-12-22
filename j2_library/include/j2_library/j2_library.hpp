@@ -34,6 +34,9 @@
 // -- encoding components --
 #include "j2_library/encoding/encoding.hpp"
 
+// -- expected components --
+#include "j2_library/expected/expected.hpp"
+
 // -- file components --
 #include "j2_library/file/file.hpp"
 
