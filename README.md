@@ -23,7 +23,9 @@
     - `directory`
 		- 디렉토리 생성 유틸
 	- `encoding`
-	    - 문자열 인코딩 변환 
+	    - 문자열 인코딩 변환
+	- `expected`
+		- C++23 `std::expected` 대체 유틸 
 	- `file`
 		- 파일 찾기
 	- `ini`

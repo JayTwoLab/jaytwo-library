@@ -7,7 +7,7 @@
 
 using j2::expected::expected; // expected 템플릿 클래스
 using j2::expected::unexpected_value; // unexpected_value 템플릿 클래스
-
+ 
 /* ===== 안전한 별칭 ===== */
 using exp_int_str = expected<int, std::string>; // 성공 값은 int, 실패 값은 std::string
 using err_str = unexpected_value<std::string>; // 실패 값 타입 별칭
@@ -87,7 +87,9 @@ TEST(expected_test, function_return_error)
 
 //-----------------------------------------
 // 파일 열기 함수 예제
+
 using file_result = j2::expected::expected<std::ifstream, std::string>;
+// 성공 시 std::ifstream 반환, 실패 시 std::string 오류 메시지 반환
 
 file_result open_file(const std::string& path)
 {
@@ -103,11 +105,11 @@ bool example_file_open()
     auto r = open_file("data.txt");
     if (!r)
     {
-        // log_error(r.error());
+        // log_error(r.error()); // 실패 처리. 문자열 오류 메시지 사용.
         return false;
     }
 
-    auto& file = r.value();
+    auto& file = r.value(); // 성공적으로 열린 파일 사용
     return true;
 }
 //-----------------------------------------
