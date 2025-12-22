@@ -60,13 +60,7 @@ namespace j2::schedule::weekly {
         now_provider_ = std::move(now_provider);
     }
 
-    // 호환 오버로드: 기존 std::tm() 반환 프로바이더를 받아 내부에서 time_point로 변환
-    void scheduler::set_now_provider(std::function<std::tm()> now_provider_tm) {
-        now_provider_ = [now_provider_tm]() -> std::chrono::system_clock::time_point {
-            std::tm tmv = now_provider_tm();
-            return j2::datetime::to_timepoint(tmv, j2::datetime::time_zone_mode::local_time);
-        };
-    }
+ 
     
     void scheduler::set_now(weekday wd, int hour, int minute) {
         // 편의: weekday+hour/min -> time_point 프로바이더로 저장

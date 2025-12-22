@@ -16,31 +16,31 @@
 
 namespace j2::schedule::weekly {
 
+    // 주간 스케줄러 클래스
     class J2LIB_API scheduler {
     public:
         explicit scheduler(time_base base = time_base::localtime);
 
-        // 테스트용: 현재 시각을 주입할 수 있는 setter (time_point 기반)
+        // 타임 포인트로 현재 시각 제공자 설정
         void set_now_provider(std::function<std::chrono::system_clock::time_point()> now_provider);
-
-        // 호환: 기존 tm 프로바이더를 받아 내부에서 time_point 프로바이더로 래핑
-        void set_now_provider(std::function<std::tm()> now_provider_tm);
-
-        // 편의 오버로드: weekday enum 으로 호출 가능
+ 
+        // 요일, 시, 분으로 현재 시각 설정 
         void set_now(weekday wd, int hour, int minute);
 
-        // 신규: time_point 를 직접 주입하는 편의 오버로드
+        // 타임 포인트로 현재 시각 설정
         void set_now(std::chrono::system_clock::time_point tp);
 
         // JSON으로부터 스케줄을 로드 (기존 범위는 추가됨)
         void load_from_json(const nlohmann::json& j);
 
-        // 옵셔널: 호출 시점에 제공자를 넘겨서 체크 가능 (time_point 기반)
+        // 현재 설정된 시간이 스케쥴에 해당되는지 여부 판정
         bool is_active_now() const;
         bool is_active_now(std::function<std::chrono::system_clock::time_point()> now_provider_tp) const;
 
+        // 주간 스케쥴을 추가
         void add_range(const weekly_range& r);
 
+        // 현재 설정된 주간 스케쥴들을 반환
         const weekly_ranges& ranges() const;
          
     private:
@@ -53,7 +53,7 @@ namespace j2::schedule::weekly {
         std::function<std::chrono::system_clock::time_point()> now_provider_;
     };
 
-     // 편의 오버로드: weekday enum 으로 호출 가능하도록 추가
+    // 요일, 시, 분으로 tm 구조체 생성
     std::tm make_tm_with_wday_hour_min(
         weekday wd,
         int hour,
