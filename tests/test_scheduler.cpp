@@ -6,12 +6,15 @@
 #include "j2_library/schedule/weekly/schedule_xml.hpp"
 #include "j2_library/schedule/weekly/schedule_dump.hpp"
 #include "j2_library/schedule/weekly/schedule_normalizer.hpp"
+#include "j2_library/datetime/datetime_convert.hpp"
 
 #include <string>
 #include <algorithm>
+#include <iostream>
 
 using namespace j2::schedule::weekly;
- 
+using namespace j2::datetime;
+
 // 전날부터 다음날로 넘어가는 스케쥴 영역 테스트
 TEST(SchedulerCases, Tue23_To_Wed10_Wed09_ActiveAndJsonXml) {
 
@@ -27,8 +30,15 @@ TEST(SchedulerCases, Tue23_To_Wed10_Wed09_ActiveAndJsonXml) {
 
     s.add_range(r); // 스케쥴 범위 추가
 
-    auto provider = []() { return make_tm_with_wday_hour_min(weekday::wed, 9, 0); }; // 수요일 09:00
-    s.set_now_provider(provider); // 현재 시각 제공자 설정
+    // auto provider = []() { return make_tm_with_wday_hour_min(weekday::wed, 9, 0); }; // 수요일 09:00
+    // s.set_now_provider(provider); // 현재 시각 제공자 설정
+
+    // 변경: time_point 프로바이더 사용 (로컬 기준으로 tm -> time_point 변환)
+    auto provider_tp = []() {
+        std::tm tm = make_tm_with_wday_hour_min(weekday::wed, 9, 0);
+        return j2::datetime::to_timepoint(tm, time_zone_mode::local_time);
+    };
+    s.set_now_provider(provider_tp); // 현재 시각 제공자 설정
 
     EXPECT_TRUE(s.is_active_now()); // 현재 시간이 스케쥴 범위 내인지 확인   
 
@@ -67,8 +77,15 @@ TEST(SchedulerCases, Sat23_To_Mon08_Mon07_ActiveAndJsonXml) {
 
     s.add_range(r); // 스케쥴 범위 추가
 
-    auto provider = []() { return make_tm_with_wday_hour_min(weekday::mon, 7, 0); }; // 월요일 07:00
-    s.set_now_provider(provider); // 현재 시각 제공자 설정
+    // auto provider = []() { return make_tm_with_wday_hour_min(weekday::mon, 7, 0); }; // 월요일 07:00
+    // s.set_now_provider(provider); // 현재 시각 제공자 설정
+
+    // 변경: time_point 프로바이더 사용
+    auto provider_tp = []() {
+        std::tm tm = make_tm_with_wday_hour_min(weekday::mon, 7, 0);
+        return j2::datetime::to_timepoint(tm, time_zone_mode::local_time);
+    };
+    s.set_now_provider(provider_tp); // 현재 시각 제공자 설정
 
     EXPECT_TRUE(s.is_active_now()); // 현재 시간이 스케쥴 범위 내인지 확인
 
@@ -228,4 +245,47 @@ TEST(SchedulerCases, LoadFromJson_PopulatesAndMerges) {
 
     s.set_now(weekday::mon, 11, 0);
     EXPECT_TRUE(s.is_active_now());
+}
+
+// New test: set_now(time_point) 동작 검사
+TEST(SchedulerCases, SetNowWithTimePoint_Works) {
+
+    scheduler s(time_base::localtime); // Localtime 기준 스케쥴러 생성
+
+    // 월요일 10:00~12:00 스케줄 추가
+    weekly_range r{
+        weekday::mon,
+        time_hm{10, 0},
+        weekday::mon,
+        time_hm{12, 0}
+    };
+    s.add_range(r); // 스케쥴 범위 추가
+
+    // time_point 생성: 월요일 11:00 (Local 기준)
+    auto tp_inside = j2::datetime::to_timepoint(
+        j2::schedule::weekly::make_tm_with_wday_hour_min(weekday::mon, 11, 0), 
+        j2::datetime::time_zone_mode::local_time
+    );
+    s.set_now(tp_inside);
+
+    EXPECT_TRUE(s.is_active_now()); // 스케쥴 범위 내인지 검사 
+
+    // time_point 생성: 월요일 09:00 (Local 기준)
+    auto tp_outside = j2::datetime::to_timepoint(
+        j2::schedule::weekly::make_tm_with_wday_hour_min(weekday::mon, 9, 0), 
+        j2::datetime::time_zone_mode::local_time
+    );
+    s.set_now(tp_outside);
+
+    EXPECT_FALSE(s.is_active_now()); // 스케쥴 범위 내인지 검사
+
+    // 실제 현재 시각으로 설정하는 테스트
+    scheduler s_now(time_base::localtime);  
+    s_now.set_now(std::chrono::system_clock::now());
+    std::cout
+        << "Current time in schedule: "
+        << std::boolalpha << s_now.is_active_now()
+        << std::endl; // 현재 시각이 스케쥴 범위 내인지 출력
+
+
 }

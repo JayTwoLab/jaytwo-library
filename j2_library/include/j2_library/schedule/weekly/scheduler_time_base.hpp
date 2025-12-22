@@ -12,7 +12,12 @@ namespace j2::schedule::weekly {
     class scheduler_time_base {
     public:
         explicit scheduler_time_base(time_base base = time_base::localtime);
+
         std::tm now_tm() const;
+
+        time_base get_base() const {
+            return base_;
+        }
 
     private:
         time_base base_;

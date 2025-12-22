@@ -1,61 +1,51 @@
 #include "j2_library/schedule/weekly/scheduler.hpp"
+#include "j2_library/datetime/datetime_convert.hpp"
 
 #include <algorithm>
 #include <vector>
 #include <cctype>
+#include <chrono>
+#include <ctime>
 
 namespace j2::schedule::weekly {
 
-    // 문자열 기반 구현
-    std::tm make_tm_with_wday_str_hour_min(
-        const std::string& weekday_str,
-        int hour,
-        int minute
-    ) {
-        std::string s = weekday_str;
-        std::transform(s.begin(), s.end(), s.begin(), [](unsigned char c){ return static_cast<char>(std::tolower(c)); });
-
-        int tm_wday = 0; // Sunday=0
-        if (s.find("mon") == 0) tm_wday = 1;
-        else if (s.find("tue") == 0) tm_wday = 2;
-        else if (s.find("wed") == 0) tm_wday = 3;
-        else if (s.find("thu") == 0) tm_wday = 4;
-        else if (s.find("fri") == 0) tm_wday = 5;
-        else if (s.find("sat") == 0) tm_wday = 6;
-        else if (s.find("sun") == 0) tm_wday = 0;
-        else {
-            // 안전 fallback: 첫 3글자 검사
-            std::string p = s.substr(0, std::min<std::size_t>(3, s.size()));
-            if (p == "mon") tm_wday = 1;
-            else if (p == "tue") tm_wday = 2;
-            else if (p == "wed") tm_wday = 3;
-            else if (p == "thu") tm_wday = 4;
-            else if (p == "fri") tm_wday = 5;
-            else if (p == "sat") tm_wday = 6;
-            else if (p == "sun") tm_wday = 0;
-        }
-
-        std::tm t{};
-        t.tm_wday = tm_wday;
-        t.tm_hour = hour;
-        t.tm_min = minute;
-        return t;
-    }
-
-    // weekday enum 오버로드: enum -> std::tm 으로 직접 변환
+    // 편의: weekday enum -> std::tm 생성 (이번 주 기준, 로컬 날짜로 정규화)
     std::tm make_tm_with_wday_hour_min(
         weekday wd,
         int hour,
         int minute
     ) {
-        // weekday enum: mon=0..sun=6
-        // std::tm::tm_wday: Sunday=0..Saturday=6
-        int wd_int = static_cast<int>(wd);
-        int tm_wday = (wd_int + 1) % 7; // mon(0) -> 1, ... sun(6) -> 0
-        std::tm t{};
-        t.tm_wday = tm_wday;
+        int wd_int = static_cast<int>(wd); // mon=0..sun=6
+
+        // 현재 로컬 날짜를 얻어 이번 주 기준으로 목표 요일로 보정
+        std::time_t now = std::time(nullptr);
+        std::tm cur{};
+#if defined(_WIN32)
+        localtime_s(&cur, &now);
+#else
+        localtime_r(&now, &cur);
+#endif
+
+        // cur.tm_wday: Sun=0..Sat=6 -> convert to mon=0..sun=6
+        int cur_wd = (cur.tm_wday + 6) % 7;
+        int delta = wd_int - cur_wd;
+
+        std::tm t = cur; // copy year/month/day
+        t.tm_mday = cur.tm_mday + delta;
         t.tm_hour = hour;
         t.tm_min = minute;
+        t.tm_sec = 0;
+        t.tm_isdst = -1;
+
+        // 정규화: tm -> time_t -> tm (로컬) 해서 tm_yday/tm_wday 등 보정
+        auto opt = j2::datetime::tm_to_time_local(t);
+        if (opt) {
+            std::tm normalized{};
+            if (j2::datetime::time_t_to_local_tm(*opt, normalized)) {
+                return normalized;
+            }
+        }
+        // 실패하면 원본 tm 반환
         return t;
     }
 
@@ -65,14 +55,30 @@ namespace j2::schedule::weekly {
           now_provider_() {
     }
 
-    void scheduler::set_now_provider(std::function<std::tm()> now_provider) {
+    // time_point 기반 프로바이더 설정
+    void scheduler::set_now_provider(std::function<std::chrono::system_clock::time_point()> now_provider) {
         now_provider_ = std::move(now_provider);
+    }
+
+    // 호환 오버로드: 기존 std::tm() 반환 프로바이더를 받아 내부에서 time_point로 변환
+    void scheduler::set_now_provider(std::function<std::tm()> now_provider_tm) {
+        now_provider_ = [now_provider_tm]() -> std::chrono::system_clock::time_point {
+            std::tm tmv = now_provider_tm();
+            return j2::datetime::to_timepoint(tmv, j2::datetime::time_zone_mode::local_time);
+        };
     }
     
     void scheduler::set_now(weekday wd, int hour, int minute) {
-        now_provider_ = [wd, hour, minute]() -> std::tm {
-            return make_tm_with_wday_hour_min(wd, hour, minute);
+        // 편의: weekday+hour/min -> time_point 프로바이더로 저장
+        now_provider_ = [wd, hour, minute]() -> std::chrono::system_clock::time_point {
+            std::tm tmv = make_tm_with_wday_hour_min(wd, hour, minute);
+            return j2::datetime::to_timepoint(tmv, j2::datetime::time_zone_mode::local_time);
         };
+    }
+
+    // time_point 기반 set_now: 즉시 주입된 time_point을 반환하는 고정 프로바이더로 저장
+    void scheduler::set_now(std::chrono::system_clock::time_point tp) {
+        now_provider_ = [tp]() -> std::chrono::system_clock::time_point { return tp; };
     }
 
     // JSON에서 읽어 스케줄에 추가합니다 (to_json으로 만든 형식을 읽음)
@@ -103,10 +109,8 @@ namespace j2::schedule::weekly {
         long long new_s = new_pair.first;
         long long new_e = new_pair.second;
 
-        // mark which existing ranges will be merged/removed
         std::vector<char> removed(ranges_.size(), 0);
 
-        // First pass: find overlaps/adjacency considering shifts of -WEEK, 0, +WEEK
         for (size_t i = 0; i < ranges_.size(); ++i) {
             auto p = to_pair(ranges_[i]);
             long long es0 = p.first;
@@ -117,7 +121,6 @@ namespace j2::schedule::weekly {
                 long long es = es0 + shiftv;
                 long long ee = ee0 + shiftv;
 
-                // overlap or adjacent (merge if es <= new_e + 1 && ee >= new_s - 1)
                 if (es <= new_e + 1 && ee >= new_s - 1) {
                     removed[i] = 1;
                     new_s = std::min(new_s, es);
@@ -127,7 +130,6 @@ namespace j2::schedule::weekly {
             }
         }
 
-        // Repeat because merging expanded interval may now overlap other existing ranges
         bool changed = true;
         while (changed) {
             changed = false;
@@ -153,18 +155,15 @@ namespace j2::schedule::weekly {
             }
         }
 
-        // Build new ranges vector excluding removed ones
         weekly_ranges out;
         out.reserve(ranges_.size() + 1);
         for (size_t i = 0; i < ranges_.size(); ++i) {
             if (!removed[i]) out.push_back(ranges_[i]);
         }
 
-        // Convert merged interval back to weekly_range representation
         long long span = new_e - new_s;
         weekly_range merged{};
         if (span + 1 >= WEEK_MINUTES) {
-            // full week
             merged.start_day = weekday::mon;
             merged.start_time.hour = 0;
             merged.start_time.minute = 0;
@@ -199,19 +198,28 @@ namespace j2::schedule::weekly {
     }
 
     bool scheduler::is_active_now() const {
-        if (now_provider_) {
-            return is_active_now(now_provider_);
+        std::chrono::system_clock::time_point tp;
+        if (now_provider_) tp = now_provider_();
+        else tp = std::chrono::system_clock::now();
+
+        std::tm tm{};
+        if (time_base_.get_base() == time_base::utc) {
+            j2::datetime::get_utc_tm(tp, tm);
+        } else {
+            j2::datetime::get_local_tm(tp, tm);
         }
-        std::tm tm = time_base_.now_tm();
         return is_active_at_tm(tm);
     }
 
-    bool scheduler::is_active_now(std::function<std::tm()> now_provider) const {
-        if (now_provider) {
-            std::tm tm = now_provider();
-            return is_active_at_tm(tm);
+    bool scheduler::is_active_now(std::function<std::chrono::system_clock::time_point()> now_provider_tp) const {
+        auto tp = now_provider_tp();
+        std::tm tm{};
+        if (time_base_.get_base() == time_base::utc) {
+            j2::datetime::get_utc_tm(tp, tm);
+        } else {
+            j2::datetime::get_local_tm(tp, tm);
         }
-        return is_active_now();
+        return is_active_at_tm(tm);
     }
 
     bool scheduler::is_active_at_tm(const std::tm& tm) const {
