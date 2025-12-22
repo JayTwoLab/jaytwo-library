@@ -1,34 +1,21 @@
+MIT License
 
-듀얼 라이선스 안내 (한국어)
-Copyright (c) 2025- Jay Two jaytwo@jaytwo.kr
+Copyright (c) 2025 Jay Two
 
-권리 및 사용 조건(요약)
-본 저장소의 코드(이하 "소스")는 다음 두 가지 조건 중 하나에 따라 사용 가능합니다.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-1) 제작자 허가(우선 조건)
-   - 만약 제작자 'Jay Two'로부터 명시적인 서면 허가(예: 이메일, 서면 동의 등)를 받은 경우, 해당 허가서에 명시된 범위 내에서 소스를 무료로 사용, 수정, 배포할 수 있습니다.
-   - 허가의 범위(상업적 이용 가능 여부, 재배포 조건 등)는 제작자가 발급한 서면 허가 문서에 따릅니다.
-   - 제작자의 허가를 받은 경우에는 본 파일에 명시된 LGPL 조건에 따르지 않을 수도 있으며, 해당 허가서의 조건이 우선합니다.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-2) 기본 라이선스 (허가가 없는 경우)
-   - 제작자로부터 명시적 허가를 받지 않은 경우, 본 소스는 GNU Lesser General Public License 버전 3.0 또는 그 이후 버전(LGPL-3.0-or-later)에 따라 사용되어야 합니다.
-   - LGPL-3.0의 전체 조건은 다음 공식 페이지에서 확인하고, 소스와 함께 LGPL-3.0 전체 사본을 포함시켜야 합니다:
-     https://www.gnu.org/licenses/lgpl-3.0.html
-   - LGPL-3.0에 따라 소스를 사용·배포하는 경우 해당 라이선스의 의무(예: 소스 공개, 복제본에 대한 라이선스 고지 등)를 준수해야 합니다.
-
-SPDX 식별자(참고)
-- LGPL 사용 시 권장 식별자: "SPDX-License-Identifier: LGPL-3.0-or-later"
-- 본 파일은 요약 설명을 포함하므로, 실제 법적 고지를 위해 사용자는 프로젝트 루트에 LGPL-3.0 전체 텍스트를 포함하거나, 배포물에 해당 라이선스 고지를 추가하시기 바랍니다.
-
-허가 요청 및 연락
-- 'jay two'의 명시적 허가를 원하시면 저장소 이슈(issue)를 열거나, 프로젝트에 기재된 연락처를 통해 문의하십시오.
-- (주의) 이 파일에 포함된 연락처 또는 이메일 주소가 없다면 저장소의 README 또는 프로젝트 메타데이터를 확인하세요.
-
-면책 및 법적 고지
-- 본 파일은 라이선스 적용에 대한 요약 안내문이며 법적 자문을 대신하지 않습니다. 중요한 법적 판단이 필요한 경우 법률 전문가와 상의하시기 바랍니다.
-
-예시 요약 문구(파일 상단에 삽입 가능)
-- "본 프로젝트는 듀얼 라이선스 방식입니다. 제작자 'Jay Two'의 명시적 서면 허가가 있는 경우 무료로 사용 가능합니다. 그 외에는 GNU Lesser General Public License v3.0 이상(LGPL-3.0-or-later)에 따라 사용하십시오."
-
-
-
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

@@ -101,15 +101,14 @@
 - 홈페이지 : https://github.com/JayTwoLab/jaytwo-library
 	- 문의사항은 이슈를 남겨주세요
 		- https://github.com/JayTwoLab/jaytwo-library/issues
-	- mail: jaytwo@jaytwo.kr
+	- [mail](mailto:jaytwo@jaytwo.kr)
 
 <br />
 
 ---
 
 ### 라이선스 
-- [듀얼 라이선스](LICENSE) 
-  - 제작자 허가가 있는 경우 자유롭게 사용, 수정, 배포 가능.
-  - 제작자 허가가 없는 경우 LGPL-3.0 라이선스를 적용하면 사용 가능.
+- [MIT 라이선스](LICENSE) 
+
 
 
