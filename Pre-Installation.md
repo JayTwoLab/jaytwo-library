@@ -69,11 +69,9 @@
 
 - 설치 명령
 ```
-sudo dnf -y install \
- gtest gtest-devel gmock gmock-devel \
- json json-devel \
- spdlog spdlog-devel \
- curl curl-devel
+sudo dnf install -y epel-release
+
+sudo dnf -y install gtest gtest-devel gmock gmock-devel json json-devel spdlog spdlog-devel curl curl-devel tinyxml2 tinyxml2-devel
 ```
 
 
@@ -83,11 +81,9 @@ sudo dnf -y install \
 
 - 설치 명령
 ```
-sudo apt install \
- libgtest-dev \
- nlohmann-json3-dev \
- libspdlog-dev \
- libcurl4-openssl-dev libssl-dev libpsl-dev
+sudo apt update
+
+sudo apt install libgtest-dev nlohmann-json3-dev libspdlog-dev libcurl4-openssl-dev libssl-dev libpsl-dev libtinyxml2-dev
 ```
 
 - NOTICE: 우분투에서 설치 점검 필요
