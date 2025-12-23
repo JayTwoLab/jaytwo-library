@@ -79,8 +79,9 @@ endif()
 find_package(Threads REQUIRED) 
 
 ################################
-# nlohmann_json 라이브러리 (include/j2_library/json/INSTALL.ko.md 참고)
-# nlohmann_json: 패키지 우선, 실패 시 로컬 vendor 인터페이스 타깃 구성 + 같은 export set 포함
+# nlohmann_json {{
+#
+# nlohmann_json 패키지 우선, 실패 시 로컬 vendor 인터페이스 타깃 구성 + 같은 export set 포함
 
 # prefer package >= 3.10.0; if not available fall back to bundled vendor
 find_package(nlohmann_json CONFIG QUIET)
@@ -119,8 +120,13 @@ else()
           EXPORT j2_libraryTargets)
 endif()
 
+# nlohmann_json }}
 ################################
-# spdlog: 패키지 우선, 없으면 third-party 사용
+
+################################
+# spdlog {{
+#
+# 패키지 우선, 없으면 third-party 사용
 
 find_package(spdlog CONFIG QUIET)
 
@@ -151,8 +157,14 @@ else()
           EXPORT j2_libraryTargets)
 endif()
 
+# spdlog }}
+################################
+
+
 ###################################
-# simpleini: 패키지 우선, 실패 시 시스템 헤더 또는 서브모듈(로컬 코드) 폴백 
+# simpleini {{
+# 
+# 패키지 우선, 실패 시 시스템 헤더 또는 서브모듈(로컬 코드) 폴백 
 #
 # 1) vcpkg/Conan 등에서 CONFIG 패키지 시도 (있으면 simpleini::simpleini 타깃을 씁니다)
 #
@@ -221,10 +233,14 @@ endif()
 #   endif()
 # 
 # endif() # if(FALSE) simpleini 임시 비활성화
-
+#
+# simpleini }}
+##################################
 
 ###############################
-# ---- Boost.Asio 우선, 실패 시 standalone Asio 폴백 ----
+# asio {{
+# 
+# Boost.Asio 우선, 실패 시 standalone Asio 폴백 ----
 #
 # vcpkg/MSVC 환경이면 통상 CONFIG 모드가 잘 동작합니다.
 # 필요 시 MODULE 모드도 병행하거나 최소 버전을 지정하세요.
@@ -283,10 +299,14 @@ endif()
 #               EXPORT j2_libraryTargets)
 # 
 # endif()
-  
+#
+# asio }}
+##############################
 
 ################################
-# curl 라이브러리 (필수: 반드시 find_package(CURL REQUIRED)로 탐색, 없으면 에러)
+# curl {{
+#
+# 필수: 반드시 find_package(CURL REQUIRED)로 탐색, 없으면 에러)
 
 find_package(CURL REQUIRED)
 
@@ -296,9 +316,12 @@ else()
   message(FATAL_ERROR "CURL not found: install 'libcurl-devel' via package manager")
 endif()
 
+# curl }}
+################################
+
 
 ################################
-# googletest 라이브러리
+# googletest {{
 # 
 # GTest 임시 비활성화 (해당 프로그램에서 직접 정의하여 사용)
 # if(FALSE) 
@@ -317,9 +340,14 @@ endif()
 #       endif()
 #     endif()
 # endif()
+#
+# googletest }}
+##########################
 
 #######################################
-# --- immer: 패키지 우선, 실패 시 서브모듈/로컬 헤더 폴백 ---
+# immer {{
+# 
+# 패키지 우선, 실패 시 서브모듈/로컬 헤더 폴백
 # 
 # if(FALSE) # # immer 임시 비활성화
 # 
@@ -384,6 +412,9 @@ endif()
 #           EXPORT j2_libraryTargets)
 # 
 # endif()
+#
+# immer }}
+#####################################
 
 
 ###################################
@@ -410,7 +441,7 @@ else()
     add_subdirectory("${TINYXML2_THIRD_PARTY_PATH}" EXCLUDE_FROM_ALL)
     # Expect subproject to create a 'tinyxml2' target.
   elseif (EXISTS "${TINYXML2_THIRD_PARTY_PATH}/tinyxml2.h" AND EXISTS "${TINYXML2_THIRD_PARTY_PATH}/tinyxml2.cpp")
-    # Build vendor static library from vendor source
+    # Build vendor static library(*.a *.lib) from vendor source
     add_library(tinyxml2_vendor STATIC
       "${TINYXML2_THIRD_PARTY_PATH}/tinyxml2.cpp"
     )
