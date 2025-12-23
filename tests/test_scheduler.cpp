@@ -38,8 +38,7 @@ TEST(SchedulerCases, Tue23_To_Wed10_Wed09_ActiveAndJsonXml) {
 
     // JSON 출력 검사
     auto j = to_json(s.ranges()); // 현재 설정된 스케쥴 범위들을 JSON으로 변환
-    nlohmann::ordered_json oj = j;
-    std::cout << oj.dump(4) << std::endl << std::endl; // JSON을 보기 좋게 출력
+    std::cout << j.dump(4) << std::endl << std::endl; // JSON을 보기 좋게 출력
 
     ASSERT_TRUE(j.is_array());
     ASSERT_EQ(j.size(), 1u);
@@ -77,8 +76,7 @@ TEST(SchedulerCases, Sat23_To_Mon08_Mon07_ActiveAndJsonXml) {
     EXPECT_TRUE(s.is_active_now()); // 현재 시간이 스케쥴 범위 내인지 확인
 
     auto j = to_json(s.ranges()); // 스케쥴 범위들을 JSON으로 변환
-    nlohmann::ordered_json oj = j;
-    std::cout << oj.dump(4) << std::endl; // JSON을 보기 좋게 출력
+    std::cout << j.dump(4) << std::endl; // JSON을 보기 좋게 출력
 
     ASSERT_TRUE(j.is_array());
     ASSERT_EQ(j.size(), 1u);
