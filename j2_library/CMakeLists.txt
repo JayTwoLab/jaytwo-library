@@ -177,10 +177,7 @@ endif()
 # 
 #   if (simpleini_FOUND)
 #     message(STATUS "Found simpleini from package manager")
-#     # 단일 공개 타깃(j2_simpleini)로 래핑해 일관된 링크 사용
-#     add_library(j2_simpleini INTERFACE)
-#     target_link_libraries(j2_simpleini INTERFACE simpleini::simpleini)
-# 
+#     # add_subdirectory를 호출하지 않음!
 #   else()
 #     message(WARNING "simpleini not found; trying system include then third-party fallback")
 # 
@@ -231,8 +228,7 @@ endif()
 #               EXPORT j2_libraryTargets)
 #     endif()
 #   endif()
-# 
-# endif() # if(FALSE) simpleini 임시 비활성화
+# endif()
 #
 # simpleini }}
 ##################################
@@ -531,11 +527,14 @@ target_include_directories(j2_library
 # -------------------------
 # 버전 헤더 생성
 # -------------------------
-configure_file(
-  ${CMAKE_CURRENT_SOURCE_DIR}/include/j2_library/version.hpp.in
-  ${CMAKE_CURRENT_BINARY_DIR}/generated/j2_library/version.hpp
-  @ONLY
-)
+# 이전: configure_file(...) 로 generated/version.hpp 를 만들던 방식
+# 이제는 수동 관리형 헤더(j2_library/include/j2_library/version.hpp)를 사용합니다.
+# 만약 자동화가 필요하면 configure_file() 을 복원하세요.
+# configure_file(
+#   ${CMAKE_CURRENT_SOURCE_DIR}/include/j2_library/version.hpp.in
+#   ${CMAKE_CURRENT_BINARY_DIR}/generated/j2_library/version.hpp
+#   @ONLY
+# )
 
 # -------------------------
 # 표준 요구 (라이브러리 사용자도 동일 표준 사용)
@@ -620,7 +619,9 @@ install(
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/generated/j2_library/version.hpp
+# 이전에는 generated/version.hpp 를 설치했음.
+# 이제는 소스 트리의 수동 관리형 헤더를 설치하도록 변경합니다.
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/include/j2_library/version.hpp
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/j2_library)
 
 # -------------------------

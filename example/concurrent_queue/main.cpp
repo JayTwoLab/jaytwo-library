@@ -26,9 +26,9 @@ struct packet
 
 
 // 함수 선언
-void example_unbounded_int_queue();
-void example_bounded_packet_queue();
-void example_wait_dequeue_with_thread();
+void example_unbounded_int_queue(); // 무제한 int 큐 예제
+void example_bounded_packet_queue(); // 크기 제한 packet 큐 예제
+void example_wait_dequeue_with_thread(); // wait_dequeue 와 스레드 예제
 
 // main 을 최상단에 배치
 int main()
