@@ -18,12 +18,14 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # 
 
 # Windows 11
-# set(J2_LIBRARY_ROOT_PATH "C:/opt/j2_library") 
-# list(PREPEND CMAKE_MODULE_PATH "${J2_LIBRARY_ROOT_PATH}/lib/cmake/j2_library")
+set(J2_LIBRARY_ROOT_PATH "C:/opt/j2_library")
+set(J2_LIBRARY_ROOT_LIB_PATH "${J2_LIBRARY_ROOT_PATH}/lib")
 
 # Linux x64 (Rocky8, etc)
-set(J2_LIBRARY_ROOT_PATH "/home/jaytwo/workspace/j2") 
-list(PREPEND CMAKE_MODULE_PATH "${J2_LIBRARY_ROOT_PATH}/lib64/cmake/j2_library")
+# set(J2_LIBRARY_ROOT_PATH "/home/jaytwo/workspace/j2")
+# set(J2_LIBRARY_ROOT_LIB_PATH "${J2_LIBRARY_ROOT_PATH}/lib64")
+
+list(PREPEND CMAKE_MODULE_PATH "${J2_LIBRARY_ROOT_LIB_PATH}/cmake/j2_library")
 
 include(j2_cmake) # Load j2_cmake module
 include(j2_find_package) # Load j2_find_package module 
@@ -33,11 +35,7 @@ add_executable(${EXE_NAME} src/main.cpp) # Add executable target
 
 target_include_directories(${EXE_NAME} PRIVATE "${J2_LIBRARY_ROOT_PATH}/include")
 
-# Windows 11
-# target_link_directories(${EXE_NAME} PRIVATE "${J2_LIBRARY_ROOT_PATH}/lib")
-
-# Linux 64
-target_link_directories(${EXE_NAME} PRIVATE "${J2_LIBRARY_ROOT_PATH}/lib64")
+target_link_directories(${EXE_NAME} PRIVATE "${J2_LIBRARY_ROOT_LIB_PATH}") # Link directory for j2_library
 
 j2_link_lib(${EXE_NAME}) # Link j2_library to the executable
 target_link_libraries(${EXE_NAME} PRIVATE j2_library)
