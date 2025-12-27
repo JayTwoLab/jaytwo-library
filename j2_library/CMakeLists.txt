@@ -546,6 +546,7 @@ target_compile_features(j2_library PUBLIC cxx_std_${J2_LIBRARY_CXX_STANDARD})
 #   라이브러리 의존성이 추가되면 여기에 추가할 것
 # -------------------------
 include(j2_link_lib)
+j2_link_lib(j2_library)
 
 ######################################################
 # GCC 버전에 따라 <filesystem> 라이브러리 링크 설정
