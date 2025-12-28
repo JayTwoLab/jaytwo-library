@@ -217,55 +217,20 @@ install(
 )
 
 
-# install third-party: 존재하는 하위 폴더만 설치하도록 안전하게 처리
-
-if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/third-party/include")
+# Install third-party tree once (preserve directory structure).
+# Copies third-party/* → ${CMAKE_INSTALL_DATAROOTDIR}/j2_library/third-party/*
+# Exclude VCS, developer CMake files and common build artifacts.
+if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/third-party")
   install(
-    DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/third-party/include/"
-    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/j2_library/third-party"
-    FILES_MATCHING
-      PATTERN "*.h" PATTERN "*.hpp" PATTERN "*.hh" PATTERN "*.ipp"
-  )
-endif()
-
-if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/third-party/lib")
-  install(
-    DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/third-party/lib/"
-    DESTINATION "${CMAKE_INSTALL_LIBDIR}/j2_library/third-party"
-    FILES_MATCHING
-      PATTERN "*.lib" PATTERN "*.a" PATTERN "*.la"
-  )
-endif()
-
-if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/third-party/bin")
-  install(
-    DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/third-party/bin/"
-    DESTINATION "${CMAKE_INSTALL_BINDIR}/j2_library/third-party"
-    FILES_MATCHING
-      PATTERN "*.dll" PATTERN "*.so" PATTERN "*.dylib" PATTERN "*.exe"
-  )
-endif()
-
-if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/third-party/share")
-  install(
-    DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/third-party/share/"
+    DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/third-party/"
     DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/j2_library/third-party"
     PATTERN ".git" EXCLUDE
     PATTERN ".git/*" EXCLUDE
     PATTERN "CMakeLists.txt" EXCLUDE
+    PATTERN "build" EXCLUDE
+    PATTERN "cmake-build-*" EXCLUDE
   )
 endif()
-
-# (선택) 전체 트리를 항상 복사하고 싶다면 위 대신 다음처럼 루트 존재만 검사할 수 있음:
-# if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/third-party")
-#   install(
-#     DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/third-party/"
-#     DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/j2_library/third-party"
-#     PATTERN ".git" EXCLUDE
-#     PATTERN ".git/*" EXCLUDE
-#     PATTERN "CMakeLists.txt" EXCLUDE
-#   )
-# endif()
 
 
 
