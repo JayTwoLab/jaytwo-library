@@ -300,4 +300,9 @@ namespace j2::xml
         std::vector<std::string> required_paths_;
     };
 
+    // -----------------------------
+    // 유틸리티 함수
+    // -----------------------------
+    J2LIB_API std::string trim_spaces(const std::string& s);
+
 } // namespace j2::xml

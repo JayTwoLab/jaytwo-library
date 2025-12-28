@@ -10,11 +10,15 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 #
-# j2_library is installed by referring to install-lib.cmd. 
+# j2_library is installed by referring to install-lib.cmd.
+# 
 # Windows example:
 #  cmake -S . -B build -G "Ninja" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="C:/opt/j2_library"
 #  cmake --build build
 #  cmake --install build
+#
+# Dynamic library build example:
+# cmake -S . -B build -G "Ninja" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="C:/opt/j2_library" -DBUILD_SHARED_LIBS=ON
 # 
 
 # Windows 11

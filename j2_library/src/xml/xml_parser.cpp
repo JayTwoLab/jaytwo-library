@@ -22,7 +22,7 @@ namespace j2::xml
     // -----------------------------
     // 공용 공백 제거 함수
     // -----------------------------
-    static std::string trim_spaces(const std::string& s)
+    std::string trim_spaces(const std::string& s)
     {
         std::size_t begin = 0;
         while (begin < s.size() &&
