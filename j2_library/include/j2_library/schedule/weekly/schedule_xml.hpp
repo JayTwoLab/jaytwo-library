@@ -5,7 +5,7 @@
 
 namespace j2::schedule::weekly {
 
-    // tinyxml2::XMLDocument 대신 XML 문자열(std::string)을 반환하도록 변경
+    // XML 문자열(std::string)을 반환하도록 변경
     std::string to_xml(const weekly_ranges& ranges);
 
 }

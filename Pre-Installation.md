@@ -27,7 +27,7 @@
 
 - `vcpkg` 로 종속성있는 패키지 설치
 	```
-	vcpkg install gtest nlohmann-json spdlog curl openssl tinyxml2 --triplet x64-windows-static
+	vcpkg install gtest nlohmann-json spdlog curl openssl --triplet x64-windows-static
 	```
 
 <br />
@@ -49,7 +49,7 @@
 
 - `vcpkg` 로 종속성있는 패키지 설치
 	```
-	vcpkg install gtest nlohmann-json spdlog curl openssl tinyxml2 --triplet x64-mingw-static
+	vcpkg install gtest nlohmann-json spdlog curl openssl  --triplet x64-mingw-static
 	```
 		
 <br />
@@ -71,7 +71,7 @@
 ```
 sudo dnf install -y epel-release
 
-sudo dnf -y install gtest gtest-devel gmock gmock-devel json json-devel spdlog spdlog-devel curl curl-devel tinyxml2 tinyxml2-devel
+sudo dnf -y install gtest gtest-devel gmock gmock-devel json json-devel spdlog spdlog-devel curl curl-devel 
 ```
 
 
@@ -83,7 +83,7 @@ sudo dnf -y install gtest gtest-devel gmock gmock-devel json json-devel spdlog s
 ```
 sudo apt update
 
-sudo apt install libgtest-dev nlohmann-json3-dev libspdlog-dev libcurl4-openssl-dev libssl-dev libpsl-dev libtinyxml2-dev
+sudo apt install libgtest-dev nlohmann-json3-dev libspdlog-dev libcurl4-openssl-dev libssl-dev libpsl-dev 
 ```
 
 - NOTICE: 우분투에서 설치 점검 필요

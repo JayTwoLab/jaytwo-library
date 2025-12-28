@@ -56,7 +56,8 @@ function(j2_link_lib)
         # endif()
 
         # tinyxml2 링크 (일관된 이름 사용: tinyxml2::tinyxml2)
-        target_link_libraries(${_target} PUBLIC tinyxml2::tinyxml2)
+        # target_link_libraries(${_target} PUBLIC tinyxml2::tinyxml2)
+
     endforeach()
 endfunction()
 

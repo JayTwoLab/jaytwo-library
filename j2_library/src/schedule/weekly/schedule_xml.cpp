@@ -1,32 +1,57 @@
-#include "j2_library/schedule/weekly/schedule_xml.hpp"
 
-#include <tinyxml2.h>
+#include "j2_library/schedule/weekly/schedule_xml.hpp"
+#include "j2_library/xml/xml.hpp"
+
 #include <string>
+#include <memory>
 
 namespace j2::schedule::weekly {
 
     std::string to_xml(const weekly_ranges& ranges) {
-        tinyxml2::XMLPrinter printer;
         static const char* day_name[] = { "Mon","Tue","Wed","Thu","Fri","Sat","Sun" };
 
-        // XML 선언 추가: <?xml version="1.0" encoding="UTF-8"?>
-        printer.PushDeclaration("xml version=\"1.0\" encoding=\"UTF-8\"");
-
-        printer.OpenElement("WeeklySchedule");
+        // build xml_node tree
+        j2::xml::xml_node root;
+        root.name = "WeeklySchedule";
 
         for (const auto& r : ranges) {
-            printer.OpenElement("Range");
-            printer.PushAttribute("start_day", day_name[static_cast<int>(r.start_day)]);
-            printer.PushAttribute("start_h", r.start_time.hour);
-            printer.PushAttribute("start_m", r.start_time.minute);
-            printer.PushAttribute("end_day", day_name[static_cast<int>(r.end_day)]);
-            printer.PushAttribute("end_h", r.end_time.hour);
-            printer.PushAttribute("end_m", r.end_time.minute);
-            printer.CloseElement(); // Range
+            auto child = std::make_unique<j2::xml::xml_node>();
+            child->name = "Range";
+
+            j2::xml::xml_attribute a1;
+            a1.name = "start_day";
+            a1.value = std::string(day_name[static_cast<int>(r.start_day)]);
+            child->attributes.push_back(std::move(a1));
+
+            j2::xml::xml_attribute a2;
+            a2.name = "start_h";
+            a2.value = std::to_string(r.start_time.hour);
+            child->attributes.push_back(std::move(a2));
+
+            j2::xml::xml_attribute a3;
+            a3.name = "start_m";
+            a3.value = std::to_string(r.start_time.minute);
+            child->attributes.push_back(std::move(a3));
+
+            j2::xml::xml_attribute a4;
+            a4.name = "end_day";
+            a4.value = std::string(day_name[static_cast<int>(r.end_day)]);
+            child->attributes.push_back(std::move(a4));
+
+            j2::xml::xml_attribute a5;
+            a5.name = "end_h";
+            a5.value = std::to_string(r.end_time.hour);
+            child->attributes.push_back(std::move(a5));
+
+            j2::xml::xml_attribute a6;
+            a6.name = "end_m";
+            a6.value = std::to_string(r.end_time.minute);
+            child->attributes.push_back(std::move(a6));
+
+            root.children.push_back(std::move(child));
         }
 
-        printer.CloseElement(); // WeeklySchedule
-        return std::string(printer.CStr());
+        return j2::xml::serialize_xml(root, true);
     }
 
 }

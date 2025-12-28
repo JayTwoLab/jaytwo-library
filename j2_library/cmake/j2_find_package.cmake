@@ -350,54 +350,54 @@ endif()
 # 3) Else if third-party contains tinyxml2.cpp/.h, build a vendor static target.
 # 4) Expose a consistent alias tinyxml2::tinyxml2 for consumer code.
 #
-find_package(tinyxml2 CONFIG QUIET)
-
-if (tinyxml2_FOUND)
-  message(STATUS "Found tinyxml2 from package manager")
-else()
-  message(WARNING "tinyxml2 not found; trying third-party fallback")
-
-  set(TINYXML2_THIRD_PARTY_PATH "${J2_THIRD_PARTY_ROOT_PATH}/tinyxml2")
-
-  if (EXISTS "${TINYXML2_THIRD_PARTY_PATH}/CMakeLists.txt")
-    add_subdirectory("${TINYXML2_THIRD_PARTY_PATH}" EXCLUDE_FROM_ALL)
-    # Expect subproject to create a 'tinyxml2' target.
-  elseif (EXISTS "${TINYXML2_THIRD_PARTY_PATH}/tinyxml2.h" AND EXISTS "${TINYXML2_THIRD_PARTY_PATH}/tinyxml2.cpp")
-    # Build vendor static library(*.a *.lib) from vendor source
-    add_library(tinyxml2_vendor STATIC
-      "${TINYXML2_THIRD_PARTY_PATH}/tinyxml2.cpp"
-    )
-
-    target_include_directories(tinyxml2_vendor PUBLIC
-      $<BUILD_INTERFACE:${TINYXML2_THIRD_PARTY_PATH}>
-      $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
-    )
-
-    # Provide consistent alias used by consumers
-    add_library(tinyxml2::tinyxml2 ALIAS tinyxml2_vendor)
-
-    # Install vendor target and headers
-    install(TARGETS tinyxml2_vendor
-            EXPORT j2_libraryTargets
-            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-    )
-
-    install(DIRECTORY "${TINYXML2_THIRD_PARTY_PATH}/"
-            DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-            FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp")
-  else()
-    message(FATAL_ERROR "tinyxml2 fallback not found at: ${TINYXML2_THIRD_PARTY_PATH}")
-  endif()
-endif()
-
-# Ensure consistent alias if upstream package created an un-namespaced target
-if (NOT TARGET tinyxml2::tinyxml2)
-  if (TARGET tinyxml2)
-    add_library(tinyxml2::tinyxml2 ALIAS tinyxml2)
-  endif()
-endif()
+#   find_package(tinyxml2 CONFIG QUIET)
+#   
+#   if (tinyxml2_FOUND)
+#     message(STATUS "Found tinyxml2 from package manager")
+#   else()
+#     message(WARNING "tinyxml2 not found; trying third-party fallback")
+#   
+#     set(TINYXML2_THIRD_PARTY_PATH "${J2_THIRD_PARTY_ROOT_PATH}/tinyxml2")
+#   
+#     if (EXISTS "${TINYXML2_THIRD_PARTY_PATH}/CMakeLists.txt")
+#       add_subdirectory("${TINYXML2_THIRD_PARTY_PATH}" EXCLUDE_FROM_ALL)
+#       # Expect subproject to create a 'tinyxml2' target.
+#     elseif (EXISTS "${TINYXML2_THIRD_PARTY_PATH}/tinyxml2.h" AND EXISTS "${TINYXML2_THIRD_PARTY_PATH}/  #tinyxml2.cpp")
+#       # Build vendor static library(*.a *.lib) from vendor source
+#       add_library(tinyxml2_vendor STATIC
+#         "${TINYXML2_THIRD_PARTY_PATH}/tinyxml2.cpp"
+#       )
+#   
+#       target_include_directories(tinyxml2_vendor PUBLIC
+#         $<BUILD_INTERFACE:${TINYXML2_THIRD_PARTY_PATH}>
+#         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+#       )
+#   
+#       # Provide consistent alias used by consumers
+#       add_library(tinyxml2::tinyxml2 ALIAS tinyxml2_vendor)
+#   
+#       # Install vendor target and headers
+#       install(TARGETS tinyxml2_vendor
+#               EXPORT j2_libraryTargets
+#               ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+#               LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+#               RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+#       )
+#   
+#       install(DIRECTORY "${TINYXML2_THIRD_PARTY_PATH}/"
+#               DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+#               FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp")
+#     else()
+#       message(FATAL_ERROR "tinyxml2 fallback not found at: ${TINYXML2_THIRD_PARTY_PATH}")
+#     endif()
+#   endif()
+#   
+#   # Ensure consistent alias if upstream package created an un-namespaced target
+#   if (NOT TARGET tinyxml2::tinyxml2)
+#     if (TARGET tinyxml2)
+#       add_library(tinyxml2::tinyxml2 ALIAS tinyxml2)
+#     endif()
+#   endif()
 
 # }} tinyxml2
 ###########################################
