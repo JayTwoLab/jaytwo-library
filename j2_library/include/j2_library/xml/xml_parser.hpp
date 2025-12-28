@@ -45,6 +45,15 @@ namespace j2::xml
         std::vector<xml_attribute> attributes;
         std::vector<std::unique_ptr<xml_node>> children;
 
+        // 기본 생성자 명시 (unique_ptr 멤버가 있어도 기본 생성자는 필요)
+        xml_node() = default;
+
+        // non-copyable, movable: unique_ptr 멤버 때문에 복사는 금지하고 이동만 허용
+        xml_node(const xml_node&) = delete;
+        xml_node& operator=(const xml_node&) = delete;
+        xml_node(xml_node&&) noexcept = default;
+        xml_node& operator=(xml_node&&) noexcept = default;
+
         // 자식 노드를 이름으로 찾기 (네임스페이스는 무시, 로컬 이름 기준)
         xml_node* find_child(const std::string& child_name);
 
