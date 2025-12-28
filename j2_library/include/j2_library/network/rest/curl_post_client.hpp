@@ -1,3 +1,5 @@
+#if 0 // disabled for now 
+
 #pragma once
 
 #include <string>
@@ -115,3 +117,6 @@ private:
 
 
 } // namespace j2::network::rest
+
+ 
+#endif

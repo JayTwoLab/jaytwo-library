@@ -10,11 +10,11 @@
 #include <iomanip>
 
 #ifndef _WIN32
-#include <iconv.h>
-#include <errno.h>
+    #include <iconv.h>
+    #include <errno.h>
 #else
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
+    #define WIN32_LEAN_AND_MEAN
+    #include <windows.h>
 #endif
 
 namespace j2::xml

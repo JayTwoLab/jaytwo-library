@@ -1,3 +1,6 @@
+#########################################
+# include_guard(GLOBAL) # 전역 범위(Global scope) 에서 중복 include를 막습니다.
+include_guard(DIRECTORY)
 
 ###########################################################
 # 스레드 라이브러리
@@ -230,13 +233,13 @@ endif()
 #
 # 필수: 반드시 find_package(CURL REQUIRED)로 탐색, 없으면 에러)
 
-find_package(CURL REQUIRED)
-
-if (CURL_FOUND)
-  message(STATUS "Found CURL (system libcurl)")
-else()
-  message(FATAL_ERROR "CURL not found: install 'libcurl-devel' via package manager")
-endif()
+# find_package(CURL REQUIRED)
+# 
+# if (CURL_FOUND)
+#   message(STATUS "Found CURL (system libcurl)")
+# else()
+#   message(FATAL_ERROR "CURL not found: install 'libcurl-devel' via package manager")
+# endif()
 
 # curl }}
 ###########################################################
@@ -401,3 +404,8 @@ endif()
 
 # }} tinyxml2
 ###########################################################
+
+# 플랫폼별 네트워크 라이브러리 링크 추가
+include(j2_network_platform_pre_module)
+
+

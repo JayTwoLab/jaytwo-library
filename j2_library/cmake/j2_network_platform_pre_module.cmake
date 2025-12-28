@@ -1,3 +1,7 @@
+#########################################
+# include_guard(GLOBAL) # 전역 범위(Global scope) 에서 중복 include를 막습니다.
+include_guard(DIRECTORY)
+
 #
 # j2_network_platform_pre_module.cmake
 # 플랫폼별 네트워크 라이브러리 설정 (사전(pre-) 설정)

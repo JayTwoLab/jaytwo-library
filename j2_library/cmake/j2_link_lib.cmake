@@ -1,3 +1,7 @@
+#########################################
+# include_guard(GLOBAL) # 전역 범위(Global scope) 에서 중복 include를 막습니다.
+include_guard(DIRECTORY)
+
 # j2_link_lib.cmake
 # 사용법: j2_link_lib(<target> [<target2> ...])
 # 지정한 하나 이상의 CMake 타겟에 대해 라이브러리 링크와 include 디렉토리를 적용합니다.
@@ -57,6 +61,15 @@ function(j2_link_lib)
 
         # tinyxml2 링크 (일관된 이름 사용: tinyxml2::tinyxml2)
         # target_link_libraries(${_target} PUBLIC tinyxml2::tinyxml2)
+
+        # -------------------------
+        # 플랫폼별 네트워크 라이브러리 링크 추가
+        # Ensure Winsock (ws2_32) and other platform network libs are linked for socket usage.
+        # This fixes unresolved external symbols like closesocket, sendto, inet_pton on Windows.
+        # include(j2_network_platform_pre_module)
+        include(j2_network_platform_post_module)
+        j2_target_network_platform_link(${_target})
+        # -------------------------
 
     endforeach()
 endfunction()

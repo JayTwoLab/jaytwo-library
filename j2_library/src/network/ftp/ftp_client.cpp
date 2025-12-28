@@ -1,3 +1,5 @@
+#if 0 // disabled for now
+
 #include "j2_library/network/ftp/ftp_client.hpp"
 
 using namespace j2::network::ftp::client;
@@ -257,3 +259,5 @@ bool sftp_client::remove_directory(const std::string& path) {
     last_error = std::string("sftp_client::remove_directory() not implemented in this stub. path: ") + path;
     return false;
 }
+
+#endif // disabled for now

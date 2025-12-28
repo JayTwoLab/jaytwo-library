@@ -159,7 +159,7 @@ namespace j2::ini {
     bool ini_parser::parse_bool(const std::string& v, bool& out)
     {
         std::string s = v;
-        std::transform(s.begin(), s.end(), s.begin(), [](unsigned char c) { return std::tolower(c); });
+        std::transform(s.begin(), s.end(), s.begin(), [](unsigned char c) -> char { return static_cast<char>(std::tolower(c)); });
         if (s == "true") { out = true; return true; }
         if (s == "false") { out = false; return true; }
         return false;

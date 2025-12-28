@@ -8,14 +8,14 @@ add_subdirectory(tcp_client)
 add_subdirectory(udp_receiver)
 add_subdirectory(udp_sender)
 
-# rest api
-add_subdirectory(rest_get)
-add_subdirectory(rest_post)
+# rest api (disable for now)
+## add_subdirectory(rest_get)
+## add_subdirectory(rest_post)
 
-# ftp
-add_subdirectory(ftp_client)
+# ftp (disable for now)
+## add_subdirectory(ftp_client)
 
-# downloader
-add_subdirectory(downloader)
+# downloader (disable for now))
+## add_subdirectory(downloader)
 
 

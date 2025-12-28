@@ -27,13 +27,14 @@
 #include "j2_library/network/udp/udp_sender.hpp"
 
 // Rest API (using curl)
-#include "j2_library/network/rest/curl_get_client.hpp"
+// #include "j2_library/network/rest/curl_get_client.hpp"
+// #include "j2_library/network/rest/curl_post_client.hpp"
 
 // FTP/SFTP client utilities and type definitions (using curl)
-#include "j2_library/network/ftp/ftp_client.hpp"
+// #include "j2_library/network/ftp/ftp_client.hpp"
 
 // File downloader utilities and type definitions
-#include "j2_library/network/downloader/downloader.hpp"
+// #include "j2_library/network/downloader/downloader.hpp"
 
 
 

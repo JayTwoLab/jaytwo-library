@@ -1,3 +1,5 @@
+#if 0 // disabled for now
+
 #pragma once
 
 #include <string>
@@ -59,3 +61,5 @@ namespace j2::network::downloader
     };
 
 } // namespace j2::network::downloader
+
+#endif // disabled for now
