@@ -29,7 +29,10 @@
 	```
 	vcpkg install gtest nlohmann-json spdlog curl openssl --triplet x64-windows-static
 	```
-
+- 소스 코드를 써드 파티에 직접 복사하는 경우 다음 경로에 복사한다.
+	- `j2_library/third_party/nlohmann_json`
+	- `j2_library/third_party/spdlog`
+ 
 <br />
 
 ---
