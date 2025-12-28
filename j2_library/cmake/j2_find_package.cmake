@@ -19,7 +19,7 @@ else()
   message(WARNING "nlohmann_json not found, using third-party vendor (header-only)")
   
   # 로컬(서브모듈) 헤더 경로
-  set(NLOHMANN_JSON_INC "${J2_THIRD_PARTY_ROOT_PATH}/nlohmann_json/include")
+  set(NLOHMANN_JSON_INC "${J2_THIRD_PARTY_ROOT_PATH}/json/include")
   if (NOT EXISTS "${NLOHMANN_JSON_INC}")
     message(FATAL_ERROR "Expected nlohmann_json include directory not found: ${NLOHMANN_JSON_INC}")
   endif()
