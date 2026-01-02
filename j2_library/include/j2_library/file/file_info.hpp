@@ -5,7 +5,7 @@
 
 #include "j2_library/export.hpp"
 
-namespace j2::file {
+namespace j2::file { 
 
     class J2LIB_API file_info {
     public:
