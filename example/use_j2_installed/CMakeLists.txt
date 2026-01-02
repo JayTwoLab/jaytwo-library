@@ -24,10 +24,12 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # Windows 11
 set(J2_LIBRARY_ROOT_PATH "C:/opt/j2_library")
 set(J2_LIBRARY_ROOT_LIB_PATH "${J2_LIBRARY_ROOT_PATH}/lib")
+set(J2_THIRD_PARTY_ROOT_PATH "${J2_LIBRARY_ROOT_PATH}/share/j2_library/third-party")
 
 # Linux x64 (Rocky8, etc)
 # set(J2_LIBRARY_ROOT_PATH "/home/jaytwo/workspace/j2")
 # set(J2_LIBRARY_ROOT_LIB_PATH "${J2_LIBRARY_ROOT_PATH}/lib64")
+
 
 list(PREPEND CMAKE_MODULE_PATH "${J2_LIBRARY_ROOT_LIB_PATH}/cmake/j2_library") # Add j2_library cmake module path
 include(j2_cmake) # Load j2_cmake module
