@@ -6,6 +6,7 @@ int main();
 #include <string>
 #include <filesystem>
 #include <vector>
+#include <fstream>
 
 #include <j2_library/j2_library.hpp>
 
@@ -13,6 +14,7 @@ namespace fs = std::filesystem;
 
 // 함수 선언부 (main에서 사용하는 함수들)
 static void dump_tree(const fs::path& base);
+static void test_create_picture_and_file_info(const fs::path& base);
 static void test_non_recursive_basic(const fs::path& base);
 static void test_recursive_case_sensitive(const fs::path& base);
 static void test_windows_wide_literal(const fs::path& base);
@@ -33,6 +35,9 @@ int main() {
     fs::path base = fs::path(CMAKE_SOURCE_DIR_PATH);
 
     dump_tree(base);
+
+    // 상대 경로로 picture.txt를 생성하고 j2::file::file_info 예제를 실행
+    test_create_picture_and_file_info(base);
 
     test_non_recursive_basic(base);
     test_recursive_case_sensitive(base);
@@ -130,6 +135,56 @@ static void dump_tree(const fs::path& base) {
         println_u8(line);
     }
     println_u8("-------------------------");
+}
+
+// 새로 추가: 상대 경로로 picture.txt 생성 후 j2::file::file_info 사용 예제
+static void test_create_picture_and_file_info(const fs::path& base) {
+    println_u8(u8"[X] 상대경로로 picture.txt 생성 및 j2::file::file_info 사용 예제 시작");
+    try {
+        fs::path dir = base / "assets";
+        fs::create_directories(dir);
+        fs::path full = dir / "picture.txt";
+
+        // 파일 생성 (바이너리/텍스트 둘 다 가능; 예제는 텍스트)
+        {
+            std::ofstream ofs(full, std::ios::binary);
+            ofs << "This is a placeholder for picture.txt\n";
+        }
+
+        // 상대 경로 예제를 위해 작업 디렉터리를 base로 잠시 변경
+        fs::path old_cwd = fs::current_path();
+        fs::current_path(base);
+
+        // 상대 경로(예: "assets/picture.txt")와 절대 경로 모두로 file_info 생성
+        j2::file::file_info fi_rel("assets/picture.txt");
+        j2::file::file_info fi_abs(full.string());
+
+        // 출력 헬퍼
+        auto print_info = [&](const std::string& title, const j2::file::file_info& fi) {
+            println_u8(title);
+            println_u8(std::string(u8"  exists: ") + (fi.exists() ? "TRUE" : "FALSE"));
+            println_u8(std::string(u8"  is_file: ") + (fi.is_file() ? "TRUE" : "FALSE"));
+            println_u8(std::string(u8"  is_dir: ") + (fi.is_dir() ? "TRUE" : "FALSE"));
+            println_u8(std::string(u8"  file_name: ") + fi.file_name());
+            println_u8(std::string(u8"  extension: ") + fi.extension());
+            println_u8(std::string(u8"  parent_path: ") + fi.parent_path());
+            println_u8(std::string(u8"  absolute_path: ") + fi.absolute_path());
+            try {
+                println_u8(std::string(u8"  file_size: ") + std::to_string(fi.file_size()) + "B");
+            } catch (...) {
+                println_u8(std::string(u8"  file_size: <error>"));
+            }
+        };
+
+        print_info(u8"  - file_info(\"assets/picture.txt\")", fi_rel);
+        print_info(std::string(u8"  - file_info(\"") + full.string() + "\")", fi_abs);
+
+        // 작업 디렉터리 복원
+        fs::current_path(old_cwd);
+    } catch (const std::exception& ex) {
+        println_u8(std::string(u8"[X] 예외 발생: ") + ex.what());
+    }
+    println_u8(u8"[X] 예제 종료");
 }
 
 // -------- 테스트 함수들 --------
