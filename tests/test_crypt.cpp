@@ -11,7 +11,7 @@
 TEST(Crypt, EncryptDecrypt_Basic) {
     j2::crypt::cipher cipher;
     cipher.set_key("jaytwo-2026-key");
-    // cipher.set_key("0123456789123456");
+    // cipher.set_key("0123456789123456"); // 16 bytes key for AES-128
 
     const std::string original = "Standard AES-128 Implementation Test!";
     const std::string encrypted = cipher.encrypt(original);
