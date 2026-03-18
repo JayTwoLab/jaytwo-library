@@ -20,7 +20,10 @@
 #endif
 
 // -- bit components --
-#include "j2_library/bit/bit.hpp" 
+#include "j2_library/bit/bit.hpp"
+
+// -- crypt components --
+#include "j2_library/crypt/crypt.hpp"
 
 // --  core components --
 #include "j2_library/core/core.hpp" 

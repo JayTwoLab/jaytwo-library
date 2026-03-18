@@ -1,0 +1,41 @@
+#pragma once
+ 
+
+#include <string>
+#include <vector>
+#include <cstdint>
+
+#include "j2_library/export.hpp"
+
+namespace j2 {
+    namespace crypt {
+
+        class J2LIB_API cipher {
+        public:
+            cipher() = default;
+            void set_key(const std::string& key);
+            std::string encrypt(const std::string& plainText) const;
+            std::string decrypt(const std::string& cipherTextHex) const;
+
+        private:
+            std::vector<uint8_t> m_round_keys;
+            bool m_is_key_set = false;
+
+            void key_expansion(const uint8_t* key);
+            void encrypt_block(const uint8_t* in, uint8_t* out) const;
+            void decrypt_block(const uint8_t* in, uint8_t* out) const;
+
+            // AES 내부 연산 헬퍼
+            static uint8_t gmix(uint8_t a, uint8_t b);
+            static void sub_bytes(uint8_t* state);
+            static void inv_sub_bytes(uint8_t* state);
+            static void shift_rows(uint8_t* state);
+            static void inv_shift_rows(uint8_t* state);
+            static void mix_columns(uint8_t* state);
+            static void inv_mix_columns(uint8_t* state);
+            static void add_round_key(uint8_t* state, const uint8_t* roundKey);
+        };
+
+    } // namespace crypt
+} // namespace j2
+
