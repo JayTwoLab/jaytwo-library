@@ -82,9 +82,21 @@ namespace j2 {
                 symbol->MaxNameLen = MAX_SYM_NAME;
 
                 DWORD64 displacement = 0;
+                std::stringstream ss;
+
                 if (SymFromAddr(process, (DWORD64)stack[i], &displacement, symbol)) {
-                    std::stringstream ss;
                     ss << "#" << i << " 0x" << std::hex << symbol->Address << " in " << symbol->Name;
+
+                    // --- 라인 번호 추출 로직 추가 ---
+                    IMAGEHLP_LINE64 line;
+                    line.SizeOfStruct = sizeof(IMAGEHLP_LINE64);
+                    DWORD lineDisplacement = 0;
+
+                    if (SymGetLineFromAddr64(process, (DWORD64)stack[i], &lineDisplacement, &line)) {
+                        ss << " at " << line.FileName << ":" << std::dec << line.LineNumber;
+                    }
+                    // -------------------------------
+
                     stack_frames.push_back(ss.str());
                 }
                 else {

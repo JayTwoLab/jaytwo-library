@@ -5,6 +5,8 @@ project(j2_lib_example VERSION ${J2_LIB_EXAMPLE_VERSION} LANGUAGES CXX)
 
 add_subdirectory(concurrent_queue) # 동시성 큐 예제
 
+add_subdirectory(crash_handler) # 크래시 핸들러 예제
+
 add_subdirectory(file-finder) # 파일 파인더 예제
 
 add_subdirectory(hello-world) # 기본 템플릿 예제
