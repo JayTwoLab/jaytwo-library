@@ -71,7 +71,7 @@ namespace j2 {
             ss_addr << std::hex << addr;
 
             // addr2line 명령어를 통해 파일명과 라인 추출
-            std::string cmd = "addr2line -e " + std::string(path) + " " + ss_addr.str() + " -f -C";
+            std::string cmd = "addr2line -e " + std::string(path) + " " + ss_addr.str() + " -f -C -i";
 
             std::array<char, 128> buffer;
             std::string result;
