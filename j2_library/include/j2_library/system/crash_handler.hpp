@@ -6,7 +6,7 @@
 #include <functional>
 #include <vector>
 
-namespace j2 {
+namespace j2 { 
     namespace system {
 
         /**
@@ -35,6 +35,7 @@ namespace j2 {
             static long __stdcall windows_exception_handler(struct _EXCEPTION_POINTERS* info);
 #else
             static void posix_signal_handler(int sig);
+            static std::string addr_to_line(void* addr);
 #endif
 
             // C++ terminate 핸들러
@@ -46,5 +47,3 @@ namespace j2 {
 
     } // namespace system
 } // namespace j2
-
-
