@@ -21,5 +21,11 @@ if(WIN32)
     set_target_properties(j2_crash_handler_example PROPERTIES LINK_FLAGS "/DEBUG")
 endif()
 
+# XNIX 환경에서는 디버깅 심볼과 최적화 설정을 조정하여 콜 스택 추출이 원활하도록 설정
+if(UNIX)
+    target_compile_options(j2_crash_handler_example PRIVATE -g -O0) # 최적화 끄기(-O0) 권장
+    target_link_options(j2_crash_handler_example PRIVATE -rdynamic)
+endif()
+
 # 인클루드 경로 설정
 target_include_directories(j2_crash_handler_example PRIVATE ${CMAKE_SOURCE_DIR}/../../include)
