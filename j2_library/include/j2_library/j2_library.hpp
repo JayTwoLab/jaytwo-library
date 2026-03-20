@@ -70,6 +70,9 @@
 // -- string components --
 #include "j2_library/string/string.hpp"
 
+// -- system components --
+#include "j2_library/system/system.hpp"
+
 // -- thread components --
 #include "j2_library/thread/thread.hpp"
 

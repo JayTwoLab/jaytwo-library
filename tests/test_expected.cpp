@@ -109,7 +109,8 @@ bool example_file_open()
         return false;
     }
 
-    auto& file = r.value(); // 성공적으로 열린 파일 사용
+    // auto& file = r.value(); // 성공적으로 열린 파일 사용
+
     return true;
 }
 //-----------------------------------------
