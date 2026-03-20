@@ -107,8 +107,15 @@ namespace j2::string {
     }
 
     // ================= mutex_string 핵심 구현 =================
-    mutex_string::mutex_string(std::string s) : s_(std::move(s)) {}
-    mutex_string::mutex_string(const char* s) : s_(s ? s : "") {}
+    mutex_string::mutex_string(std::string s) : s_(std::move(s)) {
+        // 플랫폼/라이브러리 차이로 초기 capacity가 크게 나오는 경우가 있어서
+        // 일관된 동작을 위해 내부 버퍼를 임시 std::string과 스왑해 최소 용량으로 만듭니다.
+        std::string(s_).swap(s_);
+    }
+    mutex_string::mutex_string(const char* s) : s_(s ? s : "") {
+        // 동일한 이유로 최소 용량 확보
+        std::string(s_).swap(s_);
+    }
 
     mutex_string::mutex_string(const mutex_string& other) {
 #ifndef NDEBUG
@@ -229,7 +236,9 @@ namespace j2::string {
         assert_not_reentrant_();
 #endif
         std::scoped_lock lock(m_);
-        s_.shrink_to_fit();
+        // std::string::shrink_to_fit()는 구현마다 동작이 다르므로,
+        // 일관된 최소화 동작을 위해 임시 문자열과 스왑합니다.
+        std::string(s_).swap(s_);
     }
 
     // ===== 원소 접근(값 반환) + setter =====
