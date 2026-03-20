@@ -14,24 +14,28 @@ namespace j2::file {
 
     // 실행 파일 이름 반환. 예: Hello.exe 또는 Hello
     J2LIB_API std::string executable_name(
-        std::error_code& ec,
-        name_type type = name_type::filename,
-        const exec_path_options& opt = {});
+        std::error_code& ec, // 에러 코드 반환 버전
+        name_type type = name_type::filename, // 반환 형식 지정 (기본값: filename)
+        const exec_path_options& opt = {} // 실행 경로 조회 옵션 (기본값: 기본 옵션)
+    );
 
     // 예외를 던지지 않고, 실패 시 빈 문자열 반환
     J2LIB_API std::string executable_name(
-        name_type type = name_type::filename,
-        const exec_path_options& opt = {});
+        name_type type = name_type::filename, // 반환 형식 지정 (기본값: filename)
+        const exec_path_options& opt = {} // 실행 경로 조회 옵션 (기본값: 기본 옵션)
+    );
 
     // 실행 파일 이름 반환. 예: L"Hello.exe" 또는 L"Hello" 
     J2LIB_API std::wstring executable_name_w(
-        std::error_code& ec,
-        name_type type = name_type::filename,
-        const exec_path_options& opt = {});
+        std::error_code& ec, // 에러 코드 반환 버전
+        name_type type = name_type::filename, // 반환 형식 지정 (기본값: filename)
+        const exec_path_options& opt = {} // 실행 경로 조회 옵션 (기본값: 기본 옵션)
+    );
 
     // 예외를 던지지 않고, 실패 시 빈 문자열 반환
     J2LIB_API std::wstring executable_name_w(
-        name_type type = name_type::filename,
-        const exec_path_options& opt = {});
+        name_type type = name_type::filename, // 반환 형식 지정 (기본값: filename)
+        const exec_path_options& opt = {} // 실행 경로 조회 옵션 (기본값: 기본 옵션)
+    );
 
 } // namespace j2::file
