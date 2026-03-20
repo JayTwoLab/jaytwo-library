@@ -665,4 +665,87 @@ namespace j2::string
         return wildcard_impl(text.c_str(), pattern.c_str());
     }
 
+    /**
+     * @brief 숫자에 천 단위(3) 또는 만 단위(4) 구분자를 추가합니다.
+     * @param str_num 숫자 문자열
+     * @param step 구분 단위 (기본 3)
+     * @param separator 구분자 문자 (기본 ',')
+     */
+    std::string add_separator(const std::string& str_num, int step, char separator) {
+        if (str_num.empty() || step <= 0) return str_num;
+
+        bool is_negative = (!str_num.empty() && str_num[0] == '-');
+        size_t start_idx = is_negative ? 1 : 0;
+        size_t dot_pos = str_num.find('.');
+
+        std::string integer_part = str_num.substr(start_idx, (dot_pos == std::string::npos) ? std::string::npos : dot_pos - start_idx);
+        std::string fractional_part = (dot_pos == std::string::npos) ? "" : str_num.substr(dot_pos);
+
+        std::string result = "";
+        int count = 0;
+        for (int i = (int)integer_part.length() - 1; i >= 0; --i) {
+            if (count > 0 && count % step == 0) result += separator;
+            result += integer_part[i];
+            count++;
+        }
+
+        std::reverse(result.begin(), result.end());
+        return (is_negative ? "-" : "") + result + fractional_part;
+    }
+
+    /**
+     * @brief 숫자를 한국인이 읽기 쉬운 거대 단위(만~대수)로 변환합니다.
+     * @param str_num 숫자 문자열
+     * @param include_comma 각 단위 내부(만 단위)에 콤마를 넣을지 여부
+     */
+    std::string to_human_readable_korean(const std::string& str_num, bool include_comma) {
+        if (str_num.empty() || str_num == "0" || str_num == "0.0") return "0";
+
+        bool is_negative = (!str_num.empty() && str_num[0] == '-');
+        size_t start_idx = is_negative ? 1 : 0;
+        size_t dot_pos = str_num.find('.');
+
+        std::string integer_part = str_num.substr(start_idx, (dot_pos == std::string::npos) ? std::string::npos : dot_pos - start_idx);
+        std::string fractional_part = (dot_pos == std::string::npos) ? "" : str_num.substr(dot_pos);
+
+        static const char* units[] = {
+            "", "만", "억", "조", "경", "해", "자", "양", "구", "간", "정", "재", "극",
+            "항하사", "아승기", "나유타", "불가사의", "무량대수", "대수"
+        };
+        const int max_unit_idx = (sizeof(units) / sizeof(units[0])) - 1;
+
+        std::vector<std::string> parts;
+        int len = (int)integer_part.length();
+        int unit_idx = 0;
+
+        for (int i = len; i > 0; i -= 4) {
+            int start = std::max(0, i - 4);
+            std::string section = integer_part.substr(start, i - start);
+            long long section_val = std::stoll(section);
+
+            if (section_val > 0) {
+                std::string section_str = std::to_string(section_val);
+                if (include_comma && section_val >= 1000) {
+                    section_str.insert(section_str.length() - 3, ",");
+                }
+                if (unit_idx <= max_unit_idx) {
+                    parts.push_back(section_str + units[unit_idx]);
+                }
+            }
+            unit_idx++;
+            if (unit_idx > max_unit_idx) break;
+        }
+
+        if (parts.empty()) return "0" + fractional_part;
+
+        std::reverse(parts.begin(), parts.end());
+        std::string result = "";
+        for (size_t i = 0; i < parts.size(); ++i) {
+            result += parts[i] + (i == parts.size() - 1 ? "" : " ");
+        }
+
+        return (is_negative ? "-" : "") + result + fractional_part;
+    }
+
+
 } //  namespace j2::string

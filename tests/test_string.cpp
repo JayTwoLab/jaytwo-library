@@ -152,3 +152,64 @@ TEST(StringUtils, EllipsizeBasicAndUtf8Safe)
     // 남는 부분: "한","글","A","B","C"
     EXPECT_EQ(ellipsize_utf8_safe(utf8, 5, "..."), std::string(u8"한글ABC") + "...");
 }
+
+
+/**
+ * @brief 천 단위(3자리) 및 만 단위(4자리) 구분자 테스트
+ */
+TEST(StringUtils, AddSeparator) {
+    // 1. 기본 3자리 구분 (양수)
+    EXPECT_EQ(add_separator("1234567"), u8"1,234,567");
+
+    // 2. 기본 3자리 구분 (음수 및 소수점)
+    EXPECT_EQ(add_separator("-1234.56"), u8"-1,234.56");
+
+    // 3. 한국식 4자리 구분
+    EXPECT_EQ(add_separator("123456789", 4), u8"1,2345,6789");
+
+    // 4. 짧은 문자열 (구분 불필요)
+    EXPECT_EQ(add_separator("123"), u8"123");
+    EXPECT_EQ(add_separator("-12"), u8"-12");
+    // 5. 빈 문자열 처리
+    EXPECT_EQ(add_separator(""), "");
+}
+
+/**
+ * @brief 한국어 읽기 방식(만~대수) 변환 테스트
+ */
+TEST(StringUtils, ToHumanReadableKorean) {
+    // 1. 일반적인 억/만 단위
+    // "12345678900" -> "123억 4,567만 8,900"
+    EXPECT_EQ(to_human_readable_korean("12345678900"), u8"123억 4,567만 8,900");
+
+    // 2. 중간 단위가 0인 경우 (생략 확인)
+    // "100000001" -> "1억 1"
+    EXPECT_EQ(to_human_readable_korean("100000001"), u8"1억 1");     
+    // 3. 음수 및 소수점 포함
+    EXPECT_EQ(to_human_readable_korean("-50000.5"), u8"-5만.5");
+
+    // 4. 콤마 미포함 옵션 테스트
+    EXPECT_EQ(to_human_readable_korean("12345", false), u8"1만 2345");
+}
+
+/**
+ * @brief 거대 단위(경, 해 ... 대수) 경계값 테스트
+ */
+TEST(StringUtils, LargeScaleKoreanUnit) {
+    // 1. '경' 단위 (10^16)
+    // 1,0000,0000,0000,0000
+    EXPECT_EQ(to_human_readable_korean("10000000000000000"), u8"1경");
+
+    // 2. '해' 단위 (10^20)
+    EXPECT_EQ(to_human_readable_korean("100000000000000000000"), u8"1해");
+
+    // 3. 최종 단위 '대수' (10^72)
+    // 1 뒤에 0이 72개 있는 경우
+    std::string daesu_str = "1" + std::string(72, '0');
+    EXPECT_EQ(to_human_readable_korean(daesu_str), u8"1대수");
+
+    // 4. 복합 거대 수치
+    // "100020003" (조 위의 단위 예시) -> "1경 2조 3" (중간 0 생략 확인)
+    EXPECT_EQ(to_human_readable_korean("10002000000000003"), u8"1경 2조 3");
+}
+

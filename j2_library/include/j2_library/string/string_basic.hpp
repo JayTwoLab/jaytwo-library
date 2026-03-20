@@ -205,4 +205,19 @@ namespace j2::string
     // -------------------------
     J2LIB_API bool wildcard_match(const std::string& text, const std::string& pattern);
 
+    /**
+     * @brief 숫자에 천 단위(3) 또는 만 단위(4) 구분자를 추가합니다.
+     * @param str_num 숫자 문자열
+     * @param step 구분 단위 (기본 3)
+     * @param separator 구분자 문자 (기본 ',')
+     */
+    J2LIB_API std::string add_separator(const std::string& str_num, int step = 3, char separator = ',');
+
+    /**
+     * @brief 숫자를 한국인이 읽기 쉬운 거대 단위(만~대수)로 변환합니다.
+     * @param str_num 숫자 문자열
+     * @param include_comma 각 단위 내부(만 단위)에 콤마를 넣을지 여부
+     */
+    J2LIB_API std::string to_human_readable_korean(const std::string& str_num, bool include_comma = true);
+
 } // namespace j2::core
