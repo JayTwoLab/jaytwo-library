@@ -1,12 +1,17 @@
 
 #include <iostream>
 #include <string>
+#include <filesystem>
 #include "j2_library/system/crash_handler.hpp" // 프로젝트 경로에 맞춰 수정
 
 int crash_test_function() {
     // 의도적으로 크래시를 유도하는 함수
-    int* ptr = nullptr; // Null pointer
-    return *ptr; // 이 줄에서 크래시 발생
+    //int* ptr = nullptr; // Null pointer
+    //return *ptr; // 이 줄에서 크래시 발생
+
+    std::string path = "invalid_path/new_directory";
+    std::filesystem::create_directory(path);
+    return 0;
 }
 
 int main() {
