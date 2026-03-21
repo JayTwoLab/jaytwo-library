@@ -15,12 +15,8 @@ add_subdirectory(log-manager) # 로그 매니저 예제
 
 add_subdirectory(network) # 네트워크 예제
 
+add_subdirectory(net_interface) # 네트워크 인터페이스 예제
+
 add_subdirectory(pub_sub) # 퍼블리시-서브스크라이브 예제
-
-
-
-
-
-
 
 

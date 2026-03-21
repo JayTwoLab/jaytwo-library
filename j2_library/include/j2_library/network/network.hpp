@@ -36,6 +36,7 @@
 // File downloader utilities and type definitions
 // #include "j2_library/network/downloader/downloader.hpp"
 
+#include "j2_library/network/interface/network_interface.hpp" // 네트워크 인터페이스 정보 및 통계 조회
 
 
 
