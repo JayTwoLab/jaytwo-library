@@ -33,7 +33,7 @@ int main() {
     j2::system::CrashHandler::initialize([](const std::string& log_message) {
         // 크래시 발생 시 실행되는 콜백 예시
         std::cout << "\n[User Callback] Crash Detected! Reporting to console...\n";
-        std::cout << log_message << std::endl;
+        std::cout << log_message << std::endl; // 로그 메시지를 콘솔에 출력
 
         // 여기서 파일 저장 로직을 추가할 수 있습니다.
         // std::ofstream file("crash_log.txt");
