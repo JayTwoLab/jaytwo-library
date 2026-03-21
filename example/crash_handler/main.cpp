@@ -3,6 +3,12 @@
 #include <string>
 #include "j2_library/system/crash_handler.hpp" // 프로젝트 경로에 맞춰 수정
 
+int crash_test_function() {
+    // 의도적으로 크래시를 유도하는 함수
+    int* ptr = nullptr; // Null pointer
+    return *ptr; // 이 줄에서 크래시 발생
+}
+
 int main() {
     std::cout << "--- j2::system::CrashHandler Example Start ---" << std::endl;
 
@@ -22,9 +28,10 @@ int main() {
     // 2. 의도적인 크래시 유도 (Null Pointer Dereference)
     // 실제 상황에서는 잘못된 메모리 접근 시 즉시 핸들러가 호출됩니다.
     int* invalid_ptr = nullptr;
+    // *invalid_ptr = 42;
 
     std::cout << "Accessing invalid memory now..." << std::endl;
-    *invalid_ptr = 42;
-
+    crash_test_function();
+   
     return 0;
 }
