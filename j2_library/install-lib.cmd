@@ -4,9 +4,8 @@ rmdir /s /q C:\opt\j2_library
 
 @REM cmake 설정
 @REM 라이브러리 설치 경로 : C:/opt/j2_library
-@REM 라이브러리는 릴리즈 빌드
+@REM 릴리즈(Release) 빌드 사용
 cmake -S . -B build -G "Ninja" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="C:/opt/j2_library"
-
 
 @REM 빌드
 cmake --build build
