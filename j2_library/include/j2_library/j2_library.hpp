@@ -25,6 +25,9 @@
 // -- crypt components --
 #include "j2_library/crypt/crypt.hpp"
 
+// -- config components --
+#include "j2_library/config/config.hpp"
+
 // --  core components --
 #include "j2_library/core/core.hpp" 
 

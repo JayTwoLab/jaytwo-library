@@ -4,27 +4,29 @@
 #include <cstdint>
 #include <vector>
 
+#include "j2_library/export.hpp"
+
 namespace j2::system {
 
-struct CpuInfo {
+struct J2LIB_API CpuInfo {
     double usage_percent = 0.0; // CPU 사용률 (0.0 ~ 100.0)
     int core_count = 0; // CPU 코어 수 (물리적 또는 논리적)
 };
 
-struct MemoryInfo {
+struct J2LIB_API MemoryInfo {
     uint64_t total_phys_kb = 0; // 총 물리 메모리 (KB)
     uint64_t available_phys_kb = 0; // 사용 가능한 물리 메모리 (KB)
     double usage_percent = 0.0; // 메모리 사용률 (0.0 ~ 100.0)
 };
 
-struct DiskInfo {
+struct J2LIB_API DiskInfo {
     std::string mount_path; // 디스크가 마운트된 경로 (예: "/", "C:\\")
     uint64_t total_gb = 0; // 총 디스크 용량 (GB)
     uint64_t free_gb = 0; // 사용 가능한 디스크 용량 (GB)
     double usage_percent = 0.0; // 디스크 사용률 (0.0 ~ 100.0)
 };
 
-class ResourceMonitor {
+class J2LIB_API ResourceMonitor {
 public:
     /**
         * @brief CPU 사용률을 계산합니다. (이전 호출 시점과의 차이 계산 필요)

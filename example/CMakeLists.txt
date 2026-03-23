@@ -6,6 +6,8 @@ set(J2_LIB_EXAMPLE_VERSION "0.1.0")
 
 add_subdirectory(concurrent_queue) # 동시성 큐 예제
 
+add_subdirectory(config_example) # 설정 관리 예제
+
 add_subdirectory(crash_handler) # 크래시 핸들러 예제
 
 add_subdirectory(file-finder) # 파일 파인더 예제
