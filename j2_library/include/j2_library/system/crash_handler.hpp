@@ -32,8 +32,10 @@ namespace j2 {
         private:
             // OS별 네이티브 핸들러
 #ifdef _WIN32
+            // Windows Structured Exception Handling (SEH) 기반 핸들러
             static long __stdcall windows_exception_handler(struct _EXCEPTION_POINTERS* info);
 #else
+            // POSIX 시그널 핸들러 (SIGSEGV, SIGABRT 등)
             static void posix_signal_handler(int sig);
             static std::string addr_to_line(void* addr);
 #endif
@@ -41,7 +43,7 @@ namespace j2 {
             // C++ terminate 핸들러
             static void cxx_terminate_handler();
 
-            static CrashCallback s_callback;
+            static CrashCallback s_callback; // 등록된 콜백 함수
             static void handle_crash(const std::string& type, const std::string& reason);
         };
 

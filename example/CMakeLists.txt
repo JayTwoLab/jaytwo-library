@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 3.26)
 
-set(J2_LIB_EXAMPLE_VERSION "0.1.0")
+# 예제 프로젝트
 project(j2_lib_example VERSION ${J2_LIB_EXAMPLE_VERSION} LANGUAGES CXX)
+set(J2_LIB_EXAMPLE_VERSION "0.1.0")
 
 add_subdirectory(concurrent_queue) # 동시성 큐 예제
 
@@ -19,4 +20,4 @@ add_subdirectory(net_interface) # 네트워크 인터페이스 예제
 
 add_subdirectory(pub_sub) # 퍼블리시-서브스크라이브 예제
 
-
+add_subdirectory(resource_monitor) # 리소스 모니터 예제

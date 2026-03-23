@@ -6,21 +6,21 @@
 
 int crash_test_function() {
     // 의도적으로 크래시를 유도하는 함수
+    
     //int* ptr = nullptr; // Null pointer
     //return *ptr; // 이 줄에서 크래시 발생
 
-    std::string path = "invalid_path/new_directory";
+    std::string path = "invalid_path/new_directory"; // 존재하지 않는 경로
 
     // try ... catch 블록으로 예외 처리
     try {
-        std::filesystem::create_directory(path);
+        std::filesystem::create_directory(path); // 이 줄에서 예외 발생
     }
     catch (const std::filesystem::filesystem_error& e) {
         std::cerr << "Filesystem error: " << e.what() << std::endl;
     }   
 
-    // 예외 처리를 하지 않고 크래시 유도
-    std::filesystem::create_directory(path);
+    std::filesystem::create_directory(path); // 예외 처리를 하지 않고 크래시 유도
 
     return 0;
 }
