@@ -10,7 +10,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_executable(${EXE_NAME} main.cpp)
 
 ########################################################
-# j2_library 라이브러리 관련하여 추가할 부분 
+# j2_library 라이브러리 관련하여 추가할 부분  
 # {{
 
 # j2_library 루트 경로 설정 (전역 변수)

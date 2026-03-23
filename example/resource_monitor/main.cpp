@@ -39,8 +39,9 @@ int main() {
 
         std::cout << " [" << std::fixed << std::setprecision(1) << "System Status]" << std::endl;
         std::cout << "------------------------------------------" << std::endl;
-        std::cout << "CPU Usage:      " << cpu_usage << " %" << std::endl;
 
+        // CPU 사용률과 코어별 사용률 출력
+        std::cout << "CPU Usage:      " << cpu_usage << " %" << std::endl;
         auto per_core = ResourceMonitor::get_cpu_usage_per_core();
         if (!per_core.empty()) {
             std::cout << " Per-core CPU Usage:" << std::endl;
@@ -50,12 +51,16 @@ int main() {
             }
         }
 
+        // 메모리 사용률과 사용 가능한 메모리 출력
         std::cout << "Memory Usage:   " << mem_info.usage_percent << " %" << std::endl;
         std::cout << "  (Used: " << (mem_info.total_phys_kb - mem_info.available_phys_kb) / 1024 << " MB / "
                   << "Total: " << mem_info.total_phys_kb / 1024 << " MB)" << std::endl;
+
+        // 디스크 사용률과 사용 가능한 디스크 용량 출력
         std::cout << "Disk (" << root_path << "):   " << disk_info.usage_percent << " %" << std::endl;
         std::cout << "  (Used: " << (disk_info.total_gb - disk_info.free_gb) << " GB / "
                   << "Total: " << disk_info.total_gb << " GB)" << std::endl;
+
         std::cout << "==========================================" << std::endl;
 
         std::this_thread::sleep_for(std::chrono::seconds(1));
