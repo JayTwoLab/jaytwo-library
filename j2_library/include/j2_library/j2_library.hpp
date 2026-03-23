@@ -67,6 +67,9 @@
 // -- queue components --
 #include "j2_library/queue/queue.hpp"
 
+// -- result components --
+#include "j2_library/result/result.hpp"
+
 // -- schedule components --
 #include "j2_library/schedule/schedule.hpp"
 
