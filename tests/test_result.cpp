@@ -14,12 +14,14 @@ struct validation_err { std::string field_name; std::string err_msg; };
 
 // 사용자 Result 타입 정의 (std::variant 두 개를 명시적으로 전달)
 using my_result = j2::result::result_container<
-    std::variant<basic_status, user_profile>,
-    std::variant<network_err, validation_err>
+    std::variant<basic_status, user_profile>, // 성공 케이스: Enum과 Struct
+    std::variant<network_err, validation_err> // 실패 케이스: Enum과 Struct
 >;
 
 // my_result의 코든 결과 분기가 되는 코드는 다음과 같다.
+// 
 // auto res = my_result::success(basic_status::ok);
+// 
 // res.match(
 //     j2::result::overload{
 //         [&](basic_status s) { /* 성공 케이스: Enum */ },
