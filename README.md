@@ -1,66 +1,32 @@
 ## `j2_library` Library
 
-> :kr: This project only supports Korean.
-
-<br />
-
 ---
 
-### 0. `j2_library` 소개
+### 개요
 
-- C++ 기반 다기능 라이브러리
-	- `C++` 표준과 써드 파티 일부 사용
-	- `Windows`, `Linux` 지원 (`MacOS` 지원 예정)
-	- `cmake`, `ninja` 빌드 시스템 사용
+`j2_library`는 C++17 기반의 범용 유틸리티 라이브러리입니다. Windows와 Linux를 우선 지원하며, 향후 macOS 지원이 예정되어 있습니다. 빌드는 CMake(Ninja) 기반으로 수행됩니다.
 
-- 라이브러리 구성 개요
-	- `bit`
-		- 비트 연산  
-	- `core`
-		- 일반 유틸리티 
-	- `datetime`
-		- 날짜/시간 처리 및 변환
-    - `directory`
-		- 디렉토리 생성 유틸
-	- `encoding`
-	    - 문자열 인코딩 변환
-	- `expected`
-		- C++23 `std::expected` 대체 유틸 
-	- `file`
-		- 파일 찾기
-	- `ini`
-		- INI 파일 읽기/쓰기
-	- `json`
-		- 놀먼 json 활용 유틸
-	- `log`
-		- 무정지 로거 관리자
-	- `macro`
-		- setter/getter 매크로
-		- try-opt 매크로
-	- `network`
-		- HTTP/HTTPS 파일 다운로드
-		- FTP/SFTP 클라이언트
-		- REST API
-		- TCP 클라이언트/서버
-		- UDP 수신자/송신자
-	- `overload`
-		- 람다 상속 유틸리티
-	- `queue`
-		- SPSC 스레드 안전 큐
-	- `schedule`
-		- 주단위 스케쥴러
-	- `string`
-		- 뮤텍스 문자열
-		- 크로스 플랫폼 콘솔 인코딩
-		- float/double 문자열 변환 및 비교
-		- UTF8 문자열
-	- `thread`
-		- 동적 쓰레드
-	- `uuid`
-		- UUID 생성
-	- `xml`
-		- 소형 XML 파서
-		 
+주요 기능 모듈:
+- `bit` — 비트 연산 유틸
+- `core` — 일반 유틸리티
+- `datetime` — 날짜/시간 처리
+- `directory` — 디렉토리 생성/조작 유틸
+- `encoding` — 문자열 인코딩 변환
+- `expected` — `std::expected` 대체 유틸
+- `file` — 파일 탐색 유틸
+- `ini` — INI 파일 읽기/쓰기
+- `json` — JSON 처리 유틸 (nlohmann/json 등 활용)
+- `log` — 로거 관리자
+- `macro` — 편의 매크로 집합
+- `network` — HTTP/HTTPS/FTP/SFTP, TCP/UDP 등 네트워크 유틸
+- `overload` — 람다 오버로드 유틸
+- `queue` — SPSC 스레드 안전 큐
+- `schedule` — 스케줄러
+- `string` — 문자열 유틸 (UTF-8, 콘솔 인코딩 등)
+- `thread` — 동적 스레드 유틸
+- `uuid` — UUID 생성
+- `xml` — 경량 XML 파서
+
 <br />
 
 ---
@@ -82,6 +48,23 @@
 ---
 
 ### 2. 빌드
+
+- **빠른 시작**
+	1. 소스 클론
+		```bash
+		git clone https://github.com/JayTwoLab/jaytwo-library.git
+		cd jaytwo-library
+		```
+	2. 빌드 (예: Release, out-of-source)
+		```bash
+		mkdir -p build && cd build
+		cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Release ..
+		ninja
+		```
+	3. 테스트 실행
+		```bash
+		ninja test
+		```
 
 - [라이브러리 빌드 및 설치](Build-Lib.md)
 	- `Visual Studio` 
@@ -107,8 +90,16 @@
 
 ---
 
+### 기여
+
+기여는 환영합니다. 변경 시 브랜치를 만들고 PR을 열어 주세요. 자세한 기여 규칙은 `CONTRIBUTING.md`를 참조하십시오.
+
+<br />
+
+---
+
 ### 라이선스 
-- [MIT 라이선스](LICENSE) 
+- 본 프로젝트는 MIT 라이선스로 배포됩니다. 자세한 내용은 `LICENSE` 파일을 참조하세요.
 
 
 
