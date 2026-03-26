@@ -1,4 +1,3 @@
-#if 0 // disabled for now
 
 #include "j2_library/network/ftp/ftp_client.hpp"
 
@@ -260,4 +259,4 @@ bool sftp_client::remove_directory(const std::string& path) {
     return false;
 }
 
-#endif // disabled for now
+

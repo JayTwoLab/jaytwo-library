@@ -6,6 +6,7 @@
 
 namespace j2::expected
 {
+    // C++17 스타일의 expected<T, E> 구현
 
     /* ===============================
      * unexpected<E>

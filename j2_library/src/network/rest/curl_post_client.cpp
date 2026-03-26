@@ -1,4 +1,3 @@
-#if 0 // disabled for now
 
 #include <sstream>
 #include <algorithm>
@@ -317,4 +316,4 @@ curl_post_client::result_code
 
 } // namespace j2::network::rest
 
-#endif // disabled for now
+

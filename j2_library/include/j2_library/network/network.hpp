@@ -26,17 +26,19 @@
 #include "j2_library/network/udp/udp_receiver.hpp"
 #include "j2_library/network/udp/udp_sender.hpp"
 
-// Rest API (using curl)
-// #include "j2_library/network/rest/curl_get_client.hpp"
-// #include "j2_library/network/rest/curl_post_client.hpp"
+// Rest API (libcurl 사용)
+#include "j2_library/network/rest/curl_get_client.hpp"
+#include "j2_library/network/rest/curl_post_client.hpp"
 
-// FTP/SFTP client utilities and type definitions (using curl)
-// #include "j2_library/network/ftp/ftp_client.hpp"
+// FTP/SFTP 클라이언트 구현 (libcurl 사용)    
+#include "j2_library/network/ftp/ftp_client.hpp" 
 
-// File downloader utilities and type definitions
-// #include "j2_library/network/downloader/downloader.hpp"
+// 파일 다운로드 유틸리티 (libcurl 사용) 
+#include "j2_library/network/downloader/downloader.hpp" 
 
-#include "j2_library/network/interface/network_interface.hpp" // 네트워크 인터페이스 정보 및 통계 조회
+// 네트워크 인터페이스 정보 및 통계 조회
+#include "j2_library/network/interface/network_interface.hpp" 
+
 
 
 

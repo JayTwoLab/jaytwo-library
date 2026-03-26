@@ -1,4 +1,3 @@
-#if 0 // disabled for now
 
 #include "j2_library/network/downloader/multipart_downloader.hpp"
 
@@ -317,4 +316,4 @@ namespace j2::network::downloader
 
 } // namespace j2::network::downloader
 
-#endif // disabled for now
+

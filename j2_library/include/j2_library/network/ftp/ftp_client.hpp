@@ -1,5 +1,3 @@
-#if 0 // disabled for now
-
 #pragma once
 
 #include <string>
@@ -170,4 +168,4 @@ namespace j2::network::ftp::client {
 } // namespace j2::network::ftp::client
 
 
-#endif 
+

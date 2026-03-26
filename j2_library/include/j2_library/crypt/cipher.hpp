@@ -13,8 +13,14 @@ namespace j2 {
         class J2LIB_API cipher {
         public:
             cipher() = default;
+
+            // AES-128 키 설정 (16바이트)
             void set_key(const std::string& key);
+
+            // AES-128 ECB 모드로 문자열 암호화 
             std::string encrypt(const std::string& plainText) const;
+
+            // AES-128 ECB 모드로 16진수 문자열 복호화
             std::string decrypt(const std::string& cipherTextHex) const;
 
         private:
