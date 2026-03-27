@@ -16,13 +16,13 @@
 
 using namespace j2::network::ftp::client;
 
-// Custom Progress Listener 1: Progress Bar
+// 사용자 정의 진행 리스너 1: 진행 표시줄
 class progress_bar_listener : public i_progress_listener {
 public:
     void on_progress(curl_off_t dlnow, curl_off_t dltotal,
         curl_off_t ulnow, curl_off_t ultotal) override {
 
-        // Download progress
+        // 다운로드 진행률
         if (dltotal > 0) {
             double percentage = (static_cast<double>(dlnow) / dltotal) * 100.0;
             int bar_width = 50;
@@ -42,7 +42,7 @@ public:
             }
         }
 
-        // Upload progress
+        // 업로드 진행률
         if (ultotal > 0) {
             double percentage = (static_cast<double>(ulnow) / ultotal) * 100.0;
             int bar_width = 50;
@@ -64,7 +64,7 @@ public:
     }
 };
 
-// Custom Progress Listener 2: Advanced (Speed + ETA)
+// 사용자 정의 진행 리스너 2: 고급 (속도 + ETA)
 class advanced_progress_listener : public i_progress_listener {
 private:
     std::chrono::steady_clock::time_point start_time;
@@ -82,15 +82,15 @@ public:
         auto now = std::chrono::steady_clock::now();
         auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - last_time).count();
 
-        // Download progress
-        if (dltotal > 0 && elapsed >= 100) { // Update every 100ms
+        // 다운로드 진행률
+        if (dltotal > 0 && elapsed >= 100) { // 100ms마다 업데이트
             double percentage = (static_cast<double>(dlnow) / static_cast<double>(dltotal)) * 100.0;
 
-            // Speed calculation         (KB/s)
+            // 속도 계산 (KB/s)
             curl_off_t byte_diff = dlnow - last_bytes;
             double speed = (static_cast<double>(byte_diff) / 1024.0) / (static_cast<double>(elapsed) / 1000.0);
 
-            // Remaining time estimation        
+            // 남은 시간 추정
             double remaining_bytes = static_cast<double>(dltotal) - static_cast<double>(dlnow);
             double eta = (speed > 0) ? (remaining_bytes / 1024.0) / speed : 0;
 
@@ -116,7 +116,7 @@ public:
             }
         }
 
-        // Upload progress
+        // 업로드 진행률
         if (ultotal > 0 && elapsed >= 100) {
             double percentage = (static_cast<double>(ulnow) / static_cast<double>(ultotal)) * 100.0;
 
@@ -150,7 +150,7 @@ public:
     }
 };
 
-// Custom Progress Listener 3: Log File
+// 사용자 정의 진행 리스너 3: 로그 파일
 class log_progress_listener : public i_progress_listener {
 private:
     std::ofstream log_file;
@@ -179,7 +179,7 @@ public:
         curl_off_t ulnow, curl_off_t ultotal) override {
         if (!log_file.is_open()) return;
 
-        // Get current time
+        // 현재 시간 가져오기
         auto now = std::chrono::system_clock::now();
         auto now_time_t = std::chrono::system_clock::to_time_t(now);
         auto now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()) % 1000;
@@ -195,7 +195,7 @@ public:
         oss << std::put_time(&tm_now, "%Y-%m-%d %H:%M:%S")
             << "." << std::setfill('0') << std::setw(3) << now_ms.count();
 
-        // Log download progress
+        // 다운로드 진행 기록
         if (dltotal > 0) {
             double percentage = (static_cast<double>(dlnow) / dltotal) * 100.0;
             log_file << "[" << oss.str() << "] Download: "
@@ -203,7 +203,7 @@ public:
                 << "(" << dlnow << "/" << dltotal << " bytes)" << std::endl;
         }
 
-        // Log upload progress
+        // 업로드 진행 기록
         if (ultotal > 0) {
             double percentage = (static_cast<double>(ulnow) / ultotal) * 100.0;
             log_file << "[" << oss.str() << "] Upload: "
@@ -213,7 +213,7 @@ public:
     }
 };
 
-// Custom Progress Listener 4: Multi-File Progress Tracking
+// 사용자 정의 진행 리스너 4: 다중 파일 진행 추적
 class multi_file_progress_listener : public i_progress_listener {
 private:
     std::string current_file;
@@ -233,7 +233,7 @@ public:
     void on_progress(curl_off_t dlnow, curl_off_t dltotal,
         curl_off_t ulnow, curl_off_t ultotal) override {
 
-        // Download progress
+        // 다운로드 진행률
         if (dltotal > 0) {
             double percentage = (static_cast<double>(dlnow) / dltotal) * 100.0;
             std::cout << "\r[File " << file_index << "/" << total_files << "] "
@@ -245,7 +245,7 @@ public:
             }
         }
 
-        // Upload progress
+        // 업로드 진행률
         if (ultotal > 0) {
             double percentage = (static_cast<double>(ulnow) / ultotal) * 100.0;
             std::cout << "\r[File " << file_index << "/" << total_files << "] "
@@ -267,8 +267,8 @@ private:
 public:
     spdlog_progress_listener() = default;
 
-    // logger_name, console/file enable, file path, file options
-    // max_file_size: bytes, max_files: backup count, daily: use daily file sink if true
+    // logger 이름, 콘솔/파일 사용 여부, 파일 경로, 파일 옵션
+    // max_file_size: 바이트, max_files: 백업 개수, daily: true면 일별 파일 싱크 사용
     void setup_logger(const std::string& name,
         bool use_console,
         bool use_file,
@@ -286,11 +286,11 @@ public:
         if (use_file && !file_path.empty()) {
             spdlog::sink_ptr file_sink;
             if (daily) {
-                // Daily file sink: rotates at midnight, keeps all logs (no max_files)
+                // 일별 파일 싱크: 자정에 회전하며 모든 로그를 보관(백업 수 미적용)
                 file_sink = std::make_shared<spdlog::sinks::daily_file_sink_mt>(file_path, 0, 0);
             }
             else {
-                // Rotating file sink: rotates when file reaches max_file_size, keeps max_files backups
+                // 회전 파일 싱크: 파일이 max_file_size에 도달하면 회전하고 max_files 백업을 유지
                 file_sink = std::make_shared<spdlog::sinks::rotating_file_sink_mt>(file_path, max_file_size, max_files);
             }
             sinks.push_back(file_sink);
@@ -312,13 +312,13 @@ public:
 
     void on_progress(curl_off_t dlnow, curl_off_t dltotal,
         curl_off_t ulnow, curl_off_t ultotal) override {
-        // Download progress
+        // 다운로드 진행
         if (!logger) return;
         if (dltotal > 0) {
             double percentage = (static_cast<double>(dlnow) / dltotal) * 100.0;
             logger->info("Download: {:.2f}% ({} / {} bytes)", percentage, dlnow, dltotal);
         }
-        // Upload progress
+        // 업로드 진행
         if (ultotal > 0) {
             double percentage = (static_cast<double>(ulnow) / ultotal) * 100.0;
             logger->info("Upload: {:.2f}% ({} / {} bytes)", percentage, ulnow, ultotal);
@@ -327,11 +327,11 @@ public:
 };
 
 
-
+                                                                    
 
 int main() {
 
-    // --- Print supported protocols (for debugging SFTP support) ---
+    // --- 지원하는 프로토콜 출력 (SFTP 지원 디버깅용) ---
     std::cout << "Supported protocols: ";
     curl_version_info_data* data = curl_version_info(CURLVERSION_NOW);
     if (data && data->protocols) {
@@ -344,27 +344,25 @@ int main() {
     std::cout << "=== FTP/SFTP Object-Based Progress Listener Example ===" << std::endl << std::endl;
 
 
-    // Example 1: Basic Progress Listener
-    if (false) { // set true to enable test
+    // 예제 1: 기본 진행 리스너
+    if (false) { // 테스트 활성화를 위해 true로 설정
 
         std::cout << "[ Example 1: Basic Progress Listener ]" << std::endl;
         {
             ftp_client ftp_client;
             default_progress_listener default_listener;
 
-            // create filtered with default ctor, then set target and policy
+            // 기본 생성자로 filtered 생성 후 대상과 정책 설정
             filtered_progress_listener filtered_default;
-            filtered_default.set_target(&default_listener); // non-owning
-            filtered_default.set_policy(1, 100); // 1% or 100ms
-            // NOTE: If set_policy(1,100), the log is not output 
-            // because it does not pass to the internal listener
-            // unless the integer percentage increases by more than 1% 
-            // (or 100 ms has elapsed).
+            filtered_default.set_target(&default_listener); // 비소유 포인터
+            filtered_default.set_policy(1, 100); // 1% 또는 100ms
+            // 참고: set_policy(1,100)로 설정하면 로그는 내부 리스너로 전달되지 않으면
+            // 정수 퍼센트가 1% 이상 증가하거나(또는 100ms가 경과) 하지 않는 한 출력되지 않습니다.
 
             if (ftp_client.connect("127.0.0.1", 2121, "username", "password")) {
                 std::cout << "FTP server connection successful!" << std::endl;
 
-                // Register filtered progress listener
+                // 필터된 진행 리스너 등록
                 ftp_client.set_progress_listener(&filtered_default);
 
                 std::cout << std::endl << "Downloading file... /remote/file.zip" << std::endl;
@@ -375,7 +373,7 @@ int main() {
                     std::cerr << "Download failed: " << ftp_client.get_last_error() << std::endl;
                 }
 
-                // disable progress for next transfer
+                // 다음 전송에 대해 진행 표시 비활성화
                 std::cout << std::endl << "Downloading file... /remote/other.bin" << std::endl;
                 ftp_client.remove_progress_listener();
                 if (ftp_client.download("/remote/other.bin", "other.bin")) {
@@ -385,7 +383,7 @@ int main() {
                     std::cerr << "Download failed: " << ftp_client.get_last_error() << std::endl;
                 }
 
-                // Download a non-existing file to demonstrate error handling
+                // 존재하지 않는 파일 다운로드로 오류 처리 시연
                 std::cout << std::endl << "Downloading file... /not/exist.file" << std::endl;
                 ftp_client.remove_progress_listener();
                 if (ftp_client.download("/not/exist.file", "exist.file")) {
@@ -400,17 +398,17 @@ int main() {
         std::cout << "\n" << std::string(60, '=') << "\n" << std::endl;
     }
 
-    // Example 2: Progress Bar Listener
-    if (false) { // set true to enable test 
+    // 예제 2: 진행 표시줄 리스너
+    if (false) { // 테스트 활성화를 위해 true로 설정 
         sftp_client sftp_client;
         progress_bar_listener progress_bar;
 
-        // default construct filtered and set target/policy
+        // filtered를 기본 생성 후 대상/정책 설정
         filtered_progress_listener filtered_bar;
         filtered_bar.set_target(&progress_bar);
         filtered_bar.set_policy(1, 100);
 
-        // --- Auto-create large_file.iso if it does not exist ---
+        // --- large_file.iso가 없으면 자동 생성 ---
         const std::string local_iso = "large_file.iso";
         if (!std::filesystem::exists(local_iso)) {
             std::ofstream ofs(local_iso, std::ios::binary);
@@ -429,7 +427,7 @@ int main() {
         if (sftp_client.connect("127.0.0.1", 2222, "username", "password")) {
             std::cout << "SFTP server connection successful!" << std::endl;
 
-            // Register progress listener
+            // 진행 리스너 등록
             sftp_client.set_progress_listener(&filtered_bar);
 
             std::cout << "Uploading file..." << std::endl;
@@ -445,8 +443,8 @@ int main() {
     }
 
 
-    // Example 3: Advanced Progress Listener (Speed  + ETA)
-    if (false) { // set true to enable test 
+    // 예제 3: 고급 진행 리스너 (속도 + ETA)
+    if (false) { // 테스트 활성화를 위해 true로 설정 
 
         std::cout << "[ Example 3: Advanced Progress Listener ]" << std::endl;
         {
@@ -456,7 +454,7 @@ int main() {
             if (ftp_client.connect("127.0.0.1", 2121, "username", "password")) {
                 std::cout << "FTP server connection successful!" << std::endl;
 
-                // Register advanced progress listener
+                // 고급 진행 리스너 등록
                 ftp_client.set_progress_listener(&advanced_progress);
 
                 std::cout << "Downloading large file..." << std::endl;
@@ -473,19 +471,19 @@ int main() {
 
     }
 
-    // Example 4: Log File Progress Listener
-    if (false) { // set true to enable test 
+    // 예제 4: 로그 파일 진행 리스너
+    if (false) { // 테스트 활성화를 위해 true로 설정 
 
         std::cout << "[ Example 4: Log File Listener ]" << std::endl;
         {
             ftp_client ftp_client;
             log_progress_listener log_listener("transfer.log");
 
-            // --- If document.pdf does not exist, create a dummy file ---
+            // --- document.pdf가 없으면 더미 파일 생성 ---
             const std::string local_doc = "document.pdf";
             if (!std::filesystem::exists(local_doc)) {
                 std::ofstream ofs(local_doc, std::ios::binary);
-                // 512KB dummy file (adjust size if needed)
+                // 512KB 더미 파일 (필요 시 크기 조정)
                 constexpr size_t dummy_size = 512 * 1024;
                 std::vector<char> buffer(1024, 'B');
                 for (size_t written = 0; written < dummy_size; written += buffer.size()) {
@@ -501,7 +499,7 @@ int main() {
             if (ftp_client.connect("127.0.0.1", 2121, "username", "password")) {
                 std::cout << "FTP server connection successful!" << std::endl;
 
-                // Register log listener
+                // 로그 리스너 등록
                 ftp_client.set_progress_listener(&log_listener);
 
                 std::cout << "Uploading file (recorded in log file)..." << std::endl;
@@ -519,8 +517,8 @@ int main() {
     }
 
 
-    // Example 5: Multi-file Progress Tracking
-    if (false) { // set true to enable test 
+    // 예제 5: 다중 파일 진행 추적
+    if (false) { // 테스트 활성화를 위해 true로 설정 
 
         std::cout << "[ Example 5: Multi-file Progress Listener ]" << std::endl;
         {
@@ -532,16 +530,16 @@ int main() {
                 "file3.iso"
             };
 
-            // --- If file does not exist, create a dummy file ---
+            // --- 파일이 없으면 더미 파일 생성 ---
             for (const auto& fname : files) {
                 if (!std::filesystem::exists(fname)) {
                     std::ofstream ofs(fname, std::ios::binary);
-                    // Create file with different size by extension (example)
+                    // 확장자에 따라 다른 크기의 파일 생성 (예시)
                     size_t dummy_size = 0;
                     if (fname.find(".zip") != std::string::npos) dummy_size = 256 * 1024;      // 256KB
                     else if (fname.find(".tar.gz") != std::string::npos) dummy_size = 512 * 1024; // 512KB
                     else if (fname.find(".iso") != std::string::npos) dummy_size = 1 * 1024 * 1024; // 1MB
-                    else dummy_size = 128 * 1024; // default
+                    else dummy_size = 128 * 1024; // 기본
 
                     std::vector<char> buffer(1024, 'C');
                     for (size_t written = 0; written < dummy_size; written += buffer.size()) {
@@ -566,7 +564,7 @@ int main() {
                     multi_progress.set_current_file(files[i], static_cast<int>(i) + 1);
 
                     if (ftp_client.upload(files[i], "/remote/" + files[i])) {
-                        // Success
+                        // 성공
                         std::cout << "Upload complete: " << files[i] << std::endl;
                     }
                     else {
@@ -583,8 +581,8 @@ int main() {
     }
 
 
-    // Example 6: Remove Progress Listener (No Progress Display)
-    if (false) { // set true to enable test 
+    // 예제 6: 진행 리스너 제거 (진행 표시 없음)
+    if (false) { // 테스트 활성화를 위해 true로 설정 
 
         std::cout << "[ Example 6: No Progress Display ]" << std::endl;
         {
@@ -593,7 +591,7 @@ int main() {
             if (ftp_client.connect("127.0.0.1", 2121, "username", "password")) {
                 std::cout << "FTP server connection successful!" << std::endl;
 
-                // No progress listener (or call remove_progress_listener())
+                // 진행 리스너 없음 (또는 remove_progress_listener() 호출)
 
                 std::cout << "Downloading file (no progress display)..." << std::endl;
                 if (ftp_client.download("/remote/file.txt", "file.txt")) {
@@ -607,16 +605,16 @@ int main() {
 
     }
 
-    // Example 7: spdlog Progress Listener
-    if (false) { // set true to enable test
+    // 예제 7: spdlog 진행 리스너
+    if (false) { // 테스트 활성화를 위해 true로 설정
 
         std::cout << "[ Example 7: spdlog Progress Listener ]" << std::endl;
         {
             sftp_client sftp_client;
             spdlog_progress_listener spdlog_listener;
 
-            // Setup logger: console + rotating file
-            // Parameters: logger_name, use_console, use_file, file_path, max_file_size, max_files, daily
+            // 로거 설정: 콘솔 + 회전 파일
+            // 매개변수: logger_name, use_console, use_file, file_path, max_file_size, max_files, daily
             spdlog_listener.setup_logger(
                 "sftp_transfer",           // Logger name
                 true,                       // Console output enabled
@@ -627,11 +625,11 @@ int main() {
                 false                       // Use rotating file sink (not daily)
             );
 
-            // --- Create dummy file if it doesn't exist ---
+            // --- 파일이 없으면 더미 파일 생성 ---
             const std::string local_video = "video.mp4";
             if (!std::filesystem::exists(local_video)) {
                 std::ofstream ofs(local_video, std::ios::binary);
-                // 2MB dummy file
+                // 2MB 더미 파일
                 constexpr size_t dummy_size = 2 * 1024 * 1024;
                 std::vector<char> buffer(4096, 'V');
                 for (size_t written = 0; written < dummy_size; written += buffer.size()) {
@@ -648,7 +646,7 @@ int main() {
             if (sftp_client.connect("127.0.0.1", 2222, "username", "password")) {
                 std::cout << "SFTP server connection successful!" << std::endl;
 
-                // Register spdlog listener
+                // spdlog 리스너 등록
                 sftp_client.set_progress_listener(&spdlog_listener);
 
                 std::cout << "Uploading file (logged with spdlog)..." << std::endl;
@@ -672,15 +670,15 @@ int main() {
         std::cout << "\n" << std::string(60, '=') << "\n" << std::endl;
     }
 
-    // Example 7-2: spdlog with Daily File Sink
-    if (false) { // set true to enable test
+    // 예제 7-2: spdlog 일별 파일 싱크
+    if (false) { // 테스트 활성화를 위해 true로 설정
 
         std::cout << "[ Example 7-2: spdlog Daily File Sink ]" << std::endl;
         {
             ftp_client ftp_client;
             spdlog_progress_listener daily_logger;
 
-            // Setup logger with daily file rotation (rotates at midnight)
+            // 일별 회전으로 로거 설정 (자정에 회전)
             daily_logger.setup_logger(
                 "ftp_daily_transfer",      // Logger name
                 true,                       // Console output enabled
@@ -691,11 +689,11 @@ int main() {
                 true                        // Use daily file sink
             );
 
-            // --- Create dummy file if it doesn't exist ---
+            // --- 파일이 없으면 더미 파일 생성 ---
             const std::string local_backup = "backup.tar.gz";
             if (!std::filesystem::exists(local_backup)) {
                 std::ofstream ofs(local_backup, std::ios::binary);
-                // 1.5MB dummy file
+                // 1.5MB 더미 파일
                 constexpr size_t dummy_size = 1536 * 1024;
                 std::vector<char> buffer(4096, 'D');
                 for (size_t written = 0; written < dummy_size; written += buffer.size()) {
@@ -712,7 +710,7 @@ int main() {
             if (ftp_client.connect("127.0.0.1", 2121, "username", "password")) {
                 std::cout << "FTP server connection successful!" << std::endl;
 
-                // Register daily logger
+                // 일별 로거 등록
                 ftp_client.set_progress_listener(&daily_logger);
 
                 std::cout << "Uploading backup file (logged daily)..." << std::endl;
@@ -728,15 +726,15 @@ int main() {
         std::cout << "\n" << std::string(60, '=') << "\n" << std::endl;
     }
 
-    // Example 7-3: spdlog with File Only (No Console)
-    if (false) { // set true to enable test
+    // 예제 7-3: spdlog 파일 전용 (콘솔 없음)
+    if (false) { // 테스트 활성화를 위해 true로 설정
 
         std::cout << "[ Example 7-3: spdlog File Only (Silent Mode) ]" << std::endl;
         {
             sftp_client sftp_client;
             spdlog_progress_listener silent_logger;
 
-            // Setup logger with file only (no console output)
+            // 파일 전용 로거 설정 (콘솔 출력 없음)
             silent_logger.setup_logger(
                 "sftp_silent",              // Logger name
                 false,                      // Console output disabled
@@ -747,11 +745,11 @@ int main() {
                 false                       // Use rotating file sink
             );
 
-            // --- Create dummy file if it doesn't exist ---
+            // --- 파일이 없으면 더미 파일 생성 ---
             const std::string local_data = "data.db";
             if (!std::filesystem::exists(local_data)) {
                 std::ofstream ofs(local_data, std::ios::binary);
-                // 3MB dummy file
+                // 3MB 더미 파일
                 constexpr size_t dummy_size = 3 * 1024 * 1024;
                 std::vector<char> buffer(4096, 'S');
                 for (size_t written = 0; written < dummy_size; written += buffer.size()) {
@@ -768,7 +766,7 @@ int main() {
             if (sftp_client.connect("127.0.0.1", 2222, "username", "password")) {
                 std::cout << "SFTP server connection successful!" << std::endl;
 
-                // Register silent logger (file only)
+                // 무음 모드 로거 등록 (파일 전용)
                 sftp_client.set_progress_listener(&silent_logger);
 
                 std::cout << "Uploading file in silent mode (no console output)..." << std::endl;
@@ -784,8 +782,8 @@ int main() {
         std::cout << "\n" << std::string(60, '=') << "\n" << std::endl;
     }
 
-    // Example 8: List Directory Entries
-    if (false) { // set true to enable test
+    // 예제 8: 디렉터리 항목 나열
+    if (false) { // 테스트 활성화를 위해 true로 설정
 
         ftp_client client;
         if (client.connect("127.0.0.1", 2121, "username", "password")) {
@@ -800,7 +798,7 @@ int main() {
                         << e.name << "    size=" << e.size << "\n";
                 }
 
-                // Entries in '/':
+                // '/'의 항목:
                 // [DIR]  pub            size=0
                 // [FILE] README.txt     size=1024
                 // [FILE] image.png      size=204800

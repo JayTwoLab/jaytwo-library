@@ -3,6 +3,7 @@
 
 #include "j2_library/j2_library.hpp"
 
+// 진행 상태를 콘솔에 출력하는 콜백 클래스
 class console_progress : public j2::network::downloader::multipart_progress_callback
 {
 public:
@@ -31,11 +32,11 @@ int main()
 
     downloader.set_delete_partial_file_on_fail(true); // 다운로드 실패 시 임시 파일 삭제
 
-    std::vector<std::string> files;
-    std::string error;
-
     std::string url = "http://127.0.0.1:18080";
-    std::string output_dir = ".";
+    std::string output_dir = "."; // 현재 디렉토리에 다운로드
+
+    std::vector<std::string> files; // 다운로드된 파일 경로를 저장할 벡터
+    std::string error; // 오류 메시지를 저장할 문자열
 
     // 멀티파트 다운로드 시도
     if (!downloader.download_multipart(url, output_dir, files, &error))
