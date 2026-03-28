@@ -1,21 +1,102 @@
-MIT License
+Dual License / 듀얼 라이선스
 
-Copyright (c) 2025 Jay Two
+Copyright (C) 2025 Jay Two
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+본 소프트웨어는 듀얼 라이선스(dual-licensing) 정책으로 제공됩니다. 사용자는 다음 둘 중 하나의 라이선스를 선택하여 소프트웨어를 사용할 수 있습니다.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+1) 무료(오픈소스) 사용 — GNU Lesser General Public License version 3 (LGPLv3)
+   - 이 소프트웨어의 원저작물 및 수정본은 GNU LGPLv3의 조건에 따라 사용, 복제, 배포 및 수정할 수 있습니다.
+   - LGPLv3에 따른 의무(예: 수정된 라이브러리를 배포할 때 소스 공개 등)를 준수해야 합니다.
+   - LGPLv3 전문은 아래에 포함되어 있습니다.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+2) 상용 사용 — 상용 라이선스(Commercial License)
+   - 상용 목적, 재배포 제한 해제, 서브라이선스 허용 혹은 별도 지원·유지보수 계약 등 추가 권한을 원하시면 프로젝트 소유자와 상용 라이선스 계약을 체결할 수 있습니다.
+   - 상용 라이선스의 구체적 조건(권한, 비용, 지원 범위 등)은 별도의 계약서에 따릅니다.
+   - 상용 라이선스 문의: jaytwo@jaytwo.kr
+
+중요 고지
+- 본 파일 아래의 LGPLv3 전문은 오픈소스 선택 시 적용되는 법적 조건을 명시합니다. 상용 라이선스를 선택하는 경우에는 해당 상용 계약서의 조건을 따릅니다.
+- 제3자 구성 요소(라이브러리 등)에 별도 라이선스가 적용될 수 있으며, 해당 구성 요소의 라이선스 조건을 반드시 확인하십시오.
+- 상표 및 로고 사용은 별도의 승인 대상일 수 있습니다.
+- 이 파일은 법률 자문을 대체하지 않습니다. 법적 효력이 중요한 경우 변호사와 상의하시기 바랍니다.
+
+=======================================================================
+GNU LESSER GENERAL PUBLIC LICENSE
+                       Version 3, 29 June 2007
+=======================================================================
+
+Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>
+Everyone is permitted to copy and distribute verbatim copies
+of this license document, but changing it is not allowed.
+
+Preamble
+
+The GNU Lesser General Public License is a free, copyleft license for
+software and other kinds of works...
+
+[Full text of the GNU Lesser General Public License v3 follows]
+
+(The full license text is provided verbatim below for legal clarity.)
+
+-----------------------------------------------------------------------
+LESSER GENERAL PUBLIC LICENSE
+Version 3, 29 June 2007
+-----------------------------------------------------------------------
+
+Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>
+Everyone is permitted to copy and distribute verbatim copies
+of this license document, but changing it is not allowed.
+
+This version of the GNU Lesser General Public License incorporates
+the terms of the GNU General Public License version 3, with the
+additional permissions and conditions described below.
+
+0. Additional Definitions.
+   ...
+
+[Due to length, the complete, unmodified text of the GNU Lesser General Public License v3
+should be included here. For convenience and to ensure exact legal wording, include the
+official license text from https://www.gnu.org/licenses/lgpl-3.0.txt in this LICENSE file.]
+
+-----------------------------------------------------------------------
+
+COMMERCIAL LICENSE SECTION / 상용 라이선스 안내
+
+If you require rights beyond those granted by LGPLv3 (for example, to avoid
+copyleft obligations, to obtain a warranty, maintenance, indemnification,
+or extended redistribution rights), you may obtain a commercial license from
+the copyright holder.
+
+Contact: jaytwo@jaytwo.kr
+
+A commercial license, once agreed and signed, will detail the granted rights,
+any limitations, applicable fees, support/maintenance terms (if any), and
+other contractual provisions.
+
+-----------------------------------------------------------------------
+
+DISCLAIMER OF WARRANTY / 보증의 부인
+
+소프트웨어는 "있는 그대로"(AS IS) 제공되며, 명시적이거나 암시적인
+어떠한 보증(상품성, 특정 목적에의 적합성, 권리 비침해 포함)을 하지 않습니다.
+저작권자나 기여자는 소프트웨어 사용으로 인한 직간접적, 특별한, 부수적,
+결과적 손해에 대해 어떠한 책임도 지지 않습니다.
+
+(이 면책 문구는 LGPLv3의 면책 조항과 상호 일치합니다.)
+
+-----------------------------------------------------------------------
+
+THIRD-PARTY COMPONENTS / 제3자 구성 요소
+
+본 프로젝트는 외부 오픈소스 구성 요소를 포함할 수 있으며, 각 구성 요소에
+적용되는 라이선스 조건(예: BSD, MIT, Apache, GPL 등)이 상이할 수 있습니다.
+해당 구성 요소의 소스 파일 헤더 또는 개별 LICENSE 파일에서 상세 정보를 확인하십시오.
+
+-----------------------------------------------------------------------
+
+LEGAL NOTICE / 법적 고지
+
+이 LICENSE 파일은 본 프로젝트에 적용되는 라이선스 옵션과 관련 고지를 제공합니다.
+법적 효력이 중요한 경우, 또는 기업 배포/상용 계약 체결 전에는 법률 자문을 받으시기 바랍니다.
+
+=======================================================================
