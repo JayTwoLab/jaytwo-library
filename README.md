@@ -4,9 +4,9 @@
 
 ### 개요
 
-`j2_library`는 C++17 기반의 범용 유틸리티 라이브러리입니다. 
-- Windows와 Linux를 우선 지원하며, 향후 macOS 지원이 예정되어 있습니다.
-- 빌드는 `CMake`(`Ninja`) 기반으로 수행됩니다.
+`j2_library`는 `C++17` 기반의 범용 유틸리티 라이브러리입니다. 
+- `Windows`와 `Linux`를 우선 지원하며, 향후 `macOS` 지원이 예정되어 있습니다.
+- 빌드는 [`CMake`](https://cmake.org/) [`Ninja`](https://github.com/ninja-build/ninja) 기반으로 수행됩니다.
 
 <details>
 
