@@ -98,8 +98,8 @@ ninja test
 ---
 
 ### 프로젝트 정보
-- 홈페이지 : https://github.com/JayTwoLab/jaytwo-library
-- 문의사항은 이슈를 남겨주세요. https://github.com/JayTwoLab/jaytwo-library/issues
+- [홈페이지](https://github.com/JayTwoLab/jaytwo-library)
+- 문의사항은 [이슈](https://github.com/JayTwoLab/jaytwo-library/issues)를 남겨주세요. 
 
 <br />
 
