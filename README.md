@@ -6,7 +6,10 @@
 
 `j2_library`는 C++17 기반의 범용 유틸리티 라이브러리입니다. Windows와 Linux를 우선 지원하며, 향후 macOS 지원이 예정되어 있습니다. 빌드는 `CMake`(`Ninja`) 기반으로 수행됩니다.
 
-주요 기능 모듈:
+<details>
+
+<summary>주요 기능 모듈:</summary>
+
 - `bit` — 비트 연산, 비트 배열 등
 - `config` — 설정 파일 파싱/관리
 - `core` — 범용 유틸리티, 단일 함수 래퍼 등
@@ -30,6 +33,8 @@
 - `thread` — 동적 스레드, 스레드 유틸
 - `uuid` — UUID 생성, v4 지원
 - `xml` — 경량 XML 파서, XML 파싱 유틸
+
+</details>
 
 <br />
 
@@ -65,14 +70,8 @@
 		```
 
 - [라이브러리 빌드 및 설치](Build-Lib.md)
-	- `Visual Studio` 
-	- `MinGW` (`g++`) 
-	- `Linux` (`g++`) 
-
 - [설치된 라이브러리 사용하기](Use-Installed-Lib.md)
-	- `Visual Studio` 
-	- `MinGW` (`g++`) 
-	- `Linux` (`g++`) 
+
 
 <br />
 
@@ -80,9 +79,7 @@
 
 ### 프로젝트 정보
 - 홈페이지 : https://github.com/JayTwoLab/jaytwo-library
-	- 문의사항은 이슈를 남겨주세요
-		- https://github.com/JayTwoLab/jaytwo-library/issues
-	- [mail](mailto:jaytwo@jaytwo.kr)
+- 문의사항은 이슈를 남겨주세요. https://github.com/JayTwoLab/jaytwo-library/issues
 
 <br />
 
@@ -92,12 +89,17 @@
 
 본 프로젝트는 듀얼 라이선스(dual-licensing) 정책을 채택합니다. 사용 목적에 따라 아래 라이선스 중 하나를 선택하여 적용하십시오.
 
-1) 무료(오픈소스) 사용 — GNU Lesser General Public License v3 (LGPLv3)
+<details>
+	
+<summary>1) 무료(오픈소스) 사용 — GNU Lesser General Public License v3 (LGPLv3)</summary>
 
 - 소스 코드의 복제, 배포, 수정 및 파생 저작물 작성이 허용됩니다.
 - LGPLv3의 조항을 따르며, 라이브러리를 수정하거나 수정된 라이브러리를 포함하여 재배포하는 경우 해당 변경사항을 공개해야 할 수 있습니다. 자세한 내용은 https://www.gnu.org/licenses/lgpl-3.0.html 를 참조하십시오.
 
-2) 상용 사용 — 상용 라이선스
+</details>
+
+<details>
+<summary>2) 상용 사용 — 상용 라이선스</summary>
 
 - 상용 사용자는 프로젝트 소유자로부터 제공되는 별도의 상용 라이선스를 취득할 수 있습니다.
 - 상용 라이선스는 명시적으로 소스 코드를 자유롭게 사용, 수정, 통합 및 재배포할 수 있는 권한을 부여합니다(상표 권리와는 별도).
@@ -113,6 +115,8 @@
 
 - 제3자 구성 요소에 적용되는 라이선스가 있을 수 있으며, 해당 구성 요소의 라이선스가 본 프로젝트에 추가적 의무를 부과할 수 있습니다. 개별 파일의 `LICENSE` 파일 및 주석을 확인하시기 바랍니다.
 - 상표 및 로고 사용은 별도의 승인 대상일 수 있습니다. 상표 관련 문의는 위 연락처로 해주십시오.
+
+</details>
 
 자세한 라이선스 원문은 레포지토리 루트의 `LICENSE` 파일을 참조하십시오.
 
