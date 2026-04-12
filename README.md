@@ -55,21 +55,39 @@
 ### 2. 빌드
 
 - **빠른 시작**
-	1. 소스 클론
-		```bash
-		git clone https://github.com/JayTwoLab/jaytwo-library.git
-		cd jaytwo-library
-		```
-	2. 빌드 (예: Release, out-of-source)
-		```bash
-		mkdir -p build && cd build
-		cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Release ..
-		ninja
-		```
-	3. 테스트 실행
-		```bash
-		ninja test
-		```
+
+<details>
+	
+<summary>1. 소스 클론</summary>
+
+```bash
+git clone https://github.com/JayTwoLab/jaytwo-library.git
+cd jaytwo-library
+```
+
+</details>
+
+<details>	
+
+<summary>2. 빌드</summary>
+
+```bash
+mkdir -p build && cd build
+cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Release ..
+ninja
+```
+
+</details>
+
+<details>
+	
+<summary>3. 테스트 실행</summary>
+
+```bash
+ninja test
+```
+
+</details>
 
 - [라이브러리 빌드 및 설치](Build-Lib.md)
 - [설치된 라이브러리 사용하기](Use-Installed-Lib.md)
