@@ -44,6 +44,9 @@ TEST(permissions, PosixModeBits) {
     EXPECT_TRUE(info.exists());
     EXPECT_EQ(info.to_string(), "rwxr-xr--");
 
+    // info.to_string().substr(0,3) // owner 권한 부분 (rwx)
+    EXPECT_EQ(info.to_string().substr(0, 3), "rwx");
+
     std::filesystem::remove(p);
 }
 #else
@@ -64,6 +67,10 @@ TEST(permissions, WindowsBasic) {
 
     // to_string은 항상 9글자(rwxrwxrwx 형태의 자리) 반환하도록 구현되어 있음
     EXPECT_EQ(info.to_string().size(), 9u);
+
+    // info.to_string().substr(0,3) // owner 권한 부분 (rwx)
+    //  owner 권한이 rwx가 아닌 경우, 일반적인 파일 접근(read/write/execute)이 가능하지 않을 수 있음.
+    EXPECT_EQ(info.to_string().substr(0, 3), "rwx"); // Windows에서는 일반적으로 소유자에게 모든 권한이 부여됨
 
     std::filesystem::remove(p); // 임시 파일 정리
 }
