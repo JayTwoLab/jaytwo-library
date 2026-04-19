@@ -72,9 +72,9 @@
 
 - 설치 명령
 ```
-sudo dnf install -y epel-release
+sudo dnf install epel-release
 
-sudo dnf -y install gtest gtest-devel gmock gmock-devel json json-devel spdlog spdlog-devel curl curl-devel 
+sudo dnf install gtest gtest-devel gmock gmock-devel json json-devel spdlog spdlog-devel curl curl-devel 
 ```
 
 
