@@ -87,9 +87,11 @@ file(GLOB_RECURSE SRC_FILES CONFIGURE_DEPENDS
 )
 
 # -------------------------
-# 라이브러리 추가
+# 라이브러리 추가 (STATIC 고정)
 # -------------------------
-add_library(j2_library ${SRC_FILES})
+# 이 프로젝트는 DLL / shared object를 전혀 생성하지 않도록 강제합니다.
+# add_library에 STATIC을 명시하여 정적 라이브러리(.a 또는 .lib)만 생성됩니다.
+add_library(j2_library STATIC ${SRC_FILES})
 
 # -------------------------
 # 라이브러리 별칭(alias) 설정
@@ -99,11 +101,11 @@ add_library(j2_library::j2_library ALIAS j2_library)
 #  별칭(ALIAS) 이름: j2_library::j2_library
 
 # -------------------------
-# 정적/공유 타입에 따라 매크로 자동 전파
+# 정적 빌드임을 매크로로 명시
 # -------------------------
+# 정적 라이브러리 전용으로 단순하게 J2LIB_STATIC을 항상 정의합니다.
 target_compile_definitions(j2_library
-  PUBLIC  $<$<STREQUAL:$<TARGET_PROPERTY:j2_library,TYPE>,STATIC_LIBRARY>:J2LIB_STATIC>
-  PRIVATE $<$<STREQUAL:$<TARGET_PROPERTY:j2_library,TYPE>,SHARED_LIBRARY>:J2LIB_BUILDING_DLL>
+  PUBLIC J2LIB_STATIC
 )
 
 # -------------------------
@@ -148,7 +150,6 @@ include(j2_link_lib)
 j2_link_lib(j2_library)
 
 
-
 ######################################################
 # GCC 버전에 따라 <filesystem> 라이브러리 링크 설정
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
@@ -165,11 +166,11 @@ endif()
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
+# 정적 라이브러리 전용으로 RUNTIME / LIBRARY 설치 항목은 제거하고
+# ARCHIVE(정적 아카이브) 항목만 설치하도록 변경합니다.
 install(
   TARGETS j2_library
   EXPORT j2_libraryTargets
-  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
 
@@ -215,7 +216,6 @@ install(
       PATTERN "*.cmake"
       PATTERN "*.cmake.in"
 )
-
 
 # Install third-party tree once (preserve directory structure).
 # Copies third-party/* → ${CMAKE_INSTALL_DATAROOTDIR}/j2_library/third-party/*

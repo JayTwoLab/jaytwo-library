@@ -4,6 +4,12 @@ cmake_minimum_required(VERSION 3.26)
 set(J2_LIB_SUPER_VERSION "0.1.0")
 project(j2_lib_super VERSION ${J2_LIB_SUPER_VERSION} LANGUAGES CXX)
 
+# Prevent downstream cmake invocations from trying to enable shared libs accidentally.
+if (DEFINED BUILD_SHARED_LIBS AND BUILD_SHARED_LIBS)
+  message(WARNING "Top-level: BUILD_SHARED_LIBS=ON requested but j2_library target is static-only. Overriding to OFF.")
+  set(BUILD_SHARED_LIBS OFF CACHE BOOL "Disallow building shared libraries for this project" FORCE)
+endif()
+
 # -------------------------
 # j2_library 라이브러리 서브 프로젝트 
 # -------------------------
@@ -25,4 +31,9 @@ if (BUILD_TESTING)
   include(CTest)  # BUILD_TESTING 옵션 정의
   add_subdirectory(tests) # tests/CMakeLists.txt
 endif()
+
+# 제거할 줄 예: 
+# cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="C:/opt/j2_library" -DBUILD_SHARED_LIBS=ON
+# 대신:
+# cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="C:/opt/j2_library"
 

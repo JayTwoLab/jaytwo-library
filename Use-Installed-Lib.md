@@ -1,4 +1,3 @@
-
 #### 설치된 라이브러리 사용하기
 
 ---
@@ -115,8 +114,7 @@ set(j2_library_ROOT "/opt/j2_library" CACHE PATH "Prefix of installed j2_library
 # find_package 경로 힌트
 list(APPEND CMAKE_PREFIX_PATH "${j2_library_ROOT}")
 
-# 공유 라이브러리(rpath) 실행 편의: 런타임에 prefix/lib를 자동 탐색
-# 공유로 설치하셨다면 유용합니다. (정적으로 링크한 경우 생략 가능)
+# (선택) 만약 j2_library를 공유 라이브러리로 배포하는 경우에만 rpath 설정이 필요합니다. 현재 저장소는 정적 배포를 권장/기본으로 합니다.
 set(CMAKE_BUILD_RPATH "${j2_library_ROOT}/lib")
 set(CMAKE_INSTALL_RPATH "$ORIGIN;$ORIGIN/../lib")
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)

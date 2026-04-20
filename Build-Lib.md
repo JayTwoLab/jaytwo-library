@@ -1,4 +1,3 @@
-
 #### 라이브러리 빌드하기
 
 <br />
@@ -22,7 +21,7 @@ cmake -S .. ^
  -A x64 ^
  -DCMAKE_BUILD_TYPE=Release ^
  -DCMAKE_INSTALL_PREFIX="C:/install/j2_library"
-@REM -DBUILD_SHARED_LIBS=ON 옵션을 주면 DLL 로 빌드됨
+@REM j2_library는 정적 라이브러리(.lib/.a) 전용입니다. -DBUILD_SHARED_LIBS 옵션은 지원되지 않습니다.
 
 @REM 라이브러리 빌드
 cmake --build build --config Release
@@ -51,7 +50,7 @@ cmake -S .. ^
  -G "MinGW Makefiles" ^
  -DCMAKE_BUILD_TYPE=Release ^
  -DCMAKE_INSTALL_PREFIX="C:/mingw-install/j2_library"
-@REM -DBUILD_SHARED_LIBS=ON 옵션을 주면 DLL 로 빌드됨
+@REM j2_library는 정적 라이브러리(.lib/.a) 전용입니다. -DBUILD_SHARED_LIBS 옵션은 지원되지 않습니다.
 
 @REM 라이브러리 빌드
 cmake --build build
