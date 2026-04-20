@@ -1,14 +1,13 @@
-
-@REM 기존에 파일이 있을 수 있으므로 라이브러리 경로를 지우고 진행한다. 
+@REM Remove the library directory if it exists before proceeding.
 rmdir /s /q C:\opt\j2_library
 
-@REM cmake 설정
-@REM 라이브러리 설치 경로 : C:/opt/j2_library
-@REM 릴리즈(Release) 빌드 사용
+@REM CMake configuration
+@REM Library install path: C:/opt/j2_library
+@REM Use Release build
 cmake -S . -B build -G "Ninja" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="C:/opt/j2_library"
 
-@REM 빌드
+@REM Build
 cmake --build build
 
-@REM 설치
+@REM Install
 cmake --install build

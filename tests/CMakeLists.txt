@@ -70,7 +70,10 @@ if (J2_ENABLE_TESTS)
   # =========================
   file(GLOB SRC_FILES CONFIGURE_DEPENDS
        "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
-       "${CMAKE_CURRENT_SOURCE_DIR}/*.c")
+       "${CMAKE_CURRENT_SOURCE_DIR}/*.cxx"
+       "${CMAKE_CURRENT_SOURCE_DIR}/*.cc"
+       "${CMAKE_CURRENT_SOURCE_DIR}/*.c"
+  )
 
   add_executable(${PROJECT_NAME} ${SRC_FILES})
 

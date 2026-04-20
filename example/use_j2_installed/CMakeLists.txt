@@ -19,11 +19,6 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 #  cmake --install build
 #
 ############################################################
-# Dynamic library(*.so, *.dll) build example:
-#
-# cmake -S . -B build -G "Ninja" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="C:/opt/j2_library" -DBUILD_SHARED_LIBS=ON
-#
-############################################################
 
 # Windows 11
 if (WIN32)
