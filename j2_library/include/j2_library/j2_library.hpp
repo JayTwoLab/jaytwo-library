@@ -22,6 +22,9 @@
 // -- bit components --
 #include "j2_library/bit/bit.hpp"
 
+// -- broker components --
+#include "j2_library/broker/broker.hpp"
+
 // -- config components --
 #include "j2_library/config/config.hpp"
 
