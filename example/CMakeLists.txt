@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.26)
 
-# 예제 프로젝트
-project(j2_lib_example VERSION ${J2_LIB_EXAMPLE_VERSION} LANGUAGES CXX)
-set(J2_LIB_EXAMPLE_VERSION "0.1.0")
+project(j2_lib_example) # 예제 프로젝트
 
 add_subdirectory(concurrent_queue) # 동시성 큐 예제
 
