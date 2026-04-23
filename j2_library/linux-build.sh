@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Base install directory (no surrounding quotes in value)
-INSTALL_BASE="/home/j2/dev/lib/j2_library"
+INSTALL_BASE="/home/jaytwo/dev/lib/j2_library"
 INSTALL_DEBUG="$INSTALL_BASE/debug"
 INSTALL_RELEASE="$INSTALL_BASE/release"
 
