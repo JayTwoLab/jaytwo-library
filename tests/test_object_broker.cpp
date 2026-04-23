@@ -326,7 +326,7 @@ TEST(ObjectBroker, MainRegisters_TwoReadersAccess) {
     j2::broker::object_broker::clear();
 }
 
-// 추가된 기능 테스트: contains, get_all, get_optional, registration_guard
+// 기능 테스트: contains, get_all, get_optional, registration_guard
 
 TEST(ObjectBroker, ContainsChecksPresence) {
     j2::broker::object_broker::clear();
@@ -408,7 +408,7 @@ TEST(ObjectBroker, RegistrationGuardRegistersAndUnregistersAutomatically) {
     j2::broker::object_broker::clear();
 }
 
-// 추가 테스트: 모든 이름 열거 및 중복 제거, 엔트리(타입+이름) 확인
+// 모든 이름 열거 및 중복 제거, 엔트리(타입+이름) 확인
 
 TEST(ObjectBroker, ListAllNamesAndEntries) {
     j2::broker::object_broker::clear();
