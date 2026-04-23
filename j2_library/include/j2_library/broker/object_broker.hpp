@@ -8,6 +8,10 @@
 #include <string>
 #include <shared_mutex>
 #include <mutex>
+#include <optional>
+#include <vector>
+#include <unordered_set>
+#include <algorithm>
 
 #include "j2_library/export.hpp"
  
@@ -88,6 +92,35 @@ namespace j2::broker {
         }
 
         /**
+         * @brief 특정 인스턴스가 등록되어 있는지 확인
+         */
+        template <typename T>
+        static bool contains(const std::string& name = "__default__") {
+            std::shared_lock lock(get_instance().mutex_);
+            auto& s = get_instance().storage_;
+            return s.find({ typeid(T), name }) != s.end();
+        }
+
+        /**
+         * @brief 실패 시 nullptr 대신 optional 반환 (C++17)
+         */
+        template <typename T>
+        static std::optional<std::shared_ptr<T>> get_optional(const std::string& name = "__default__") {
+            std::shared_lock lock(get_instance().mutex_);
+            auto& s = get_instance().storage_;
+            auto it = s.find({ typeid(T), name });
+            if (it != s.end()) {
+                try {
+                    return std::make_optional(std::any_cast<std::shared_ptr<T>>(it->second));
+                }
+                catch (const std::bad_any_cast&) {
+                    return std::nullopt;
+                }
+            }
+            return std::nullopt;
+        }
+
+        /**
          * @brief 특정 인스턴스 제거
          */
         template <typename T>
@@ -103,6 +136,125 @@ namespace j2::broker {
             std::unique_lock lock(get_instance().mutex_);
             get_instance().storage_.clear();
         }
+
+        /**
+         * @brief 특정 타입에 등록된 모든 인스턴스(포인터만) 반환
+         * 기존 호환성을 유지하기 위한 보존형 API
+         */
+        template <typename T>
+        static std::vector<std::shared_ptr<T>> get_all() {
+            std::vector<std::shared_ptr<T>> result;
+            std::shared_lock lock(get_instance().mutex_);
+            for (const auto& entry : get_instance().storage_) {
+                if (entry.first.type == typeid(T)) {
+                    try {
+                        auto sp = std::any_cast<std::shared_ptr<T>>(entry.second);
+                        if (sp) result.push_back(sp);
+                    }
+                    catch (const std::bad_any_cast&) {
+                        // 무시
+                    }
+                }
+            }
+            return result;
+        }
+
+        /**
+         * @brief 특정 타입에 등록된 모든 인스턴스와 이름을 반환
+         * 반환값: vector of (name, shared_ptr<T>)
+         */
+        template <typename T>
+        static std::vector<std::pair<std::string, std::shared_ptr<T>>> get_all_with_names() {
+            std::vector<std::pair<std::string, std::shared_ptr<T>>> result;
+            std::shared_lock lock(get_instance().mutex_);
+            for (const auto& entry : get_instance().storage_) {
+                if (entry.first.type == typeid(T)) {
+                    try {
+                        auto sp = std::any_cast<std::shared_ptr<T>>(entry.second);
+                        if (sp) result.emplace_back(entry.first.name, sp);
+                    }
+                    catch (const std::bad_any_cast&) {
+                        // 무시
+                    }
+                }
+            }
+            return result;
+        }
+
+        /**
+         * @brief 특정 타입에 등록된 이름 목록만 반환
+         */
+        template <typename T>
+        static std::vector<std::string> list_names_for_type() {
+            std::vector<std::string> names;
+            std::shared_lock lock(get_instance().mutex_);
+            for (const auto& entry : get_instance().storage_) {
+                if (entry.first.type == typeid(T)) {
+                    names.push_back(entry.first.name);
+                }
+            }
+            return names;
+        }
+
+        /**
+         * @brief 전체 등록 엔트리에서 이름만 모두 반환 (중복 포함)
+         */
+        static std::vector<std::string> list_all_names() {
+            std::vector<std::string> names;
+            std::shared_lock lock(get_instance().mutex_);
+            for (const auto& entry : get_instance().storage_) {
+                names.push_back(entry.first.name);
+            }
+            return names;
+        }
+
+        /**
+         * @brief 전체 등록 엔트리에서 이름을 중복 제거하여 반환
+         */
+        static std::vector<std::string> list_unique_names() {
+            std::unordered_set<std::string> set;
+            std::shared_lock lock(get_instance().mutex_);
+            for (const auto& entry : get_instance().storage_) {
+                set.insert(entry.first.name);
+            }
+            return std::vector<std::string>(set.begin(), set.end());
+        }
+
+        /**
+         * @brief 전체 등록 엔트리를 (type_index, name) 쌍으로 반환
+         * 타입 정보를 통해 어떤 타입에 등록되었는지 확인할 수 있습니다.
+         */
+        static std::vector<std::pair<std::type_index, std::string>> list_all_entries() {
+            std::vector<std::pair<std::type_index, std::string>> entries;
+            std::shared_lock lock(get_instance().mutex_);
+            for (const auto& entry : get_instance().storage_) {
+                entries.emplace_back(entry.first.type, entry.first.name);
+            }
+            return entries;
+        }
+
+        /**
+         * @brief 스코프 기반 자동 등록/해제 헬퍼
+         * 사용 예:
+         *   {
+         *       object_broker::registration_guard<Foo> g("temp", ptr);
+         *       // 스코프 종료 시 자동으로 unregister
+         *   }
+         */
+        template <typename T>
+        struct registration_guard {
+            registration_guard(const std::string& name, std::shared_ptr<T> instance)
+                : name_(name) {
+                object_broker::register_instance<T>(name_, instance);
+            }
+            explicit registration_guard(std::shared_ptr<T> instance)
+                : registration_guard("__default__", instance) {}
+            ~registration_guard() {
+                object_broker::unregister_instance<T>(name_);
+            }
+        private:
+            std::string name_;
+        };
 
     private:
         object_broker() = default;

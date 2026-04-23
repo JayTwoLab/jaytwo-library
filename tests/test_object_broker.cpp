@@ -34,7 +34,8 @@ TEST(ObjectBroker, RegisterAndGetDefault) {
     ASSERT_NE(got, nullptr); // 조회된 인스턴스가 nullptr이 아닌지 확인
     EXPECT_EQ(got->value, 42); // 조회된 인스턴스의 value가 42인지 확인
 
-    j2::broker::object_broker::clear();
+    j2::broker::object_broker::clear(); // 모든 인스턴스 제거
+    // 필요한 인스턴스만 삭제 시 unregister_instance<Foo>(인스턴스명)를 사용.
 }
 
 TEST(ObjectBroker, RegisterAndGetNamed) {
@@ -321,6 +322,133 @@ TEST(ObjectBroker, MainRegisters_TwoReadersAccess) {
     // 모든 읽기가 성공했는지 검증
     EXPECT_EQ(fail_count.load(), 0);
     EXPECT_EQ(success_count.load(), reads_per_thread * 2);
+
+    j2::broker::object_broker::clear();
+}
+
+// 추가된 기능 테스트: contains, get_all, get_optional, registration_guard
+
+TEST(ObjectBroker, ContainsChecksPresence) {
+    j2::broker::object_broker::clear();
+
+    auto inst = std::make_shared<Foo>(11);
+    j2::broker::object_broker::register_instance<Foo>("present", inst);
+
+    // 존재 확인
+    EXPECT_TRUE(j2::broker::object_broker::contains<Foo>("present"));
+    EXPECT_FALSE(j2::broker::object_broker::contains<Foo>("absent"));
+
+    j2::broker::object_broker::unregister_instance<Foo>("present");
+    EXPECT_FALSE(j2::broker::object_broker::contains<Foo>("present"));
+
+    j2::broker::object_broker::clear();
+}
+
+TEST(ObjectBroker, GetAllReturnsAllInstancesForType) {
+    j2::broker::object_broker::clear();
+
+    auto a = std::make_shared<Foo>(1); // a는 Foo{1} 인스턴스
+    auto b = std::make_shared<Foo>(2); // b는 Foo{2} 인스턴스
+    auto c = std::make_shared<Foo>(3); // c는 Foo{3} 인스턴스
+
+    j2::broker::object_broker::register_instance<Foo>("a", a);
+    j2::broker::object_broker::register_instance<Foo>("b", b);
+    j2::broker::object_broker::register_instance<Foo>("c", c);
+
+    auto all = j2::broker::object_broker::get_all<Foo>();
+
+    // 모든 등록된 인스턴스가 반환되는지 확인 (순서 보장 없음)
+    ASSERT_EQ(all.size(), 3u);
+
+    // 값과 포인터 포함 여부 확인
+    bool foundA = false, foundB = false, foundC = false;
+    for (const auto& p : all) {
+        if (p == a && p->value == 1) foundA = true;
+        if (p == b && p->value == 2) foundB = true;
+        if (p == c && p->value == 3) foundC = true;
+    }
+    EXPECT_TRUE(foundA);
+    EXPECT_TRUE(foundB);
+    EXPECT_TRUE(foundC);
+
+    j2::broker::object_broker::clear();
+}
+
+TEST(ObjectBroker, GetOptionalReturnsOptionalWhenPresent) {
+    j2::broker::object_broker::clear();
+
+    auto inst = std::make_shared<Foo>(99);
+    j2::broker::object_broker::register_instance<Foo>("opt", inst);
+
+    auto opt = j2::broker::object_broker::get_optional<Foo>("opt");
+    ASSERT_TRUE(opt.has_value());
+    ASSERT_NE(*opt, nullptr);
+    EXPECT_EQ((*opt)->value, 99);
+
+    auto none = j2::broker::object_broker::get_optional<Foo>("missing");
+    EXPECT_FALSE(none.has_value());
+
+    j2::broker::object_broker::clear();
+}
+
+TEST(ObjectBroker, RegistrationGuardRegistersAndUnregistersAutomatically) {
+    j2::broker::object_broker::clear();
+
+    auto temp = std::make_shared<Foo>(555);
+    {
+        // 스코프 진입 시 등록, 탈출 시 자동 제거되어야 함
+        j2::broker::object_broker::registration_guard<Foo> guard("scoped", temp);
+        auto got = j2::broker::object_broker::get<Foo>("scoped");
+        ASSERT_NE(got, nullptr);
+        EXPECT_EQ(got, temp);
+    }
+    // 스코프를 벗어나면 자동으로 제거되어야 함
+    EXPECT_EQ(j2::broker::object_broker::get<Foo>("scoped"), nullptr);
+
+    j2::broker::object_broker::clear();
+}
+
+// 추가 테스트: 모든 이름 열거 및 중복 제거, 엔트리(타입+이름) 확인
+
+TEST(ObjectBroker, ListAllNamesAndEntries) {
+    j2::broker::object_broker::clear();
+
+    auto a = std::make_shared<Foo>(1);
+    auto b = std::make_shared<Foo>(2);
+    auto cfg = std::make_shared<config_service>();
+
+    // 동일 이름 "shared"를 Foo와 config_service에 각각 등록하여 중복 사례 생성
+    j2::broker::object_broker::register_instance<Foo>("a", a);
+    j2::broker::object_broker::register_instance<Foo>("b", b);
+    j2::broker::object_broker::register_instance<config_service>("a", cfg);
+
+    // 모든 이름(중복 포함) 얻기
+    auto all_names = j2::broker::object_broker::list_all_names();
+    // 등록된 엔트리 수와 일치해야 함
+    EXPECT_EQ(all_names.size(), 3u);
+
+    // 중복 제거된 이름 얻기
+    auto unique_names = j2::broker::object_broker::list_unique_names();
+    // "a","b" 두 이름만 있어야 함
+    EXPECT_EQ(unique_names.size(), 2u);
+    // 포함 여부 검사
+    EXPECT_TRUE(std::find(unique_names.begin(), unique_names.end(), "a") != unique_names.end());
+    EXPECT_TRUE(std::find(unique_names.begin(), unique_names.end(), "b") != unique_names.end());
+
+    // 타입 + 이름 쌍 열거
+    auto entries = j2::broker::object_broker::list_all_entries();
+    EXPECT_EQ(entries.size(), 3u);
+
+    // entries 안에 (typeid(Foo),"a"), (typeid(Foo),"b"), (typeid(config_service),"a")가 존재하는지 검사
+    bool found_FA = false, found_FB = false, found_CSA = false;
+    for (const auto& e : entries) {
+        if (e.first == typeid(Foo) && e.second == "a") found_FA = true;
+        if (e.first == typeid(Foo) && e.second == "b") found_FB = true;
+        if (e.first == typeid(config_service) && e.second == "a") found_CSA = true;
+    }
+    EXPECT_TRUE(found_FA);
+    EXPECT_TRUE(found_FB);
+    EXPECT_TRUE(found_CSA);
 
     j2::broker::object_broker::clear();
 }
