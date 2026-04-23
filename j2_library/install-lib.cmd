@@ -1,10 +1,15 @@
+@REM Set initial install directory
+set "INSTALL_DIR=C:/opt/j2_library"
+
 @REM Remove the library directory if it exists before proceeding.
-rmdir /s /q C:\opt\j2_library
+if exist "%INSTALL_DIR%" (
+    rmdir /s /q "%INSTALL_DIR%"
+)
 
 @REM CMake configuration
-@REM Library install path: C:/opt/j2_library
+@REM Library install path: %INSTALL_DIR%
 @REM Use Release build
-cmake -S . -B build -G "Ninja" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="C:/opt/j2_library"
+cmake -S . -B build -G "Ninja" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="%INSTALL_DIR%"
 
 @REM Build
 cmake --build build
