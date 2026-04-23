@@ -1,18 +1,19 @@
-# Create build directory
-mkdir build 
-cd build
+#!/usr/bin/env bash
+set -euo pipefail
 
-# Run cmake (Release build, specify install path)
-#  - Change the -DCMAKE_INSTALL_PREFIX value according to your desired install path.
-#  - Change the -DCMAKE_BUILD_TYPE value for Debug/Release mode.
-cmake -S .. -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="/home/j2/dev/lib/j2_library"
-# If using clang
-#   cmake -S .. -B build -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang ... 
+# Initial value: install directory
+INSTALL_DIR="/home/j2/dev/lib/j2_library"
 
-# Build the library (parallel build using number of CPU cores)
-cmake --build build -j$(nproc)
+# Remove if it exists
+if [ -e "$INSTALL_DIR" ]; then
+    rm -rf "$INSTALL_DIR"
+fi
 
-# Install the library 
+# CMake configuration (Release, Ninja, set install prefix)
+cmake -S . -B build -G "Ninja" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$INSTALL_DIR"
+
+# Build (parallel: number of CPU cores)
+cmake --build build -j"$(nproc)"
+
+# Install
 cmake --install build
-# If the install path is a system directory like /usr/local/..., sudo (root privileges) is required for installation.
-#  sudo cmake --install build
