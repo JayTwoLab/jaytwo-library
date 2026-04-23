@@ -12,13 +12,14 @@ set(CMAKE_CXX_EXTENSIONS OFF) # OFF: 컴파일러 확장 기능을 쓰지 않고
 # j2_library CMake helper 모듈 경로
 list(PREPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/j2_library/cmake")
 
-# 소스 파일 및 실행 파일
+# hello-world 소스 파일 및 실행 파일
 file(GLOB SRC_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
 add_executable(${EXE_NAME} ${SRC_FILES})
 
 # 루트에서 제공되는 ALIAS 타깃 사용
 target_link_libraries(${EXE_NAME} PRIVATE j2_library::j2_library)
 
+# 현재 디렉토리를 포함 디렉토리로 추가 (헤더 파일이 있는 경우)
 target_include_directories(${EXE_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
 
 

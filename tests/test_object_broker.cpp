@@ -2,6 +2,10 @@
 #include <memory>
 #include <string>
 #include <iostream>
+#include <vector>
+#include <atomic>
+#include <thread>
+#include <chrono>
 
 #include "j2_library/broker/object_broker.hpp"
 
