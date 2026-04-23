@@ -1,19 +1,22 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Initial value: install directory
-INSTALL_DIR="/home/j2/dev/lib/j2_library"
+# Base install directory (no surrounding quotes in value)
+INSTALL_BASE="/home/j2/dev/lib/j2_library"
+INSTALL_DEBUG="$INSTALL_BASE/debug"
+INSTALL_RELEASE="$INSTALL_BASE/release"
 
-# Remove if it exists
-if [ -e "$INSTALL_DIR" ]; then
-    rm -rf "$INSTALL_DIR"
+# Remove previous install tree if it exists
+if [ -e "$INSTALL_BASE" ]; then
+    rm -rf "$INSTALL_BASE"
 fi
 
-# CMake configuration (Release, Ninja, set install prefix)
-cmake -S . -B build -G "Ninja" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$INSTALL_DIR"
+# Configure, build and install Debug (separate build dir for single-config generator)
+cmake -S . -B build-debug -G "Ninja" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX="$INSTALL_DEBUG"
+cmake --build build-debug -j"$(nproc)"
+cmake --install build-debug
 
-# Build (parallel: number of CPU cores)
-cmake --build build -j"$(nproc)"
-
-# Install
-cmake --install build
+# Configure, build and install Release
+cmake -S . -B build-release -G "Ninja" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$INSTALL_RELEASE"
+cmake --build build-release -j"$(nproc)"
+cmake --install build-release
