@@ -48,8 +48,21 @@ TEST(JsonExists, EscapedKeysWithTildeAndSlash) {
     j["config"]["weird"]["a/b"] = 1;   // '/' 포함
     j["config"]["weird"]["c~d"] = 2;   // '~' 포함
 
+    // j의 JSON 구조는 다음과 같다. 
+    // {
+    //    "config": {
+    //        "weird": {
+    //           "a/b": 1,
+    //           "c~d": 2
+    //        }
+    //    }
+    // }
+    // "a/b"의 /는 슬래시로 인식되므로, 구분을 위하여 "~1"로 이스케이프해야 한다.
+    // "c~d"의 ~는 물결로 인식되므로, 구분을 위하여 "~0"로 이스케이프해야 한다. 
+
     // "/config/weird/a~1b" 가 "a/b" 키를 가리킴
     EXPECT_TRUE(jj::exists(j, "/config/weird/a~1b"));
+
     // "/config/weird/c~0d" 가 "c~d" 키를 가리킴
     EXPECT_TRUE(jj::exists(j, "/config/weird/c~0d"));
 

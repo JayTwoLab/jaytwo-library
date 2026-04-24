@@ -9,11 +9,11 @@
 
 #include <nlohmann/json.hpp>
 
-// 프로젝트 전역 별칭
-using nj  = nlohmann::json; // nlohmann::json을 nj로 축약하여 사용 가능
-using njj = nlohmann::json::json_pointer; // nlohmann::json::json_pointer를 njj로 축약하여 사용 가능
+namespace j2::json { // jj 로 축약하여 사용 가능
 
-namespace j2::json { // jj 로 축약하여 사용 가능 
+    // 프로젝트 전역 별칭
+    using nj = nlohmann::json; // nlohmann::json을 nj로 축약하여 사용 가능
+    using njj = nlohmann::json::json_pointer; // nlohmann::json::json_pointer를 njj로 축약하여 사용 가능
 
     //--------------------------------------------------------------
     // 내부 헬퍼: 읽기 포인터 (예외 없음)
