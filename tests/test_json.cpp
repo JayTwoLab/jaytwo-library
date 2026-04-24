@@ -13,7 +13,7 @@
 #include <nlohmann/json.hpp>
 
 // 네임스페이스 별칭
-namespace jj = j2::json;
+namespace jjson = j2::json;
 
 TEST(JsonExists, BasicTrueFalse) {
     // 준비: 간단한 설정 JSON
@@ -28,16 +28,16 @@ TEST(JsonExists, BasicTrueFalse) {
     };
 
     // 존재하는 경로는 true
-    EXPECT_TRUE(jj::exists(j, "/config/database/host"));
-    EXPECT_TRUE(jj::exists(j, "/config/database/port"));
-    EXPECT_TRUE(jj::exists(j, "/config/database/ssl"));
+    EXPECT_TRUE(jjson::exists(j, "/config/database/host"));
+    EXPECT_TRUE(jjson::exists(j, "/config/database/port"));
+    EXPECT_TRUE(jjson::exists(j, "/config/database/ssl"));
 
     // 존재하지 않는 경로는 false
-    EXPECT_FALSE(jj::exists(j, "/config/database/user"));
-    EXPECT_FALSE(jj::exists(j, "/config/does_not_exist"));
+    EXPECT_FALSE(jjson::exists(j, "/config/database/user"));
+    EXPECT_FALSE(jjson::exists(j, "/config/does_not_exist"));
 
     // 중간 노드까지만 있고 리프가 없으면 false
-    EXPECT_FALSE(jj::exists(j, "/config/database/port/x"));
+    EXPECT_FALSE(jjson::exists(j, "/config/database/port/x"));
 }
 
 TEST(JsonExists, EscapedKeysWithTildeAndSlash) {
@@ -61,51 +61,51 @@ TEST(JsonExists, EscapedKeysWithTildeAndSlash) {
     // "c~d"의 ~는 물결로 인식되므로, 구분을 위하여 "~0"로 이스케이프해야 한다. 
 
     // "/config/weird/a~1b" 가 "a/b" 키를 가리킴
-    EXPECT_TRUE(jj::exists(j, "/config/weird/a~1b"));
+    EXPECT_TRUE(jjson::exists(j, "/config/weird/a~1b"));
 
     // "/config/weird/c~0d" 가 "c~d" 키를 가리킴
-    EXPECT_TRUE(jj::exists(j, "/config/weird/c~0d"));
+    EXPECT_TRUE(jjson::exists(j, "/config/weird/c~0d"));
 
     // 잘못된 이스케이프 혹은 오타는 false
-    EXPECT_FALSE(jj::exists(j, "/config/weird/a/ b")); // 공백 포함 오타
-    EXPECT_FALSE(jj::exists(j, "/config/weird/a~0b")); // 잘못된 이스케이프
+    EXPECT_FALSE(jjson::exists(j, "/config/weird/a/ b")); // 공백 포함 오타
+    EXPECT_FALSE(jjson::exists(j, "/config/weird/a~0b")); // 잘못된 이스케이프
 }
 
 TEST(JsonGetString, MatchAndMismtachAndNull) {
     nlohmann::json j;
-    j["config"]["database"]["host"] = "db.local";
-    j["config"]["database"]["port"] = 5432;      // 문자열 아님
-    j["config"]["database"]["note"] = nullptr;   // null
+    j["config"]["database"]["host"] = "db.local"; // 문자열
+    j["config"]["database"]["port"] = 5432;      // 숫자 : 문자열 아님
+    j["config"]["database"]["note"] = nullptr;   // null 값 : 문자열 아님
 
     // 타입 일치: 문자열 반환
-    EXPECT_EQ(jj::get_string(j, "/config/database/host", "127.0.0.1"), "db.local");
+    EXPECT_EQ(jjson::get_string(j, "/config/database/host", "127.0.0.1"), "db.local");
 
-    // 타입 불일치: 기본값 반환
-    EXPECT_EQ(jj::get_string(j, "/config/database/port", "127.0.0.1"), "127.0.0.1");
+    // 타입 불일치: 기본값(문자열 "1234") 반환
+    EXPECT_EQ(jjson::get_string(j, "/config/database/port", "1234"), "1234");
 
-    // null: 기본값 반환
-    EXPECT_EQ(jj::get_string(j, "/config/database/note", "no-note"), "no-note");
+    // null: 기본값(문자열 "no-note") 반환
+    EXPECT_EQ(jjson::get_string(j, "/config/database/note", "no-note"), "no-note");
 
-    // 존재하지 않음: 기본값 반환
-    EXPECT_EQ(jj::get_string(j, "/config/database/user", "postgres"), "postgres");
+    // 존재하지 않음: 기본값(문자열 "postgres") 반환
+    EXPECT_EQ(jjson::get_string(j, "/config/database/user", "postgres"), "postgres");
 }
 
 TEST(JsonGetBool, MatchAndMismatch) {
     nlohmann::json j;
-    j["feature"]["enabled"] = true;
-    j["feature"]["flag_as_number"] = 1;  // bool이 아님(숫자)
-    j["feature"]["text"] = "true";       // bool이 아님(문자열)
+    j["feature"]["enabled"] = true;     // boolean 타입
+    j["feature"]["flag_as_number"] = 1; // bool 이 아님 (숫자)
+    j["feature"]["text"] = "true";      // bool 이 아님 (문자열)
 
     // 타입 일치: 불리언 반환
-    EXPECT_TRUE(jj::get_bool(j, "/feature/enabled", false));
+    EXPECT_TRUE(jjson::get_bool(j, "/feature/enabled", false));
 
     // 타입 불일치: 기본값 반환
-    EXPECT_FALSE(jj::get_bool(j, "/feature/flag_as_number", false));
-    EXPECT_TRUE(jj::get_bool(j, "/feature/flag_as_number", true));  // 기본값만 바꾸면 그대로 반영
-    EXPECT_FALSE(jj::get_bool(j, "/feature/text", false));
+    EXPECT_FALSE(jjson::get_bool(j, "/feature/flag_as_number", false));
+    EXPECT_TRUE(jjson::get_bool(j, "/feature/flag_as_number", true));  // 기본값만 바꾸면 그대로 반영
+    EXPECT_FALSE(jjson::get_bool(j, "/feature/text", false));
 
     // 존재하지 않음: 기본값 반환
-    EXPECT_TRUE(jj::get_bool(j, "/feature/missing", true));
+    EXPECT_TRUE(jjson::get_bool(j, "/feature/missing", true));
 }
 
 TEST(JsonGetInt, FromIntAndIntegralFloat) {
@@ -114,10 +114,10 @@ TEST(JsonGetInt, FromIntAndIntegralFloat) {
     j["config"]["port_float_integral"] = 6000.0; // 소수부 0.0인 부동소수
 
     // 정수는 그대로
-    EXPECT_EQ(jj::get_int(j, "/config/port_int", 0), 5432);
+    EXPECT_EQ(jjson::get_int(j, "/config/port_int", 0), 5432);
 
-    // 소수부가 0.0이면 정수로 캐스팅 허용
-    EXPECT_EQ(jj::get_int(j, "/config/port_float_integral", 0), 6000);
+    // 소수부가 0.0 이면 정수로 캐스팅 허용
+    EXPECT_EQ(jjson::get_int(j, "/config/port_float_integral", 0), 6000);
 }
 
 TEST(JsonGetInt, RejectFractionalFloatAndWrongType) {
@@ -127,11 +127,11 @@ TEST(JsonGetInt, RejectFractionalFloatAndWrongType) {
     j["config"]["flag"] = true;                  // bool
 
     // 소수부 존재 -> 정수성 불만족, 기본값
-    EXPECT_EQ(jj::get_int(j, "/config/port_float_fraction", 1234), 1234);
+    EXPECT_EQ(jjson::get_int(j, "/config/port_float_fraction", 1234), 1234);
 
     // 문자열/불리언 -> 타입 불일치, 기본값
-    EXPECT_EQ(jj::get_int(j, "/config/text", 4321), 4321);
-    EXPECT_EQ(jj::get_int(j, "/config/flag", 1), 1);
+    EXPECT_EQ(jjson::get_int(j, "/config/text", 4321), 4321);
+    EXPECT_EQ(jjson::get_int(j, "/config/flag", 1), 1);
 }
 
 TEST(JsonGetInt, OutOfRange) {
@@ -142,7 +142,7 @@ TEST(JsonGetInt, OutOfRange) {
     // (MSVC/nlohmann에서 number_unsigned로 잡히도록 ull 사용)
 
     // 범위 초과 -> 기본값
-    EXPECT_EQ(jj::get_int(j, "/big/beyond_int_max", -1), -1);
+    EXPECT_EQ(jjson::get_int(j, "/big/beyond_int_max", -1), -1);
 }
 
 TEST(JsonGetDouble, FromIntAndFloat) {
@@ -151,9 +151,9 @@ TEST(JsonGetDouble, FromIntAndFloat) {
     j["val"]["d"] = 3.25;     // 부동소수
 
     // 정수 -> 10.0
-    EXPECT_DOUBLE_EQ(jj::get_double(j, "/val/i", -1.0), 10.0);
+    EXPECT_DOUBLE_EQ(jjson::get_double(j, "/val/i", -1.0), 10.0);
     // 부동소수 -> 3.25
-    EXPECT_DOUBLE_EQ(jj::get_double(j, "/val/d", -1.0), 3.25);
+    EXPECT_DOUBLE_EQ(jjson::get_double(j, "/val/d", -1.0), 3.25);
 }
 
 TEST(JsonGetDouble, RejectNaNAndInfAndWrongType) {
@@ -170,12 +170,12 @@ TEST(JsonGetDouble, RejectNaNAndInfAndWrongType) {
     j["val"]["flag"] = false;   // 불리언
 
     // NaN/Inf 는 try_number_cast 에서 거부되어 기본값 반환
-    EXPECT_DOUBLE_EQ(jj::get_double(j, "/val/nan", 1.5), 1.5);
-    EXPECT_DOUBLE_EQ(jj::get_double(j, "/val/inf", 2.5), 2.5);
+    EXPECT_DOUBLE_EQ(jjson::get_double(j, "/val/nan", 1.5), 1.5);
+    EXPECT_DOUBLE_EQ(jjson::get_double(j, "/val/inf", 2.5), 2.5);
 
     // 문자열/불리언 -> 기본값
-    EXPECT_DOUBLE_EQ(jj::get_double(j, "/val/text", 9.9), 9.9);
-    EXPECT_DOUBLE_EQ(jj::get_double(j, "/val/flag", 8.8), 8.8);
+    EXPECT_DOUBLE_EQ(jjson::get_double(j, "/val/text", 9.9), 9.9);
+    EXPECT_DOUBLE_EQ(jjson::get_double(j, "/val/flag", 8.8), 8.8);
 }
 
 TEST(JsonArrayPaths, Indexing) {
@@ -184,16 +184,16 @@ TEST(JsonArrayPaths, Indexing) {
     j["arr"] = nlohmann::json::array({ 10, 20, 30 });
 
     // 존재 확인
-    EXPECT_TRUE(jj::exists(j, "/arr/0"));
-    EXPECT_TRUE(jj::exists(j, "/arr/2"));
-    EXPECT_FALSE(jj::exists(j, "/arr/3")); // 범위 밖
+    EXPECT_TRUE(jjson::exists(j, "/arr/0"));
+    EXPECT_TRUE(jjson::exists(j, "/arr/2"));
+    EXPECT_FALSE(jjson::exists(j, "/arr/3")); // 범위 밖
 
     // 정수 읽기
-    EXPECT_EQ(jj::get_int(j, "/arr/1", -1), 20);
+    EXPECT_EQ(jjson::get_int(j, "/arr/1", -1), 20);
 
     // 타입 불일치 시 기본값 (여기서는 의도적으로 문자열로 치환)
     j["arr"][1] = "twenty";
-    EXPECT_EQ(jj::get_int(j, "/arr/1", -1), -1);
+    EXPECT_EQ(jjson::get_int(j, "/arr/1", -1), -1);
 }
 
 TEST(JsonDeepPaths, NestedStructureAndNull) {
@@ -209,12 +209,16 @@ TEST(JsonDeepPaths, NestedStructureAndNull) {
         }}
     };
 
+    // 다음과 같은 JSON 구조를 가진다.
+    // j["a"]["b"]["c"]["d"] = "leaf"
+    // j["a"]["b"]["c"]["n"] = null
+
     // 정해진 깊은 경로의 문자열
-    EXPECT_EQ(jj::get_string(j, "/a/b/c/d", "x"), "leaf");
+    EXPECT_EQ(jjson::get_string(j, "/a/b/c/d", "x"), "leaf");
 
     // null 은 기본값
-    EXPECT_EQ(jj::get_string(j, "/a/b/c/n", "null-as-default"), "null-as-default");
+    EXPECT_EQ(jjson::get_string(j, "/a/b/c/n", "null-as-default"), "null-as-default");
 
     // 존재하지 않으면 기본값
-    EXPECT_EQ(jj::get_string(j, "/a/b/x", "missing"), "missing");
+    EXPECT_EQ(jjson::get_string(j, "/a/b/x", "missing"), "missing");
 }
