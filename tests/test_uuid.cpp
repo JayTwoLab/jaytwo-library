@@ -22,8 +22,6 @@
 #include "j2_library/uuid/uuid_v4.hpp"
 #include "j2_library/string/to_console_encoding.hpp"
 
-using j2::uuid::UuidV4;
-
 // UUID 정규식: 소문자 hex와 하이픈 형식을 강제한다.
 static const std::regex kUuidRegex(
     R"(^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$)");
@@ -31,7 +29,7 @@ static const std::regex kUuidRegex(
 TEST(UuidV4, FormatAndLength) {
     // 5개 정도 생성해 형식과 길이를 확인한다.
     for (int i = 0; i < 5; ++i) {
-        const std::string id = UuidV4::generate();
+        const std::string id = j2::uuid::UuidV4::generate();
 
         // 길이는 하이픈 포함 36자여야 한다.
         EXPECT_EQ(id.size(), 36u) << j2::string::to_console_encoding(u8"UUID 길이는 36자여야 합니다.");
@@ -52,7 +50,7 @@ TEST(UuidV4, VersionAndVariantBits) {
     // 버전 nibble 은 문자열 14번째(0-index) 문자여야 한다.
     // 바리언트 nibble 은 19번째 문자여야 한다.
     for (int i = 0; i < 20; ++i) {
-        const std::string id = UuidV4::generate();
+        const std::string id = j2::uuid::UuidV4::generate();
 
         // version=4 (문자 '4') 확인
         ASSERT_EQ(id.size(), 36u);
@@ -73,7 +71,7 @@ TEST(UuidV4, ManyNoDuplicate) {
     seen.reserve(kN * 2);
 
     for (int i = 0; i < kN; ++i) {
-        auto id = UuidV4::generate();
+        auto id = j2::uuid::UuidV4::generate();
         auto [it, inserted] = seen.insert(std::move(id));
         if (!inserted) {
             ADD_FAILURE() << j2::string::to_console_encoding(u8"중복 UUID 발견: ") << *it;
@@ -100,7 +98,7 @@ TEST(UuidV4, MultithreadedNoDuplicate) {
             auto& vec = buckets[t];
             vec.reserve(per_thread);
             for (int i = 0; i < per_thread; ++i) {
-                vec.emplace_back(UuidV4::generate());
+                vec.emplace_back(j2::uuid::UuidV4::generate());
             }
             });
     }

@@ -1,4 +1,3 @@
-// test_json.cpp
 // GoogleTest를 이용해 j2::json 유틸리티를 검증하는 테스트 모음
 // - exists(path): 경로 존재 여부
 // - get_string/get_bool/get_int/get_double: 타입 안전 value_or 래퍼 (예외 없음)
@@ -11,14 +10,14 @@
 
 #include <gtest/gtest.h>
 #include "j2_library/json/json.hpp"
+#include <nlohmann/json.hpp>
 
-// 별칭은 헤더(json.hpp)에서 이미 다음과 같이 정의되어 있음:
-// using nj     = nlohmann::json;
-// namespace jj = j2::json;
+// 네임스페이스 별칭
+namespace jj = j2::json;
 
 TEST(JsonExists, BasicTrueFalse) {
     // 준비: 간단한 설정 JSON
-    nj j = {
+    nlohmann::json j = {
         {"config", {
             {"database", {
                 {"host", "db.local"},
@@ -45,7 +44,7 @@ TEST(JsonExists, EscapedKeysWithTildeAndSlash) {
     // 준비: 키에 '/' 와 '~' 가 포함된 경우 JSON Pointer 이스케이프 필요
     // JSON Pointer 규칙:
     //   '~' -> '~0', '/' -> '~1'
-    nj j;
+    nlohmann::json j;
     j["config"]["weird"]["a/b"] = 1;   // '/' 포함
     j["config"]["weird"]["c~d"] = 2;   // '~' 포함
 
@@ -60,7 +59,7 @@ TEST(JsonExists, EscapedKeysWithTildeAndSlash) {
 }
 
 TEST(JsonGetString, MatchAndMismtachAndNull) {
-    nj j;
+    nlohmann::json j;
     j["config"]["database"]["host"] = "db.local";
     j["config"]["database"]["port"] = 5432;      // 문자열 아님
     j["config"]["database"]["note"] = nullptr;   // null
@@ -79,7 +78,7 @@ TEST(JsonGetString, MatchAndMismtachAndNull) {
 }
 
 TEST(JsonGetBool, MatchAndMismatch) {
-    nj j;
+    nlohmann::json j;
     j["feature"]["enabled"] = true;
     j["feature"]["flag_as_number"] = 1;  // bool이 아님(숫자)
     j["feature"]["text"] = "true";       // bool이 아님(문자열)
@@ -97,7 +96,7 @@ TEST(JsonGetBool, MatchAndMismatch) {
 }
 
 TEST(JsonGetInt, FromIntAndIntegralFloat) {
-    nj j;
+    nlohmann::json j;
     j["config"]["port_int"] = 5432;   // 정수
     j["config"]["port_float_integral"] = 6000.0; // 소수부 0.0인 부동소수
 
@@ -109,7 +108,7 @@ TEST(JsonGetInt, FromIntAndIntegralFloat) {
 }
 
 TEST(JsonGetInt, RejectFractionalFloatAndWrongType) {
-    nj j;
+    nlohmann::json j;
     j["config"]["port_float_fraction"] = 6000.5; // 소수부 존재
     j["config"]["text"] = "7000";                // 문자열
     j["config"]["flag"] = true;                  // bool
@@ -123,7 +122,7 @@ TEST(JsonGetInt, RejectFractionalFloatAndWrongType) {
 }
 
 TEST(JsonGetInt, OutOfRange) {
-    nj j;
+    nlohmann::json j;
     // int 범위를 초과하는 큰 수: 2147483648(= INT_MAX + 1)
     j["big"]["beyond_int_max"] = 2147483648ull;
     // 음수로도 범위 밖을 만들 수 있지만 여기서는 양수 초과만 검사
@@ -134,7 +133,7 @@ TEST(JsonGetInt, OutOfRange) {
 }
 
 TEST(JsonGetDouble, FromIntAndFloat) {
-    nj j;
+    nlohmann::json j;
     j["val"]["i"] = 10;       // 정수여도 double 로 안전 변환 허용
     j["val"]["d"] = 3.25;     // 부동소수
 
@@ -145,7 +144,7 @@ TEST(JsonGetDouble, FromIntAndFloat) {
 }
 
 TEST(JsonGetDouble, RejectNaNAndInfAndWrongType) {
-    nj j;
+    nlohmann::json j;
 
     // nlohmann::json 은 C++ 값으로 NaN/Inf 저장은 가능하나 JSON 리터럴로 표현되지는 않음.
     // 테스트에서는 값 주입을 통해 생성한다.
@@ -168,8 +167,8 @@ TEST(JsonGetDouble, RejectNaNAndInfAndWrongType) {
 
 TEST(JsonArrayPaths, Indexing) {
     // 배열 인덱싱은 JSON Pointer에서 "/키/인덱스" 형태로 접근
-    nj j;
-    j["arr"] = nj::array({ 10, 20, 30 });
+    nlohmann::json j;
+    j["arr"] = nlohmann::json::array({ 10, 20, 30 });
 
     // 존재 확인
     EXPECT_TRUE(jj::exists(j, "/arr/0"));
@@ -186,7 +185,7 @@ TEST(JsonArrayPaths, Indexing) {
 
 TEST(JsonDeepPaths, NestedStructureAndNull) {
     // 깊은 중첩 + null 처리
-    nj j = {
+    nlohmann::json j = {
         {"a", {
             {"b", {
                 {"c", {
@@ -206,13 +205,3 @@ TEST(JsonDeepPaths, NestedStructureAndNull) {
     // 존재하지 않으면 기본값
     EXPECT_EQ(jj::get_string(j, "/a/b/x", "missing"), "missing");
 }
-
-// 메인 함수를 따로 정의할 필요는 없음.
-// GoogleTest에서는 gtest_main 라이브러리를 링크하면 자동으로 main 제공.
-// 만약 직접 main이 필요하다면 아래를 사용하세요.
-/*
-int main(int argc, char** argv) {
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
-}
-*/

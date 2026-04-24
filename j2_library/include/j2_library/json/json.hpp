@@ -156,5 +156,4 @@ namespace j2::json { // jj 로 축약하여 사용 가능
 
 } // namespace j2::json
 
-// 네임스페이스 별칭
-namespace jj = j2::json;
+

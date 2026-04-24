@@ -6,9 +6,7 @@
 
 // --- Single Function ---
 
-namespace jc = j2::core;
-
 TEST(SingleFunction, Add) {
-    EXPECT_EQ(jc::add(2, 3), 5);
+    EXPECT_EQ(j2::core::add(2, 3), 5);
 }
 

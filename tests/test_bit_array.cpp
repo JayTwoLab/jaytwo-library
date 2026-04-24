@@ -1,4 +1,3 @@
-// test_bit_array.cpp
 // GoogleTest 기반 단위 테스트 (비트 단위 처리 주석 확장판)
 //
 // 이 파일은 bit_array 클래스의 "비트 단위" 동작을 검증합니다.
@@ -25,8 +24,6 @@
  
 // 프로젝트의 실제 경로로 수정하세요.
 #include "j2_library/bit/bit_array.hpp"
-
-using j2::bit::bit_array;
 
 // ---------------------------------------------
 // 유틸: 벡터<bool> 비교 + 디버그 문자열
@@ -73,19 +70,19 @@ TEST(BitArray, BasicConstructionAndSize) {
     // [시나리오]
     // - 바이트 {1100'0000} (=0xC0) 을 3비트로만 해석
     // - MSB-first 가정이므로 index 0 = '1'(MSB), index 1 = '1', index 2 = '0'
-    bit_array a1({ 0b11000000 }, 3);
+    j2::bit::bit_array a1({ 0b11000000 }, 3);
     EXPECT_EQ(a1.size(), 3u);
     EXPECT_EQ(a1.data().size(), 1u);
 
     // 전체 8비트 사용
-    bit_array a2({ 0b11000000 }, 8);
+    j2::bit::bit_array a2({ 0b11000000 }, 8);
     EXPECT_EQ(a2.size(), 8u);
     EXPECT_EQ(a2.data().size(), 1u);
 
     // 2바이트(16비트) 사용
     // 바이트열: [1100'0011] [1010'0110]
     //            ^MSB ... LSB^  ^MSB ... LSB^
-    bit_array a3({ 0b11000011, 0b10100110 }, 16);
+    j2::bit::bit_array a3({ 0b11000011, 0b10100110 }, 16);
     EXPECT_EQ(a3.size(), 16u);
     EXPECT_EQ(a3.data().size(), 2u);
 }
@@ -94,7 +91,7 @@ TEST(BitArray, GetSubArray_MSBIndexing) {
     // src: [1100'0011] [1010'0110] (총 16비트)
     // idx:  0 1 2 3 4 5 6 7 | 8 9 10 11 12 13 14 15
     // bit:  1 1 0 0 0 0 1 1 | 1 0 1 0  0  1  1  0     (MSB-first 가정)
-    bit_array src({ 0b11000011, 0b10100110 }, 16);
+    j2::bit::bit_array src({ 0b11000011, 0b10100110 }, 16);
 
     // 앞의 4비트 [0..3]: 1 1 0 0
     auto sub0 = src.get(0, 4).to_array();
@@ -114,11 +111,11 @@ TEST(BitArray, GetSubArray_MSBIndexing) {
 TEST(BitArray, MergeByOffset_MSBIndexing) {
     // 병합(merge): 대상(dst)의 특정 오프셋부터 다른 비트열(ins)을 "위치 그대로" 덮어쓰기
     // dst 초기 상태 (16비트 0): [0000'0000] [0000'0000]
-    bit_array dst({ 0x00, 0x00 }, 16);
+    j2::bit::bit_array dst({ 0x00, 0x00 }, 16);
 
     // 삽입 소스 ins (8비트): [1111'1100]
     // index(0..7) = 1 1 1 1 1 1 0 0
-    bit_array ins({ 0b11111100 }, 8);
+    j2::bit::bit_array ins({ 0b11111100 }, 8);
 
     // 오프셋 4부터 ins(8비트)를 복사
     // dst 비트 인덱스 [4..11] 위치에 ins[0..7]가 순서대로 들어갑니다(MSB-first 인덱싱).
@@ -133,18 +130,18 @@ TEST(BitArray, MergeByOffset_MSBIndexing) {
         << ", ins=" << BitsToString(ins_bits);
 
     // 범위를 벗어나면 실패해야 함
-    bit_array tooSmall({ 0x00 }, 4);     // 4비트짜리 대상
+    j2::bit::bit_array tooSmall({ 0x00 }, 4);     // 4비트짜리 대상
     EXPECT_FALSE(tooSmall.merge(ins, 12)); // 오프셋 12부터 8비트는 불가능
 }
 
 TEST(BitArray, ConcatOperatorPlus_MSBIndexing) {
     // 연결(+)는 [좌측 비트열 | 우측 비트열] 순서로 이어붙입니다.
     // a: 4비트 1010
-    bit_array a({ 0b10100000 }, 4);  // 바이트로는 1010'0000 이지만 size=4 이므로 유효비트는 앞의 4개만
+    j2::bit::bit_array a({ 0b10100000 }, 4);  // 바이트로는 1010'0000 이지만 size=4 이므로 유효비트는 앞의 4개만
     // b: 4비트 1100
-    bit_array b({ 0b11000000 }, 4);
+    j2::bit::bit_array b({ 0b11000000 }, 4);
     // c: a+b → 8비트 1010 1100
-    bit_array c = a + b;
+    j2::bit::bit_array c = a + b;
 
     EXPECT_EQ(c.size(), 8u);
     EXPECT_TRUE(VecBoolEq(c.get(0, 4).to_array(), a.to_array())); // c[0..3] == a
@@ -153,7 +150,7 @@ TEST(BitArray, ConcatOperatorPlus_MSBIndexing) {
 
 TEST(BitArray, DataAndSetBytes_AllocationAndZeroing) {
     // set_bytes(N): 내부 저장 바이트 수를 N으로 재할당하고 모두 0으로 채운다고 가정
-    bit_array a;
+    j2::bit::bit_array a;
     a.set_bytes(4); // 4바이트 = 32비트 (모두 0)
     EXPECT_EQ(a.size(), 32u);
     for (auto v : a.data()) EXPECT_EQ(v, 0);
@@ -169,7 +166,7 @@ TEST(BitArray, FromBytesAndToArray_BitZeroFill) {
     // from({0x12, 0x34}, 16):
     // 0x12 = 0001'0010, 0x34 = 0011'0100  (MSB→LSB 나열)
     // 총 16비트 그대로 사용
-    bit_array a;
+    j2::bit::bit_array a;
     a.from({ 0x12, 0x34 }, 16);
     EXPECT_EQ(a.size(), 16u);
     auto bytes = a.data();
@@ -178,7 +175,7 @@ TEST(BitArray, FromBytesAndToArray_BitZeroFill) {
     EXPECT_EQ(bytes[1], 0x34);
 
     // set_bits(10): 10비트를 확보하며 기본값은 0으로 채워진다고 가정
-    bit_array b;
+    j2::bit::bit_array b;
     b.set_bits(10);
     auto bits = b.to_array();
     EXPECT_EQ(bits.size(), 10u);
@@ -189,7 +186,7 @@ TEST(BitArray, ShiftLeftAndRight_MSBIndexing) {
     // a = 8비트 0000 1111
     // idx: 0 1 2 3 4 5 6 7
     // bit: 0 0 0 0 1 1 1 1
-    bit_array a({ 0x0F }, 8);
+    j2::bit::bit_array a({ 0x0F }, 8);
 
     // << 4 (왼쪽 쉬프트 4): 각 비트를 더 작은 인덱스로 이동시키고, 하위(오른쪽) 비트는 0으로 채움
     // 결과 기대: 1111 0000  (= index 0..3 = 1, index 4..7 = 0)
@@ -208,7 +205,7 @@ TEST(BitArray, ReverserRoundtrip_MSBIndexing) {
     // reverser(): 비트열의 순서를 "완전히 뒤집는" 연산이라고 가정
     // 예) [b0 b1 b2 ... bN-1] → [bN-1 ... b2 b1 b0]
     // 라운드트립(두 번 적용)하면 원상 복구되어야 함.
-    bit_array a({ 0x34, 0x12 }, 10);
+    j2::bit::bit_array a({ 0x34, 0x12 }, 10);
     auto before = a.to_array();
     a.reverser();  // 1차 반전
     a.reverser();  // 2차 반전 → 원복

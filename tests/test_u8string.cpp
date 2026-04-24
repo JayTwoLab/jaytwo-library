@@ -1,18 +1,13 @@
-
 #include <gtest/gtest.h>
 
 #include "j2_library/j2_library.hpp"
-
-// 테스트 편의를 위한 using
-using j2::string::u8::u8str;
-using j2::string::u8::u8string;
 
 // 기본 생성자 / 기본 상태 테스트
 // 기본 생성자 / 기본 상태 테스트
 TEST(u8str_basic, default_ctor_and_empty)
 {
     // 기본 생성 시 빈 문자열이어야 함
-    u8str s;
+    j2::string::u8::u8str s;
     EXPECT_TRUE(s.empty());
     EXPECT_EQ(s.size(), 0u);
     EXPECT_EQ(s.to_std_string(), std::string());
@@ -31,11 +26,11 @@ TEST(u8str_basic, constructors_from_various_types)
     std::u16string u16 = u"UTF16";
     std::u32string u32 = U"UTF32";
 
-    u8str s1(cstr);
-    u8str s2(std_str);
-    u8str s3(wstr);
-    u8str s4(u16);
-    u8str s5(u32);
+    j2::string::u8::u8str s1(cstr);
+    j2::string::u8::u8str s2(std_str);
+    j2::string::u8::u8str s3(wstr);
+    j2::string::u8::u8str s4(u16);
+    j2::string::u8::u8str s5(u32);
 
     EXPECT_EQ(s1.to_std_string(), "Hello");
     EXPECT_EQ(s2.to_std_string(), "World");
@@ -47,7 +42,7 @@ TEST(u8str_basic, constructors_from_various_types)
 // from_* 세터 함수 테스트
 TEST(u8str_basic, from_setters)
 {
-    u8str s;
+    j2::string::u8::u8str s;
     s.from_std_string(std::string("Hello"));
     EXPECT_EQ(s.to_std_string(), "Hello");
 
@@ -68,7 +63,7 @@ TEST(u8str_basic, from_setters)
 // clear / size / empty 테스트
 TEST(u8str_basic, clear_size_empty)
 {
-    u8str s("내용있음");
+    j2::string::u8::u8str s("내용있음");
     EXPECT_FALSE(s.empty());
     EXPECT_GT(s.size(), 0u);
 
@@ -81,7 +76,7 @@ TEST(u8str_basic, clear_size_empty)
 TEST(u8str_convert, to_w_u16_u32_roundtrip)
 {
     // 이모지 포함 UTF-8 문자열
-    u8str s("안녕하세요😎");
+    j2::string::u8::u8str s("안녕하세요😎");
 
     std::wstring  ws = s.to_wstring();
     std::u16string u16 = s.to_u16string();
@@ -104,21 +99,21 @@ TEST(u8str_convert, to_w_u16_u32_roundtrip)
 // starts_with / ends_with / contains 테스트
 TEST(u8str_search, starts_ends_contains)
 {
-    u8str s("안녕하세요 UTF-8 테스트");
+    j2::string::u8::u8str s("안녕하세요 UTF-8 테스트");
 
     // starts_with (const char* 버전 포함)
     EXPECT_TRUE(s.starts_with("안녕"));
     EXPECT_FALSE(s.starts_with("UTF"));
-    u8str prefix("안녕하세요");
+    j2::string::u8::u8str prefix("안녕하세요");
     EXPECT_TRUE(s.starts_with(prefix));
 
-    u8str too_long("안녕하세요 UTF-8 테스트 그리고 더 있습니다");
+    j2::string::u8::u8str too_long("안녕하세요 UTF-8 테스트 그리고 더 있습니다");
     EXPECT_FALSE(s.starts_with(too_long));
 
     // ends_with
     EXPECT_TRUE(s.ends_with("테스트"));
     EXPECT_FALSE(s.ends_with("안녕"));
-    u8str suffix("테스트");
+    j2::string::u8::u8str suffix("테스트");
     EXPECT_TRUE(s.ends_with(suffix));
 
     EXPECT_FALSE(s.ends_with("매우 긴 접미사"));
@@ -126,18 +121,18 @@ TEST(u8str_search, starts_ends_contains)
     // contains
     EXPECT_TRUE(s.contains("UTF-8"));
     EXPECT_FALSE(s.contains("없는문자열"));
-    u8str needle("UTF-8");
+    j2::string::u8::u8str needle("UTF-8");
     EXPECT_TRUE(s.contains(needle));
 
     // needle 이 빈 문자열이면 항상 true
     EXPECT_TRUE(s.contains(""));
-    EXPECT_TRUE(s.contains(u8str("")));
+    EXPECT_TRUE(s.contains(j2::string::u8::u8str("")));
 }
 
 // index_of / last_index_of 테스트
 TEST(u8str_search, index_of_and_last_index_of)
 {
-    u8str s("apple banana apple grape");
+    j2::string::u8::u8str s("apple banana apple grape");
 
     // 첫 번째 "apple"
     EXPECT_EQ(s.index_of("apple"), 0);
@@ -162,25 +157,25 @@ TEST(u8str_search, index_of_and_last_index_of)
 // trim / ltrim / rtrim 테스트
 TEST(u8str_trim, trim_functions)
 {
-    u8str s(" \t\nABC  ");
+    j2::string::u8::u8str s(" \t\nABC  ");
     s.ltrim();
     EXPECT_EQ(s.to_std_string(), "ABC  ");
 
-    u8str s2(" \t\nABC  ");
+    j2::string::u8::u8str s2(" \t\nABC  ");
     s2.rtrim();
     EXPECT_EQ(s2.to_std_string(), " \t\nABC");
 
-    u8str s3(" \t\nABC  ");
+    j2::string::u8::u8str s3(" \t\nABC  ");
     s3.trim();
     EXPECT_EQ(s3.to_std_string(), "ABC");
 
     // 전부 공백인 경우
-    u8str s4("   \n\t  ");
+    j2::string::u8::u8str s4("   \n\t  ");
     s4.trim();
     EXPECT_TRUE(s4.to_std_string().empty());
 
     // 이미 공백이 없는 경우
-    u8str s5("ABC");
+    j2::string::u8::u8str s5("ABC");
     s5.trim();
     EXPECT_EQ(s5.to_std_string(), "ABC");
 }
@@ -188,7 +183,7 @@ TEST(u8str_trim, trim_functions)
 // split 테스트
 TEST(u8str_split, basic_and_edge_cases)
 {
-    u8str s("사과,배,포도,,수박");
+    j2::string::u8::u8str s("사과,배,포도,,수박");
 
     // skip_empty = false
     auto v1 = s.split(",", false);
@@ -208,7 +203,7 @@ TEST(u8str_split, basic_and_edge_cases)
     EXPECT_EQ(v2[3].to_std_string(), "수박");
 
     // 구분자가 없는 경우
-    u8str s2("단일문자열");
+    j2::string::u8::u8str s2("단일문자열");
     auto v3 = s2.split(",", false);
     ASSERT_EQ(v3.size(), 1u);
     EXPECT_EQ(v3[0].to_std_string(), "단일문자열");
@@ -222,7 +217,7 @@ TEST(u8str_split, basic_and_edge_cases)
 // replace / replace_all 테스트
 TEST(u8str_replace, replace_and_replace_all)
 {
-    u8str s("안녕하세요, 세상. 안녕하세요, 여러분.");
+    j2::string::u8::u8str s("안녕하세요, 세상. 안녕하세요, 여러분.");
 
     // 첫 번째 매치만 치환
     s.replace("안녕하세요", "Hello");
@@ -233,17 +228,17 @@ TEST(u8str_replace, replace_and_replace_all)
     EXPECT_EQ(s.to_std_string(), "Hello, 세상. Hi, 여러분.");
 
     // u8str 버전
-    u8str from("Hello");
-    u8str to("안녕");
+    j2::string::u8::u8str from("Hello");
+    j2::string::u8::u8str to("안녕");
     s.replace_all(from, to);
     EXPECT_EQ(s.to_std_string(), "안녕, 세상. Hi, 여러분.");
 
     // from 이 빈 문자열인 경우: 아무 일도 일어나지 않아야 함
-    u8str s2("AAA");
-    s2.replace(u8str(""), u8str("B"));
+    j2::string::u8::u8str s2("AAA");
+    s2.replace(j2::string::u8::u8str(""), j2::string::u8::u8str("B"));
     EXPECT_EQ(s2.to_std_string(), "AAA");
 
-    s2.replace_all(u8str(""), u8str("B"));
+    s2.replace_all(j2::string::u8::u8str(""), j2::string::u8::u8str("B"));
     EXPECT_EQ(s2.to_std_string(), "AAA");
 }
 
@@ -251,7 +246,7 @@ TEST(u8str_replace, replace_and_replace_all)
 TEST(u8str_substring, left_right_mid_utf8)
 {
     // "안녕" (2), "😀" (1), "하세요" (3) => 총 6 코드포인트
-    u8str s("안녕😀하세요");
+    j2::string::u8::u8str s("안녕😀하세요");
 
     auto l2 = s.left(2);
     auto r2 = s.right(2);
@@ -280,7 +275,7 @@ TEST(u8str_substring, left_right_mid_utf8)
     EXPECT_TRUE(s.mid(0, 0).to_std_string().empty());
 
     // 빈 문자열 대상
-    u8str empty_s;
+    j2::string::u8::u8str empty_s;
     EXPECT_TRUE(empty_s.left(3).to_std_string().empty());
     EXPECT_TRUE(empty_s.right(3).to_std_string().empty());
     EXPECT_TRUE(empty_s.mid(0, 1).to_std_string().empty());
@@ -289,12 +284,12 @@ TEST(u8str_substring, left_right_mid_utf8)
 // reverse_utf8 테스트
 TEST(u8str_algo, reverse_utf8)
 {
-    u8str s("ABC안녕😀");
-    u8str original = s;
+    j2::string::u8::u8str s("ABC안녕😀");
+    j2::string::u8::u8str original = s;
 
     // 1글자 / 빈 문자열은 변화가 없어야 함
-    u8str one("A");
-    u8str empty;
+    j2::string::u8::u8str one("A");
+    j2::string::u8::u8str empty;
     one.reverse_utf8();
     empty.reverse_utf8();
     EXPECT_EQ(one.to_std_string(), "A");
@@ -309,7 +304,7 @@ TEST(u8str_algo, reverse_utf8)
 // pad_left / pad_right 테스트
 TEST(u8str_algo, pad_left_right)
 {
-    u8str s("가나");  // 코드포인트 2개
+    j2::string::u8::u8str s("가나");  // 코드포인트 2개
 
     s.pad_left(4, '_');
     EXPECT_EQ(s.to_std_string(), "__가나");
@@ -318,7 +313,7 @@ TEST(u8str_algo, pad_left_right)
     EXPECT_EQ(s.to_std_string(), "__가나__");
 
     // 이미 길이가 충분한 경우: 변경되지 않아야 함
-    u8str s2("ABCDE");
+    j2::string::u8::u8str s2("ABCDE");
     s2.pad_left(3, '_');
     s2.pad_right(3, '_');
     EXPECT_EQ(s2.to_std_string(), "ABCDE");
@@ -327,7 +322,7 @@ TEST(u8str_algo, pad_left_right)
 // strip_prefix / strip_suffix 테스트
 TEST(u8str_algo, strip_prefix_suffix)
 {
-    u8str s("HelloWorld");
+    j2::string::u8::u8str s("HelloWorld");
 
     EXPECT_TRUE(s.strip_prefix("Hello"));
     EXPECT_EQ(s.to_std_string(), "World");
@@ -343,8 +338,8 @@ TEST(u8str_algo, strip_prefix_suffix)
     EXPECT_EQ(s.to_std_string(), "ABCDEF");
 
     // u8str 버전 prefix
-    u8str s2("앞부분제거");
-    u8str prefix("앞부분");
+    j2::string::u8::u8str s2("앞부분제거");
+    j2::string::u8::u8str prefix("앞부분");
     EXPECT_TRUE(s2.strip_prefix(prefix));
     EXPECT_EQ(s2.to_std_string(), "제거");
 }
@@ -352,10 +347,10 @@ TEST(u8str_algo, strip_prefix_suffix)
 // equals_ignore_case_ascii 테스트
 TEST(u8str_algo, equals_ignore_case_ascii)
 {
-    u8str s1("HelloWorld");
-    u8str s2("helloworld");
-    u8str s3("HELLO_WORLD");
-    u8str s4("Hello");
+    j2::string::u8::u8str s1("HelloWorld");
+    j2::string::u8::u8str s2("helloworld");
+    j2::string::u8::u8str s3("HELLO_WORLD");
+    j2::string::u8::u8str s4("Hello");
 
     EXPECT_TRUE(s1.equals_ignore_case_ascii(s2));
     EXPECT_TRUE(s1.equals_ignore_case_ascii("helloworld"));
@@ -363,22 +358,22 @@ TEST(u8str_algo, equals_ignore_case_ascii)
     EXPECT_FALSE(s1.equals_ignore_case_ascii(s4));  // 길이 다름
 
     // 비 ASCII 문자 포함: ASCII 부분만 대소문자 비교 대상
-    u8str s5("안녕Hello");
-    u8str s6("안녕hello");
+    j2::string::u8::u8str s5("안녕Hello");
+    j2::string::u8::u8str s6("안녕hello");
     EXPECT_TRUE(s5.equals_ignore_case_ascii(s6));
 }
 
 // to_lower / to_upper / copy 버전 테스트
 TEST(u8str_algo, to_lower_upper)
 {
-    u8str s("AbCdEf123");
+    j2::string::u8::u8str s("AbCdEf123");
     s.to_lower();
     EXPECT_EQ(s.to_std_string(), "abcdef123");
 
     s.to_upper();
     EXPECT_EQ(s.to_std_string(), "ABCDEF123");
 
-    u8str s2("Hello World!");
+    j2::string::u8::u8str s2("Hello World!");
     auto lower = s2.to_lower_copy();
     auto upper = s2.to_upper_copy();
 
@@ -390,25 +385,25 @@ TEST(u8str_algo, to_lower_upper)
 // 연산자 테스트: +=, +, ==, !=
 TEST(u8str_operators, plus_and_compare)
 {
-    u8str a("Hello");
-    u8str b("World");
+    j2::string::u8::u8str a("Hello");
+    j2::string::u8::u8str b("World");
 
     a += " ";
     a += b;
     EXPECT_EQ(a.to_std_string(), "Hello World");
 
-    u8str c = u8("Hello") + " " + b;
+    j2::string::u8::u8str c = ::u8("Hello") + " " + b;
     EXPECT_EQ(c.to_std_string(), "Hello World");
 
-    u8str d("Hello World");
+    j2::string::u8::u8str d("Hello World");
     EXPECT_TRUE(c == d);
     EXPECT_FALSE(c != d);
 
-    u8str e("Different");
+    j2::string::u8::u8str e("Different");
     EXPECT_FALSE(c == e);
     EXPECT_TRUE(c != e);
 
     // const char* + u8str 조합 테스트
-    u8str f = "Say " + u8str("Hi");
+    j2::string::u8::u8str f = "Say " + ::u8("Hi");
     EXPECT_EQ(f.to_std_string(), "Say Hi");
 }

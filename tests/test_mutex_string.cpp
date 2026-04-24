@@ -5,14 +5,12 @@
 #include <gtest/gtest.h>
 #include "j2_library/j2_library.hpp"
 
-using jstr = j2::string::mutex_string; // alias for easier usage
-
 // Google Test framework
 // TEST(Test Suite Name, Test Name)
 
 // 1. Constructor and basic state test
 TEST(mutex_string, constructor_and_basic) {
-    jstr ms = "start";
+    j2::string::mutex_string ms = "start";
     EXPECT_EQ(ms.str(), "start");
     EXPECT_EQ(ms.size(), 5);
     EXPECT_EQ(ms.length(), 5);
@@ -21,7 +19,7 @@ TEST(mutex_string, constructor_and_basic) {
 
 // 2. Capacity-related function test
 TEST(mutex_string, capacity_functions) {
-    jstr ms = "start";
+    j2::string::mutex_string ms = "start";
     auto cap0 = ms.capacity();
     EXPECT_EQ(cap0, 15);
     ms.reserve(64);
@@ -44,7 +42,7 @@ TEST(mutex_string, capacity_functions) {
 
 // 3. Append/Insert/Modify function test
 TEST(mutex_string, append_insert_modify) {
-    jstr ms = "start";
+    j2::string::mutex_string ms = "start";
     ms.append(" plus");
     ms += ' ';
     ms += std::string("more");
@@ -62,38 +60,38 @@ TEST(mutex_string, append_insert_modify) {
 
 // 4. Search-related function test
 TEST(mutex_string, Find) {
-    jstr ms = "[***start plus more] tail";
+    j2::string::mutex_string ms = "[***start plus more] tail";
     EXPECT_EQ(ms.find("plus"), 10u);
 }
 
 TEST(mutex_string, RFind) {
-    jstr ms = "[***start plus more] tail";
+    j2::string::mutex_string ms = "[***start plus more] tail";
     EXPECT_EQ(ms.rfind('l'), 24u);
 }
 
 TEST(mutex_string, FindFirstOf) {
-    jstr ms = "[***start plus more] tail";
+    j2::string::mutex_string ms = "[***start plus more] tail";
     EXPECT_EQ(ms.find_first_of("aeiou"), 6u);
 }
 
 TEST(mutex_string, FindLastOf) {
-    jstr ms = "[***start plus more] tail";
+    j2::string::mutex_string ms = "[***start plus more] tail";
     EXPECT_EQ(ms.find_last_of('o'), 16u);
 }
 
 TEST(mutex_string, FindFirstNotOf) {
-    jstr ms = "[***start plus more] tail";
+    j2::string::mutex_string ms = "[***start plus more] tail";
     EXPECT_EQ(ms.find_first_not_of("()*"), 0u);
 }
 
 TEST(mutex_string, FindLastNotOf) {
-    jstr ms = "[***start plus more] tail";
+    j2::string::mutex_string ms = "[***start plus more] tail";
     EXPECT_EQ(ms.find_last_not_of(')'), 24u);
 }
 
 // 5. Substring and compare function test
 TEST(mutex_string, SubstrAndCompare) {
-    jstr ms = "(***start plus more] tai)";
+    j2::string::mutex_string ms = "(***start plus more] tai)";
     std::size_t pos_plus = ms.find("plus");
     if (pos_plus != std::string::npos) {
         EXPECT_EQ(ms.substr(pos_plus, 4), "plus");
@@ -104,7 +102,7 @@ TEST(mutex_string, SubstrAndCompare) {
 
 // 6. Replace/Erase/Copy/Resize function test
 TEST(mutex_string, ReplaceEraseCopyResize) {
-    jstr ms = "(***start plus more] tai)";
+    j2::string::mutex_string ms = "(***start plus more] tai)";
     if (ms.size() >= 5) {
         ms.replace(1, 5, "BEGIN");
     }
@@ -131,25 +129,25 @@ TEST(mutex_string, ReplaceEraseCopyResize) {
 
 // 7. Swap/Clear/Empty function test
 TEST(mutex_string, SwapClearEmpty) {
-    jstr ms = "##(BEGINartplus more] tai)!!!";
+    j2::string::mutex_string ms = "##(BEGINartplus more] tai)!!!";
     std::string ext = "EXTERNAL";
     ms.swap(ext);
     EXPECT_EQ(ms.str(), "EXTERNAL");
     EXPECT_EQ(ext, "##(BEGINartplus more] tai)!!!");
     ms.swap(ext);
-    jstr ms2 = "other";
+    j2::string::mutex_string ms2 = "other";
     ms2.swap(ms);
     EXPECT_EQ(ms.str(), "other");
     EXPECT_EQ(ms2.str(), "##(BEGINartplus more] tai)!!!");
     ms2.swap(ms);
-    jstr tmp = "temp";
+    j2::string::mutex_string tmp = "temp";
     tmp.clear();
     EXPECT_TRUE(tmp.empty());
 }
 
 // 8. Guard/With function test
 TEST(mutex_string, GuardAndWith) {
-    jstr ms = "##(BEGINartplus more] tai)!!!";
+    j2::string::mutex_string ms = "##(BEGINartplus more] tai)!!!";
     {
         auto g = ms.guard();
         EXPECT_EQ(g->length(), 29);
@@ -163,7 +161,7 @@ TEST(mutex_string, GuardAndWith) {
 
 // 9. Operator and special function test
 TEST(mutex_string, OperatorsAndSpecial) {
-    jstr ms = "##(BEGINartplus more] tai)!!! [WITH]";
+    j2::string::mutex_string ms = "##(BEGINartplus more] tai)!!! [WITH]";
     ms.insert(0, 3, '*');
     ms.replace(0, 3, 2, '#');
     ms.erase(0);
@@ -175,17 +173,17 @@ TEST(mutex_string, OperatorsAndSpecial) {
 }
 
 
-TEST(mutex_string, Jstr) {
+TEST(mutex_string, jstr) {
     //---------------------------------------------------------------------------
     // Demonstration of various j2::mutex_string features similar to std::string
-    // testJstr() does not include multi-thread related tests.
+    // testj2::string::mutex_string() does not include multi-thread related tests.
 
-    // std::cout << "\n===== testJstr: j2::mutex_string basic functionality test =====\n";
+    // std::cout << "\n===== testj2::string::mutex_string: j2::mutex_string basic functionality test =====\n";
 
     //-----------------------------------------------------------
 // construction/copy initialization (implicit conversion allowed)
-    // jstr is same as j2::mutex_string
-    jstr ms = "start"; // 5 characters
+    // j2::string::mutex_string is same as j2::mutex_string
+    j2::string::mutex_string ms = "start"; // 5 characters
     EXPECT_EQ(ms.str(), "start");
     EXPECT_EQ(ms.size(), 5);
     EXPECT_EQ(ms.length(), 5);
@@ -356,11 +354,11 @@ TEST(mutex_string, Jstr) {
 
     //-----------------------------------------------------------
     // swap(mutex_string&)
-    jstr ms2 = "other";
+    j2::string::mutex_string ms2 = "other";
     ms2.swap(ms);
-    // std::cout << "after swap(jstr): ms=\"" << ms.str()
+    // std::cout << "after swap(j2::string::mutex_string): ms=\"" << ms.str()
     // << "\", ms2=\"" << ms2.str() << "\"\n";
-    // after swap(jstr): ms="other", ms2="##(BEGINartplus more] tai)!!!"
+    // after swap(j2::string::mutex_string): ms="other", ms2="##(BEGINartplus more] tai)!!!"
     EXPECT_EQ(ms.str(), "other");
     EXPECT_EQ(ms2.str(), "##(BEGINartplus more] tai)!!!");
 
@@ -368,7 +366,7 @@ TEST(mutex_string, Jstr) {
 
     //-----------------------------------------------------------
     // clear / empty
-    jstr tmp = "temp";
+    j2::string::mutex_string tmp = "temp";
     tmp.clear();
     // std::cout << "after clear(): tmp.empty()=" << std::boolalpha << tmp.empty() << "\n";
     // after clear(): tmp.empty()=true
@@ -425,7 +423,7 @@ TEST(mutex_string, Jstr) {
     EXPECT_TRUE(ms != "zzz");
     // ms != "zzz" ? true
 
-    // std::cout << "===== end of testJstr =====\n";
+    // std::cout << "===== end of testj2::string::mutex_string =====\n";
 }
 
 // C API mimic(example)
@@ -443,7 +441,7 @@ TEST(mutex_string, Atomicity) {
     // - safe usage: (1) snapshot copy ms.str()
     //               (2) use std::string API within lock guard scope: auto g=ms.guard(); g->c_str();
 
-    jstr ms("start"); // same as jstr ms("start");
+    j2::string::mutex_string ms("start"); // same as j2::string::mutex_string ms("start");
 
     auto writer = [&] {
             std::mt19937 rng(std::random_device{}());
@@ -502,7 +500,7 @@ TEST(mutex_string, Atomicity) {
 TEST(mutex_string, Casting) {
 
     std::string stds = "standard";
-    jstr ms = stds; // implicit conversion from std::string
+    j2::string::mutex_string ms = stds; // implicit conversion from std::string
     EXPECT_EQ(ms.str(), "standard");
 
     std::string stds3 = static_cast<std::string>(ms); // explicit cast to std::string
