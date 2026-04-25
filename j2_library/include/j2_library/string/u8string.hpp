@@ -5,6 +5,14 @@
 #include <vector>
 #include <cstdint>
 
+// C++ 표준 문자열 타입
+// | 타입           | type     | 문자크기 | 인코딩                          |
+// | :------------- | :------- | :------- | : ----------------------------- |
+// | std::string    | char     | 1 Byte   | ASCII, UTF-8, 멀티바이트 문자열 |
+// | std::wstring   | wchar_t  | 2/4 Byte | Windows 2B, Linux/macOS 4B      |
+// | std::u16string | char16_t | 2 Byte   | UTF-16 인코딩(플랫폼 무관 고정) |
+// | std::u32string | char32_t | 4 Byte   | UTF-32 인코딩(모든 유니코드)    |
+
 // UTF-8 관련 기능을 j2::string::u8 네임스페이스에 모아서 사용
 namespace j2::string::u8
 {

@@ -5,7 +5,7 @@
 #include "j2_library/encoding/encoding.hpp"
 #include "j2_library/string/to_console_encoding.hpp" // 콘솔 메시지 변환 (Windows 한글 깨짐 방지)
 
-using namespace j2::encoding;
+// using namespace j2::encoding;
 
 // -----------------------------
 // 공통: 스킵 유틸리티 함수
@@ -59,9 +59,9 @@ static bool Probe_CP949() {
 #if !defined(_WIN32) && !defined(J2LIB_USE_ICONV)
     return false; // iconv 비활성화
 #endif
-    if (!utf8_to_cp949(sample, cp)) return false;
+    if (!j2::encoding::utf8_to_cp949(sample, cp)) return false;
     if (cp.empty()) return false;
-    if (!cp949_to_utf8(cp, back)) return false;
+    if (!j2::encoding::cp949_to_utf8(cp, back)) return false;
     return back == sample;
 }
 
@@ -74,9 +74,9 @@ static bool Probe_ISO2022KR() {
 #if !defined(_WIN32) && !defined(J2LIB_USE_ICONV)
     return false;
 #endif
-    if (!utf8_to_iso2022kr(sample, iso)) return false;
+    if (!j2::encoding::utf8_to_iso2022kr(sample, iso)) return false;
     if (iso.empty()) return false;
-    if (!iso2022kr_to_utf8(iso, back)) return false;
+    if (!j2::encoding::iso2022kr_to_utf8(iso, back)) return false;
     return back == sample;
 }
 
@@ -89,9 +89,9 @@ static bool Probe_JOHAB() {
 #if !defined(_WIN32) && !defined(J2LIB_USE_ICONV)
     return false;
 #endif
-    if (!utf8_to_johab(sample, jo)) return false;
+    if (!j2::encoding::utf8_to_johab(sample, jo)) return false;
     if (jo.empty()) return false;
-    if (!johab_to_utf8(jo, back)) return false;
+    if (!j2::encoding::johab_to_utf8(jo, back)) return false;
     return back == sample;
 }
 
@@ -104,9 +104,9 @@ static bool Probe_MacKorean() {
 #if !defined(_WIN32) && !defined(J2LIB_USE_ICONV)
     return false;
 #endif
-    if (!utf8_to_mackorean(sample, mk)) return false;
+    if (!j2::encoding::utf8_to_mackorean(sample, mk)) return false;
     if (mk.empty()) return false;
-    if (!mackorean_to_utf8(mk, back)) return false;
+    if (!j2::encoding::mackorean_to_utf8(mk, back)) return false;
     return back == sample;
 }
 
@@ -122,29 +122,29 @@ TEST(EncodingUtils, Utf8_Utf16_Utf32_Roundtrip_KoreanAndEmoji)
 
     // UTF-8 → UTF-16
     std::u16string u16;
-    ASSERT_TRUE(utf8_to_utf16(utf8, u16));
+    ASSERT_TRUE(j2::encoding::utf8_to_utf16(utf8, u16));
 
     // UTF-16 → UTF-8
     std::string utf8_b;
-    ASSERT_TRUE(utf16_to_utf8(u16, utf8_b));
+    ASSERT_TRUE(j2::encoding::utf16_to_utf8(u16, utf8_b));
     EXPECT_EQ(utf8_b, utf8);
 
     // UTF-16 → UTF-32
     std::u32string u32;
-    ASSERT_TRUE(utf16_to_utf32(u16, u32));
+    ASSERT_TRUE(j2::encoding::utf16_to_utf32(u16, u32));
 
     // UTF-32 → UTF-16
     std::u16string u16_b;
-    ASSERT_TRUE(utf32_to_utf16(u32, u16_b));
+    ASSERT_TRUE(j2::encoding::utf32_to_utf16(u32, u16_b));
     EXPECT_EQ(u16_b, u16);
 
     // UTF-8 → UTF-32
     std::u32string u32_b;
-    ASSERT_TRUE(utf8_to_utf32(utf8, u32_b));
+    ASSERT_TRUE(j2::encoding::utf8_to_utf32(utf8, u32_b));
 
     // UTF-32 → UTF-8
     std::string utf8_c;
-    ASSERT_TRUE(utf32_to_utf8(u32_b, utf8_c));
+    ASSERT_TRUE(j2::encoding::utf32_to_utf8(u32_b, utf8_c));
     EXPECT_EQ(utf8_c, utf8);
 }
 
@@ -161,11 +161,11 @@ TEST(EncodingUtils, Utf8_Cp949_Roundtrip_BasicHangulOnly)
 
     const std::string utf8 = u8"안녕하세요 세상";
     std::string cp949;
-    if (!utf8_to_cp949(utf8, cp949)) { SkipMsg(u8"환경에서 CP949 변환 실패 - 스킵"); return; }
+    if (!j2::encoding::utf8_to_cp949(utf8, cp949)) { SkipMsg(u8"환경에서 CP949 변환 실패 - 스킵"); return; }
     ASSERT_FALSE(cp949.empty());
 
     std::string utf8_back;
-    if (!cp949_to_utf8(cp949, utf8_back)) { SkipMsg(u8"환경에서 CP949 역변환 실패 - 스킵"); return; }
+    if (!j2::encoding::cp949_to_utf8(cp949, utf8_back)) { SkipMsg(u8"환경에서 CP949 역변환 실패 - 스킵"); return; }
     EXPECT_EQ(utf8_back, utf8);
 }
 
@@ -181,11 +181,11 @@ TEST(EncodingUtils, Utf16_Cp949_Roundtrip_BasicHangulOnly)
 
     const std::u16string u16 = u"테스트 문자열 한글만";
     std::string cp949;
-    if (!utf16_to_cp949(u16, cp949)) { SkipMsg(u8"환경에서 CP949 변환 실패 - 스킵"); return; }
+    if (!j2::encoding::utf16_to_cp949(u16, cp949)) { SkipMsg(u8"환경에서 CP949 변환 실패 - 스킵"); return; }
     ASSERT_FALSE(cp949.empty());
 
     std::u16string u16_back;
-    if (!cp949_to_utf16(cp949, u16_back)) { SkipMsg(u8"환경에서 CP949 역변환 실패 - 스킵"); return; }
+    if (!j2::encoding::cp949_to_utf16(cp949, u16_back)) { SkipMsg(u8"환경에서 CP949 역변환 실패 - 스킵"); return; }
     EXPECT_EQ(u16_back, u16);
 }
 
@@ -201,11 +201,11 @@ TEST(EncodingUtils, ISO2022KR_Utf8_Roundtrip_BasicHangulOnly)
 
     const std::string utf8 = u8"한글 이메일 테스트";
     std::string iso2022;
-    if (!utf8_to_iso2022kr(utf8, iso2022)) { SkipMsg(u8"환경에서 ISO-2022-KR 변환 실패 - 스킵"); return; }
+    if (!j2::encoding::utf8_to_iso2022kr(utf8, iso2022)) { SkipMsg(u8"환경에서 ISO-2022-KR 변환 실패 - 스킵"); return; }
     ASSERT_FALSE(iso2022.empty());
 
     std::string utf8_back;
-    if (!iso2022kr_to_utf8(iso2022, utf8_back)) { SkipMsg(u8"환경에서 ISO-2022-KR 역변환 실패 - 스킵"); return; }
+    if (!j2::encoding::iso2022kr_to_utf8(iso2022, utf8_back)) { SkipMsg(u8"환경에서 ISO-2022-KR 역변환 실패 - 스킵"); return; }
     EXPECT_EQ(utf8_back, utf8);
 }
 
@@ -221,11 +221,11 @@ TEST(EncodingUtils, Johab_Utf8_Roundtrip_BasicHangulOnly)
 
     const std::string utf8 = u8"조합형 한글 테스트";
     std::string johab;
-    if (!utf8_to_johab(utf8, johab)) { SkipMsg(u8"환경에서 JOHAB 변환 실패 - 스킵"); return; }
+    if (!j2::encoding::utf8_to_johab(utf8, johab)) { SkipMsg(u8"환경에서 JOHAB 변환 실패 - 스킵"); return; }
     ASSERT_FALSE(johab.empty());
 
     std::string utf8_back;
-    if (!johab_to_utf8(johab, utf8_back)) { SkipMsg(u8"환경에서 JOHAB 역변환 실패 - 스킵"); return; }
+    if (!j2::encoding::johab_to_utf8(johab, utf8_back)) { SkipMsg(u8"환경에서 JOHAB 역변환 실패 - 스킵"); return; }
     EXPECT_EQ(utf8_back, utf8);
 }
 
@@ -241,11 +241,11 @@ TEST(EncodingUtils, MacKorean_Utf8_Roundtrip_BasicHangulOnly)
 
     const std::string utf8 = u8"맥코리안 인코딩 테스트";
     std::string mackor;
-    if (!utf8_to_mackorean(utf8, mackor)) { SkipMsg(u8"환경에서 MacKorean 변환 실패 - 스킵"); return; }
+    if (!j2::encoding::utf8_to_mackorean(utf8, mackor)) { SkipMsg(u8"환경에서 MacKorean 변환 실패 - 스킵"); return; }
     ASSERT_FALSE(mackor.empty());
 
     std::string utf8_back;
-    if (!mackorean_to_utf8(mackor, utf8_back)) { SkipMsg(u8"환경에서 MacKorean 역변환 실패 - 스킵"); return; }
+    if (!j2::encoding::mackorean_to_utf8(mackor, utf8_back)) { SkipMsg(u8"환경에서 MacKorean 역변환 실패 - 스킵"); return; }
     EXPECT_EQ(utf8_back, utf8);
 }
 
@@ -262,9 +262,9 @@ TEST(EncodingUtils, UnsupportedCharacter_To_CP949_ShouldFailOrSkip)
 #endif
     if (!Probe_CP949()) { SkipMsg(u8"CP949 라운드트립 프루빙 실패 - 환경 스킵"); return; }
 
-    const std::string utf8 = u8"한글 + 😊"; // 이모지는 CP949에서 표현 불가
+    const std::string utf8 = u8"한글 + 😊"; // 이모지는 CP949에서 표현 불가 (EUC-KR에서도 마찬가지)
     std::string cp949;
-    bool ok = utf8_to_cp949(utf8, cp949);
+    bool ok = j2::encoding::utf8_to_cp949(utf8, cp949);
     if (!ok) {
         GTEST_SUCCEED() << j2::string::to_console_encoding(u8"표현 불가 문자로 변환 실패(기대한 동작)").c_str();
     }

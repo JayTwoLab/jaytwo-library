@@ -45,8 +45,22 @@ static int* get_int_ptr(bool ok = true) {
 
 // 1) std::optional<std::string> 반환: 실패 시 nullopt 전파
 static std::optional<std::string> make_greeting_opt(bool ok_user) {
-    // 실패 시 현재 함수는 즉시 nullopt 반환
+
     TRY_OPT(name, get_user_name(ok_user));
+    // 
+    // (시도[try])
+    //  get_user_name() 함수의 수행을 시도한다.
+    //  get_user_name() 함수는 std::optional 을 사용하여 성공/실패를 나타낸다.
+    // 
+    // (성공 시)
+    //   name 변수에 get_user_name()의 반환된다.
+    //   성공 시 이후 코드가 계속 실행된다.
+    // 
+    // (실패 시)
+    //   get_user_name()가 nullopt을 반환하므로, make_greeting_opt()도 즉시 nullopt을 반환한다.
+    //   실패 시는 TRY_OPT() 이후 코드는 실행되지 않는다.
+    // 
+
     return std::string("Hello, ") + name;
 }
 

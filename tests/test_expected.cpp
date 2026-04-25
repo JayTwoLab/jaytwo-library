@@ -5,19 +5,12 @@
 
 #include "j2_library/expected/expected.hpp"
 
-using j2::expected::expected; // expected 템플릿 클래스
-using j2::expected::unexpected_value; // unexpected_value 템플릿 클래스
- 
-/* ===== 안전한 별칭 ===== */
-using exp_int_str = expected<int, std::string>; // 성공 값은 int, 실패 값은 std::string
-using err_str = unexpected_value<std::string>; // 실패 값 타입 별칭
-
 /* =========================
  * 성공 값
  * ========================= */
 TEST(expected_test, success_value)
 {
-    exp_int_str r{ 42 }; // 성공 값 생성
+    j2::expected::expected<int, std::string> r{ 42 }; // 성공 값 생성
 
     EXPECT_TRUE(r.has_value()); // 성공 상태 확인
     EXPECT_TRUE(static_cast<bool>(r)); // 불리언 컨텍스트에서 true
@@ -29,8 +22,8 @@ TEST(expected_test, success_value)
  * ========================= */
 TEST(expected_test, error_value)
 {
-    err_str err{ "error occurred" };
-    exp_int_str r{ err }; // 실패 값 생성
+    j2::expected::unexpected_value<std::string> err{ "error occurred" };
+    j2::expected::expected<int, std::string> r{ err }; // 실패 값 생성
 
     EXPECT_FALSE(r.has_value()); // 실패 상태 확인
     EXPECT_FALSE(static_cast<bool>(r)); // 불리언 컨텍스트에서 false
@@ -42,8 +35,8 @@ TEST(expected_test, error_value)
  * ========================= */
 TEST(expected_test, value_throws_when_error)
 {
-    err_str err{ "bad" };
-    exp_int_str r{ err }; // 실패 값 생성
+    j2::expected::unexpected_value<std::string> err{ "bad" };
+    j2::expected::expected<int, std::string> r{ err }; // 실패 값 생성
 
     EXPECT_THROW(r.value(), std::logic_error); // value() 호출 시 예외 발생
 }
@@ -53,7 +46,7 @@ TEST(expected_test, value_throws_when_error)
  * ========================= */
 TEST(expected_test, error_throws_when_value)
 {
-    exp_int_str r{ 10 }; // 성공 값 생성
+    j2::expected::expected<int, std::string> r{ 10 }; // 성공 값 생성
 
     EXPECT_THROW(r.error(), std::logic_error); // error() 호출 시 예외 발생
 }
@@ -61,17 +54,17 @@ TEST(expected_test, error_throws_when_value)
 /* =========================
  * 함수 반환 예제
  * ========================= */
-static exp_int_str parse_number(const std::string& s)
+static j2::expected::expected<int, std::string> parse_number_123(const std::string& s)
 {
     if (s == "123")
-        return exp_int_str{ 123 }; // 성공 값 반환
+        return j2::expected::expected<int, std::string>{ 123 }; // 성공 값 반환
 
-    return exp_int_str{ err_str{"not a number"} }; // 실패 값 반환 
+    return j2::expected::expected<int, std::string>{ j2::expected::unexpected_value<std::string>{"not a number"} }; // 실패 값 반환 
 }
 
 TEST(expected_test, function_return_success)
 {
-    auto r = parse_number("123"); // 성공 값 반환
+    auto r = parse_number_123("123"); // 성공 값 반환
 
     ASSERT_TRUE(r); // 성공 상태 확인
     EXPECT_EQ(r.value(), 123); // 성공 값 확인
@@ -79,7 +72,7 @@ TEST(expected_test, function_return_success)
 
 TEST(expected_test, function_return_error)
 {
-    auto r = parse_number("abc"); // 실패 값 반환
+    auto r = parse_number_123("abc"); // 실패 값 반환
 
     ASSERT_FALSE(r); // 실패 상태 확인
     EXPECT_EQ(r.error(), "not a number"); // 실패 값 확인
@@ -88,10 +81,8 @@ TEST(expected_test, function_return_error)
 //-----------------------------------------
 // 파일 열기 함수 예제
 
-using file_result = j2::expected::expected<std::ifstream, std::string>;
 // 성공 시 std::ifstream 반환, 실패 시 std::string 오류 메시지 반환
-
-file_result open_file(const std::string& path)
+j2::expected::expected<std::ifstream, std::string> open_file(const std::string& path)
 {
     std::ifstream f(path);
     if (!f)

@@ -1,4 +1,12 @@
+
 #include <gtest/gtest.h>
+
+#ifdef _WIN32
+    #include <windows.h>
+#else
+    #include <locale>
+    #include <codecvt>
+#endif
 
 #include "j2_library/j2_library.hpp"
 
@@ -16,15 +24,24 @@ TEST(u8str_basic, default_ctor_and_empty)
 // 다양한 타입으로부터의 생성자 테스트
 TEST(u8str_basic, constructors_from_various_types)
 {
+
+// | 타입           | value_type | 문자 크기   | 인코딩                                         |
+// | :------------- | :--------- | :---------- | : -------------------------------------------- |
+// | std::string    | char       | 1 Byte      | ASCII, UTF - 8, 멀티바이트 문자열              |
+// | std::wstring   | wchar_t    | 2 or 4 Byte | Windows 2 bytes, 리눅스 / macOS에서는 4 bytes  |
+// | std::u16string | char16_t   | 2 Byte      | UTF - 16 인코딩(플랫폼 무관 고정)              |
+// | std::u32string | char32_t   | 4 Byte      | UTF - 32 인코딩(모든 유니코드 문자 고정 크기)  |
+
     const char* cstr = "Hello";
     std::string std_str = "World";
-#if defined(_WIN32)
-    std::wstring wstr = L"윈도우";
-#else
-    std::wstring wstr = L"리눅스";
-#endif
-    std::u16string u16 = u"UTF16";
-    std::u32string u32 = U"UTF32";
+
+    // 현재 소스코드는 UTF-8 인코딩된 소스코드이며, std::wstring wstr = L"한글"; 를 사용하기 위해 변환이 필요함.
+    //  윈도우인 경우, 소스코드 인코딩이 Unicode (UTF-16) 이면 바로 처리됨.
+    //  리눅스인 경우, 소스코드 인코딩이 UTF-8 이므로, std::wstring wstr = L"한글"; 는 UTF-32 문자열이 되어버림. 따라서 변환을 거쳐야 함.
+    std::wstring wstr = j2::string::u8::to_wstring( j2::string::u8::to_u8_string(u8"한글") );
+
+    std::u16string u16 = u"UTF16"; // 소문자 u""로 UTF-16 문자열 리터럴 생성
+    std::u32string u32 = U"UTF32"; // 대문자 U""로 UTF-32 문자열 리터럴 생성
 
     j2::string::u8::u8str s1(cstr);
     j2::string::u8::u8str s2(std_str);
@@ -63,7 +80,7 @@ TEST(u8str_basic, from_setters)
 // clear / size / empty 테스트
 TEST(u8str_basic, clear_size_empty)
 {
-    j2::string::u8::u8str s("내용있음");
+    j2::string::u8::u8str s(u8"내용있음");
     EXPECT_FALSE(s.empty());
     EXPECT_GT(s.size(), 0u);
 
@@ -76,7 +93,7 @@ TEST(u8str_basic, clear_size_empty)
 TEST(u8str_convert, to_w_u16_u32_roundtrip)
 {
     // 이모지 포함 UTF-8 문자열
-    j2::string::u8::u8str s("안녕하세요😎");
+    j2::string::u8::u8str s(u8"안녕하세요😎");
 
     std::wstring  ws = s.to_wstring();
     std::u16string u16 = s.to_u16string();
@@ -99,34 +116,34 @@ TEST(u8str_convert, to_w_u16_u32_roundtrip)
 // starts_with / ends_with / contains 테스트
 TEST(u8str_search, starts_ends_contains)
 {
-    j2::string::u8::u8str s("안녕하세요 UTF-8 테스트");
+    j2::string::u8::u8str s(u8"안녕하세요 UTF-8 테스트");
 
     // starts_with (const char* 버전 포함)
-    EXPECT_TRUE(s.starts_with("안녕"));
-    EXPECT_FALSE(s.starts_with("UTF"));
-    j2::string::u8::u8str prefix("안녕하세요");
+    EXPECT_TRUE(s.starts_with(u8"안녕"));
+    EXPECT_FALSE(s.starts_with(u8"UTF"));
+    j2::string::u8::u8str prefix(u8"안녕하세요");
     EXPECT_TRUE(s.starts_with(prefix));
 
-    j2::string::u8::u8str too_long("안녕하세요 UTF-8 테스트 그리고 더 있습니다");
+    j2::string::u8::u8str too_long(u8"안녕하세요 UTF-8 테스트 그리고 더 있습니다");
     EXPECT_FALSE(s.starts_with(too_long));
 
     // ends_with
-    EXPECT_TRUE(s.ends_with("테스트"));
-    EXPECT_FALSE(s.ends_with("안녕"));
-    j2::string::u8::u8str suffix("테스트");
+    EXPECT_TRUE(s.ends_with(u8"테스트"));
+    EXPECT_FALSE(s.ends_with(u8"안녕"));
+    j2::string::u8::u8str suffix(u8"테스트");
     EXPECT_TRUE(s.ends_with(suffix));
 
-    EXPECT_FALSE(s.ends_with("매우 긴 접미사"));
+    EXPECT_FALSE(s.ends_with(u8"매우 긴 접미사"));
 
     // contains
-    EXPECT_TRUE(s.contains("UTF-8"));
-    EXPECT_FALSE(s.contains("없는문자열"));
-    j2::string::u8::u8str needle("UTF-8");
+    EXPECT_TRUE(s.contains(u8"UTF-8"));
+    EXPECT_FALSE(s.contains(u8"없는문자열"));
+    j2::string::u8::u8str needle(u8"UTF-8");
     EXPECT_TRUE(s.contains(needle));
 
     // needle 이 빈 문자열이면 항상 true
-    EXPECT_TRUE(s.contains(""));
-    EXPECT_TRUE(s.contains(j2::string::u8::u8str("")));
+    EXPECT_TRUE(s.contains(u8""));
+    EXPECT_TRUE(s.contains(j2::string::u8::u8str(u8"")));
 }
 
 // index_of / last_index_of 테스트
@@ -183,35 +200,35 @@ TEST(u8str_trim, trim_functions)
 // split 테스트
 TEST(u8str_split, basic_and_edge_cases)
 {
-    j2::string::u8::u8str s("사과,배,포도,,수박");
+    j2::string::u8::u8str s(u8"사과,배,포도,,수박");
 
     // skip_empty = false
-    auto v1 = s.split(",", false);
+    auto v1 = s.split(u8",", false);
     ASSERT_EQ(v1.size(), 5u);
-    EXPECT_EQ(v1[0].to_std_string(), "사과");
-    EXPECT_EQ(v1[1].to_std_string(), "배");
-    EXPECT_EQ(v1[2].to_std_string(), "포도");
-    EXPECT_EQ(v1[3].to_std_string(), "");
-    EXPECT_EQ(v1[4].to_std_string(), "수박");
+    EXPECT_EQ(v1[0].to_std_string(), u8"사과");
+    EXPECT_EQ(v1[1].to_std_string(), u8"배");
+    EXPECT_EQ(v1[2].to_std_string(), u8"포도");
+    EXPECT_EQ(v1[3].to_std_string(), u8"");
+    EXPECT_EQ(v1[4].to_std_string(), u8"수박");
 
     // skip_empty = true
-    auto v2 = s.split(",", true);
+    auto v2 = s.split(u8",", true);
     ASSERT_EQ(v2.size(), 4u);
-    EXPECT_EQ(v2[0].to_std_string(), "사과");
-    EXPECT_EQ(v2[1].to_std_string(), "배");
-    EXPECT_EQ(v2[2].to_std_string(), "포도");
-    EXPECT_EQ(v2[3].to_std_string(), "수박");
+    EXPECT_EQ(v2[0].to_std_string(), u8"사과");
+    EXPECT_EQ(v2[1].to_std_string(), u8"배");
+    EXPECT_EQ(v2[2].to_std_string(), u8"포도");
+    EXPECT_EQ(v2[3].to_std_string(), u8"수박");
 
     // 구분자가 없는 경우
-    j2::string::u8::u8str s2("단일문자열");
-    auto v3 = s2.split(",", false);
+    j2::string::u8::u8str s2(u8"단일문자열");
+    auto v3 = s2.split(u8",", false);
     ASSERT_EQ(v3.size(), 1u);
-    EXPECT_EQ(v3[0].to_std_string(), "단일문자열");
+    EXPECT_EQ(v3[0].to_std_string(), u8"단일문자열");
 
     // delim 이 빈 문자열인 경우 (전체를 하나로)
-    auto v4 = s2.split("", false);
+    auto v4 = s2.split(u8"", false);
     ASSERT_EQ(v4.size(), 1u);
-    EXPECT_EQ(v4[0].to_std_string(), "단일문자열");
+    EXPECT_EQ(v4[0].to_std_string(), u8"단일문자열");
 }
 
 // replace / replace_all 테스트

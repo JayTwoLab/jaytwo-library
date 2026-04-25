@@ -21,8 +21,6 @@
 
 #include "j2_library/thread/dynamic_thread.hpp"
 
-using namespace std::chrono_literals;
-
 namespace {
 
     // 지정된 밀리초 동안 현재 스레드 일시 정지
@@ -70,10 +68,10 @@ TEST(dynamic_thread, RunsLambda) {
     j2::thread::dynamic_thread dt;
     std::atomic<int> count{ 0 };
 
-    dt.setInterval(20ms);
+    dt.setInterval(std::chrono::milliseconds(20));
     dt.start([&] { count.fetch_add(1, std::memory_order_relaxed); });
 
-    SleepFor(150ms);
+    SleepFor(std::chrono::milliseconds(150));
     dt.stop();
 
     EXPECT_GE(count.load(std::memory_order_relaxed), 5); // 5회 이상 실행되었는지 확인. 5~7회 예상.
@@ -83,10 +81,10 @@ TEST(dynamic_thread, RunsBoundMemberFunction) {
     j2::thread::dynamic_thread dt;
     Counter c;
 
-    dt.setInterval(30ms);
+    dt.setInterval(std::chrono::milliseconds(30));
     dt.start(&Counter::tick, &c);
 
-    SleepFor(240ms);
+    SleepFor(std::chrono::milliseconds(240));
     dt.stop();
 
     EXPECT_GE(c.value.load(std::memory_order_relaxed), 5); // 5회 이상 실행되었는지 확인. 5~8회 예상.   
@@ -96,10 +94,10 @@ TEST(dynamic_thread, CanAdjustIntervalBeforeStart) {
     j2::thread::dynamic_thread dt;
     std::atomic<int> count{ 0 };
 
-    dt.setInterval(40ms);
+    dt.setInterval(std::chrono::milliseconds(40));
     dt.start([&] { count.fetch_add(1, std::memory_order_relaxed); });
 
-    SleepFor(210ms);
+    SleepFor(std::chrono::milliseconds(210));
     dt.stop();
 
     EXPECT_GE(count.load(std::memory_order_relaxed), 4); // 4회 이상 실행되었는지 확인. 4~6회 예상.
@@ -109,10 +107,10 @@ TEST(dynamic_thread, StartWithThreadTaskReference) {
     j2::thread::dynamic_thread dt;
     TaskCounter task;
 
-    dt.setInterval(25ms);
+    dt.setInterval(std::chrono::milliseconds(25));
     dt.start(task); // thread_task& 오버로드
 
-    SleepFor(180ms);
+    SleepFor(std::chrono::milliseconds(180));
     dt.stop();
 
     EXPECT_GE(task.value.load(std::memory_order_relaxed), 5); // 5회 이상 실행되었는지 확인. 5~7회 예상.
@@ -122,10 +120,10 @@ TEST(dynamic_thread, StartWithThreadTaskSharedPtr) {
     j2::thread::dynamic_thread dt;
     auto sp = std::make_shared<TaskCounter>();
 
-    dt.setInterval(25ms);
+    dt.setInterval(std::chrono::milliseconds(25));
     dt.start(sp); // shared_ptr<thread_task> 오버로드
 
-    SleepFor(180ms);
+    SleepFor(std::chrono::milliseconds(180));
     dt.stop();
 
     EXPECT_GE(sp->value.load(std::memory_order_relaxed), 5); // 5회 이상 실행되었는지 확인. 5~7회 예상.
@@ -135,13 +133,13 @@ TEST(dynamic_thread, IgnoreDoubleStart) {
     j2::thread::dynamic_thread dt;
     std::atomic<int> count{ 0 };
 
-    dt.setInterval(20ms);
+    dt.setInterval(std::chrono::milliseconds(20));
     dt.start([&] { count.fetch_add(1, std::memory_order_relaxed); });
 
     // 실행 중 중복 start → 무시되어야 함
     dt.start([&] { count.fetch_add(1000, std::memory_order_relaxed); });
 
-    SleepFor(160ms);
+    SleepFor(std::chrono::milliseconds(160));
     dt.stop();
 
     const int v = count.load(std::memory_order_relaxed);
@@ -153,10 +151,10 @@ TEST(dynamic_thread, StopIsIdempotent) {
     j2::thread::dynamic_thread dt;
     std::atomic<int> count{ 0 };
 
-    dt.setInterval(15ms);
+    dt.setInterval(std::chrono::milliseconds(15));
     dt.start([&] { count.fetch_add(1, std::memory_order_relaxed); });
 
-    SleepFor(90ms);
+    SleepFor(std::chrono::milliseconds(90));
     dt.stop();  // 1차 멱등성 호출. 여러번 호출해도 문제 없어야 함.
     dt.stop();  // 2차
     dt.stop();  // 3차
@@ -168,14 +166,14 @@ TEST(dynamic_thread, NoExecutionAfterStop) {
     j2::thread::dynamic_thread dt;
     std::atomic<int> count{ 0 };
 
-    dt.setInterval(10ms);
+    dt.setInterval(std::chrono::milliseconds(10));
     dt.start([&] { count.fetch_add(1, std::memory_order_relaxed); });
 
-    SleepFor(60ms);
+    SleepFor(std::chrono::milliseconds(60));
     dt.stop();
     const int afterStop = count.load(std::memory_order_relaxed);
 
-    SleepFor(80ms);
+    SleepFor(std::chrono::milliseconds(80));
     EXPECT_EQ(count.load(std::memory_order_relaxed), afterStop); // stop 이후 실행 없음 확인
 }
 
@@ -183,10 +181,10 @@ TEST(dynamic_thread, DerivedTaskByReference) {
     j2::thread::dynamic_thread dt;
     DerivedTask task(/*limit=*/0);
 
-    dt.setInterval(20ms);
+    dt.setInterval(std::chrono::milliseconds(20));
     dt.start(task); // thread_task& 오버로드
 
-    SleepFor(140ms);
+    SleepFor(std::chrono::milliseconds(140));
     dt.stop();
 
     EXPECT_GE(task.value.load(std::memory_order_relaxed), 4); // 4회 이상 실행되었는지 확인. 4~6회 예상.
@@ -198,13 +196,13 @@ TEST(dynamic_thread, DerivedTaskBySharedPtrAndExternalReset) {
     j2::thread::dynamic_thread dt;
     auto sp = std::make_shared<DerivedTask>(/*limit=*/0);
 
-    dt.setInterval(15ms);
+    dt.setInterval(std::chrono::milliseconds(15));
     dt.start(sp);  // 내부에서 shared_ptr 보관
 
     // 외부 포인터 해제 → 내부 보관분이 수명 보장
     sp.reset();
 
-    SleepFor(90ms);
+    SleepFor(std::chrono::milliseconds(90));
     dt.stop();
 
     // 크래시/데드락 없이 stop() 완료되면 수명 보장 동작으로 간주
