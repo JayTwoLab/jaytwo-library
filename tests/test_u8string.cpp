@@ -25,15 +25,15 @@ TEST(u8str_basic, default_ctor_and_empty)
 TEST(u8str_basic, constructors_from_various_types)
 {
 
-// | 타입           | value_type | 문자 크기   | 인코딩                                         |
-// | :------------- | :--------- | :---------- | : -------------------------------------------- |
-// | std::string    | char       | 1 Byte      | ASCII, UTF - 8, 멀티바이트 문자열              |
-// | std::wstring   | wchar_t    | 2 or 4 Byte | Windows 2 bytes, 리눅스 / macOS에서는 4 bytes  |
-// | std::u16string | char16_t   | 2 Byte      | UTF - 16 인코딩(플랫폼 무관 고정)              |
-// | std::u32string | char32_t   | 4 Byte      | UTF - 32 인코딩(모든 유니코드 문자 고정 크기)  |
+// | 타입           | value_type | 문자크기 | 인코딩                           |
+// | :------------- | :--------- | :------- | : ------------------------------ |
+// | std::string    | char       | 1 Byte   | ASCII, UTF-8, 멀티바이트 문자열  |
+// | std::wstring   | wchar_t    | 2,4 Byte | Windows 2B, Linux/macOS 4B       |
+// | std::u16string | char16_t   | 2 Byte   | UTF-16 인코딩(플랫폼 무관 고정)  |
+// | std::u32string | char32_t   | 4 Byte   | UTF-32 인코딩(모든 유니코드 문자 |
 
     const char* cstr = "Hello";
-    std::string std_str = "World";
+    std::string std_str = "World"; // u8"World"과 동일 
 
     // 현재 소스코드는 UTF-8 인코딩된 소스코드이며, std::wstring wstr = L"한글"; 를 사용하기 위해 변환이 필요함.
     //  윈도우인 경우, 소스코드 인코딩이 Unicode (UTF-16) 이면 바로 처리됨.
