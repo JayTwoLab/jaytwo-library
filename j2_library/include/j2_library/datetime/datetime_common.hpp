@@ -11,10 +11,6 @@
 #include "j2_library/export.hpp"
 
 namespace j2::datetime {
-
-    // 타임존 모드
-    enum class time_zone_mode { utc, local_time };
-
-
+    enum class time_zone_mode { utc, local_time }; // 타임존 모드
 } // namespace j2::datetime
 

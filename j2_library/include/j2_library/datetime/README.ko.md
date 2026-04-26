@@ -16,8 +16,8 @@
 - 시계는 `system_clock`, `steady_clock`, `high_resolution_clock`만 제공.
 - 날짜·달력 클래스는 없어 `std::tm`과 `std::time_t` 같은 C 구조체에 의존.
 - 지역 시간과 UTC 변환은 `std::localtime`, `std::gmtime` 같은 C API를 사용해야 하며, 스레드 안전하지 않음.
-- 타임존 기능이 아예 없어 Howard Hinnant의 `date.h` 같은 외부 라이브러리에 의존해야 함.
-- 윤초(Leap second) 처리 기능이 없음.
+- 타임존 기능이 **아예 없어,** Howard Hinnant의 `date.h` 같은 외부 라이브러리에 의존해야 함.
+- 윤초(`Leap second`) 처리 기능이 없음. 
 - 날짜와 시간의 포맷팅·파싱은 `strftime`, `strptime` 같은 C 라이브러리에 의존.
 
 ### C++20의 확장
@@ -26,7 +26,7 @@
 - 날짜 표현을 위한 다양한 클래스가 새로 도입됨: `year`, `month`, `day`, 그리고 `year_month_day`, `year_month_weekday`, `weekday`, `month_day_last` 등
 - 지역 시간과 UTC 변환이 강화되어 `sys_time`, `utc_time`, `local_time`, `zoned_time` 등을 통해 안전하게 변환 가능.
 - 타임존을 다루는 `time_zone`, `time_zone_link`가 추가되고, IANA Time Zone Database(`tzdb`)가 내장되어 `locate_zone("Asia/Seoul")` 같은 방식으로 손쉽게 사용 가능.
-- 윤초를 표현하는 `std::chrono::leap_second`가 추가됨.
+- 윤초를 표현하는 `std::chrono::leap_second`가 추가됨. (2035년까지 윤초 제도를 폐지 예정)
 - 출력과 파싱은 `std::format` 및 `std::chrono::format`을 통해 ISO 8601 형식 지원.                                                                      
                                                                       
 
