@@ -5,9 +5,12 @@
 #include <ctime>
 #include <string>
 
+#include "j2_library/export.hpp"
+
 namespace j2::datetime::v1 {
 
-    class time_span {
+    // time_span 클래스는 기간을 나타내며, 내부적으로 밀리초 단위로 저장됩니다.
+    class J2LIB_API time_span {
     public:
         // 주어진 밀리초 기간으로 time_span 객체를 생성합니다.
         explicit time_span(std::chrono::milliseconds ms);
@@ -39,7 +42,8 @@ namespace j2::datetime::v1 {
     // 시간 표기 기준: 로컬 시간인지 UTC인지 명시합니다.
     enum class time_spec { local_time, utc };
 
-    class date_time {
+    // date_time 클래스는 시스템 클럭과 밀리초 정밀도의 time_point를 기반으로 날짜와 시간을 나타냅니다.
+    class J2LIB_API date_time {
     public:
         // 시스템 클럭 및 밀리초 정밀도의 time_point 타입 정의입니다.
         using clock = std::chrono::system_clock;
